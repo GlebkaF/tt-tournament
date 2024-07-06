@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   try {
-    const { player1Id, player2Id, player1Score, player2Score, result } =
+    const { player1Id, player2Id, player1Score, player2Score, result, date } =
       await req.json();
     await prisma.match.create({
       data: {
@@ -13,6 +13,7 @@ export async function POST(req: Request) {
         player1Score,
         player2Score,
         result,
+        date: new Date(date),
       },
     });
     return new Response(

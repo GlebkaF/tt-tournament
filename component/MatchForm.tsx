@@ -1,31 +1,77 @@
 "use client";
 
-import { Player } from "@/app/interface";
-import { useState } from "react";
+import { Player, Match, MatchResult } from "@/app/interface";
+import { useState, useMemo, useEffect } from "react";
+import { Form, Select, Button, message, Typography, DatePicker } from "antd";
+import dayjs from "dayjs";
+
+const { Option } = Select;
+const { Title, Text } = Typography;
 
 interface MatchFormProps {
   players: Player[];
+  playedMatches: Match[];
   onSubmit: () => void;
 }
 
-const MatchForm: React.FC<MatchFormProps> = ({ players, onSubmit }) => {
+const MatchForm: React.FC<MatchFormProps> = ({
+  players,
+  playedMatches,
+  onSubmit,
+}) => {
+  // Sort players by last name
+  const sortedPlayers = useMemo(() => {
+    return [...players].sort((a, b) =>
+      (a.lastName || "" + a.firstName || "").localeCompare(
+        b.lastName || "" + b.firstName || ""
+      )
+    );
+  }, [players]);
+
   const [player1Id, setPlayer1Id] = useState<number | null>(null);
   const [player2Id, setPlayer2Id] = useState<number | null>(null);
-  const [result, setResult] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
+  const [result, setResult] = useState<MatchResult>(MatchResult.draw);
+  const [matchDate, setMatchDate] = useState(dayjs());
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const getOpponents = useMemo(
+    () => (playerId: number | null) => {
+      if (!playerId) return [];
+      return sortedPlayers.filter((player) => {
+        if (player.id === playerId) return false;
+        const match = playedMatches.find(({ player1, player2 }) => {
+          const mPlayers = [player1.id, player2.id].sort();
+          const pPlayers = [player.id, playerId].sort();
+          return mPlayers[0] === pPlayers[0] && mPlayers[1] === pPlayers[1];
+        });
+        return !match;
+      });
+    },
+    [sortedPlayers, playedMatches]
+  );
 
-    if (player1Id === null || player2Id === null || result === "") {
-      setMessage("All fields are required.");
+  useEffect(() => {
+    setPlayer2Id(null);
+  }, [player1Id]);
+
+  const handleSubmit = async () => {
+    if (player1Id === null || player2Id === null) {
+      setErrorMessage("All fields are required.");
       return;
     }
 
     if (player1Id === player2Id) {
-      setMessage("Players must be different.");
+      setErrorMessage("Players must be different.");
       return;
     }
+
+    const scores = {
+      [MatchResult.player1Win]: { player1Score: 3, player2Score: 1 },
+      [MatchResult.player2Win]: { player1Score: 1, player2Score: 3 },
+      [MatchResult.draw]: { player1Score: 2, player2Score: 2 },
+    };
+
+    const { player1Score, player2Score } = scores[result];
 
     const res = await fetch("/api/match", {
       method: "POST",
@@ -33,87 +79,122 @@ const MatchForm: React.FC<MatchFormProps> = ({ players, onSubmit }) => {
       body: JSON.stringify({
         player1Id,
         player2Id,
-        player1Score: 0, // Dummy values to satisfy API schema
-        player2Score: 0, // Dummy values to satisfy API schema
+        player1Score,
+        player2Score,
         result,
+        date: matchDate.format("YYYY-MM-DD"),
       }),
     });
 
     if (res.ok) {
-      setMessage("Match recorded successfully!");
+      message.success("Match recorded successfully!");
       onSubmit(); // Refresh matches after submission
+      setPlayer1Id(null);
+      setPlayer2Id(null);
+      setResult(MatchResult.draw);
+      setMatchDate(dayjs());
     } else {
-      setMessage("There was an error recording the match.");
+      message.error("There was an error recording the match.");
     }
+  };
 
-    setPlayer1Id(null);
-    setPlayer2Id(null);
-    setResult("");
+  const getPlayerName = (id: number | null) => {
+    const player = players.find((p) => p.id === id);
+    return player ? `${player.lastName || ""} ${player.firstName}`.trim() : "";
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="p-4 bg-white shadow-md rounded-lg w-full max-w-lg mx-auto overflow-hidden"
+    <Form
+      onFinish={handleSubmit}
+      layout="vertical"
+      className="p-4 bg-white shadow-md rounded-lg w-full max-w-lg mx-auto"
     >
-      <h2 className="text-xl font-semibold mb-4">Record Match Result</h2>
-      <div className="mb-4">
-        <label className="block text-gray-700 mb-2">Player 1:</label>
-        <select
-          value={player1Id || ""}
-          onChange={(e) => setPlayer1Id(Number(e.target.value))}
-          className="mt-1 block w-full p-3 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+      <Title level={3}>Record Match Result</Title>
+      <Form.Item label="Player 1" required>
+        <Select
+          value={player1Id || undefined}
+          onChange={setPlayer1Id}
+          placeholder="Select Player"
+          size="large"
         >
-          <option value="" disabled>
-            Select Player
-          </option>
-          {players.map((player) => (
-            <option key={player.id} value={player.id}>
-              {player.firstName} {player.lastName}
-            </option>
+          {sortedPlayers.map((player) => (
+            <Option key={player.id} value={player.id}>
+              {`${player.lastName || ""} ${player.firstName}`.trim()}
+            </Option>
           ))}
-        </select>
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 mb-2">Player 2:</label>
-        <select
-          value={player2Id || ""}
-          onChange={(e) => setPlayer2Id(Number(e.target.value))}
-          className="mt-1 block w-full p-3 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        </Select>
+      </Form.Item>
+      <Form.Item label="Player 2" required>
+        <Select
+          value={player2Id || undefined}
+          onChange={setPlayer2Id}
+          placeholder="Select Player"
+          size="large"
+          disabled={!player1Id}
         >
-          <option value="" disabled>
-            Select Player
-          </option>
-          {players.map((player) => (
-            <option key={player.id} value={player.id}>
-              {player.firstName} {player.lastName}
-            </option>
+          {getOpponents(player1Id).map((player) => (
+            <Option key={player.id} value={player.id}>
+              {`${player.lastName || ""} ${player.firstName}`.trim()}
+            </Option>
           ))}
-        </select>
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 mb-2">Result:</label>
-        <select
-          value={result}
-          onChange={(e) => setResult(e.target.value)}
-          className="mt-1 block w-full p-3 bg-gray-50 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        </Select>
+      </Form.Item>
+      <Form.Item label="Match Date" required>
+        <DatePicker
+          value={matchDate}
+          onChange={setMatchDate}
+          size="large"
+          className="w-full"
+        />
+      </Form.Item>
+      <Form.Item label="Result" required>
+        <div className="space-y-3">
+          <Button
+            type={result === MatchResult.player1Win ? "primary" : "default"}
+            onClick={() => setResult(MatchResult.player1Win)}
+            size="large"
+            block
+            disabled={!player1Id || !player2Id}
+          >
+            Победил {getPlayerName(player1Id)}
+          </Button>
+          <Button
+            type={result === MatchResult.draw ? "primary" : "default"}
+            onClick={() => setResult(MatchResult.draw)}
+            size="large"
+            block
+            disabled={!player1Id || !player2Id}
+          >
+            Ничья
+          </Button>
+          <Button
+            type={result === MatchResult.player2Win ? "primary" : "default"}
+            onClick={() => setResult(MatchResult.player2Win)}
+            size="large"
+            block
+            disabled={!player1Id || !player2Id}
+          >
+            Победил {getPlayerName(player2Id)}
+          </Button>
+        </div>
+      </Form.Item>
+      <Form.Item>
+        <Button
+          type="primary"
+          htmlType="submit"
+          size="large"
+          block
+          disabled={!player1Id || !player2Id}
         >
-          <option value="" disabled>
-            Select Result
-          </option>
-          <option value="PLAYER1_WIN">Player 1 Wins</option>
-          <option value="PLAYER2_WIN">Player 2 Wins</option>
-          <option value="DRAW">Draw</option>
-        </select>
-      </div>
-      <button
-        type="submit"
-        className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-      >
-        Submit
-      </button>
-      {message && <p className="mt-4 text-red-500">{message}</p>}
-    </form>
+          Submit
+        </Button>
+        {errorMessage && (
+          <Text type="danger" className="mt-4">
+            {errorMessage}
+          </Text>
+        )}
+      </Form.Item>
+    </Form>
   );
 };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { Match, Player } from "@/app/interface";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MatchForm from "./MatchForm";
 
 const MatchList = ({ matches }: { matches: Match[] }) => {
@@ -32,14 +32,8 @@ const MatchList = ({ matches }: { matches: Match[] }) => {
   );
 };
 
-export default function MatchPage({
-  players,
-  initialMatches,
-}: {
-  players: Player[];
-  initialMatches: Match[];
-}) {
-  const [matches, setMatches] = useState<Match[]>(initialMatches);
+export default function MatchPage({ players }: { players: Player[] }) {
+  const [matches, setMatches] = useState<Match[]>([]);
 
   const refreshMatches = async () => {
     const res = await fetch("/api/match");
@@ -47,9 +41,17 @@ export default function MatchPage({
     setMatches(updatedMatches);
   };
 
+  useEffect(() => {
+    refreshMatches();
+  }, []);
+
   return (
     <div className="container mx-auto px-4">
-      <MatchForm players={players} onSubmit={refreshMatches} />
+      <MatchForm
+        players={players}
+        playedMatches={matches}
+        onSubmit={refreshMatches}
+      />
       <MatchList matches={matches} />
     </div>
   );
