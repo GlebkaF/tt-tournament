@@ -1,11 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { Player, Match } from "@/app/interface";
-import PlayerList from "@/component/PlayerList";
 import MatchPage from "@/component/MatchPage";
 
 const prisma = new PrismaClient();
 
-export default async function PlayerListPage() {
+export default async function MatchesPage() {
   const players: Player[] = await prisma.user.findMany();
   const matches: Match[] = await prisma.match.findMany({
     include: {
@@ -14,10 +13,5 @@ export default async function PlayerListPage() {
     },
   });
 
-  return (
-    <div className="flex flex-row">
-      <PlayerList players={players} />
-      <MatchPage players={players} initialMatches={matches} />
-    </div>
-  );
+  return <MatchPage players={players} initialMatches={matches} />;
 }

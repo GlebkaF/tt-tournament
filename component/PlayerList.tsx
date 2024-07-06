@@ -1,8 +1,6 @@
-interface Player {
-  id: number;
-  firstName: string;
-  lastName: string;
-}
+"use client";
+
+import { Player } from "@/app/interface";
 
 interface PlayerListProps {
   players: Player[];
