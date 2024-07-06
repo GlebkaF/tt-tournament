@@ -1,19 +1,15 @@
+import { STANDINGS_CACHE_KEY, getCache, setCache } from "@/helpers/cache";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
-let cache: any = null;
-let cacheTimestamp: number = 0;
-
-// export function resetCache() {
-//   cache = null;
-//   cacheTimestamp = 0;
-// }
 
 export async function GET(req: NextRequest) {
-  const cacheTTL = 60 * 1000; // 1 minute
+  const cacheTTL = 10 * 60 * 1000; // 10 minute
 
-  if (cache && Date.now() - cacheTimestamp < cacheTTL) {
+  const cache = getCache(STANDINGS_CACHE_KEY);
+
+  if (cache) {
     return NextResponse.json(cache);
   }
 
@@ -96,10 +92,8 @@ export async function GET(req: NextRequest) {
         player.league =
           index < 8 ? "🥇" : index < 16 ? "🥈" : index < 24 ? "🥉" : "";
       });
-
     // Update cache
-    cache = standings;
-    cacheTimestamp = Date.now();
+    setCache(STANDINGS_CACHE_KEY, standings);
 
     return NextResponse.json(standings);
   } catch (error) {

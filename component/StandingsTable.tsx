@@ -25,7 +25,12 @@ const generateColumns = (roundsCount: number, isMobile: boolean) => {
         dataIndex: "position",
         key: "position",
         align: "center" as const,
-        render: (text: any) => <strong>{text}</strong>,
+        render: (text: any, record: any) => (
+          <strong>
+            {text}
+            {record.league}
+          </strong>
+        ),
       },
       {
         title: "Участник",
@@ -63,7 +68,12 @@ const generateColumns = (roundsCount: number, isMobile: boolean) => {
       dataIndex: "position",
       key: "position",
       align: "center" as const,
-      render: (text: any) => <strong>{text}</strong>,
+      render: (text: any, record: any) => (
+        <strong>
+          {text}
+          {record.league}
+        </strong>
+      ),
     },
     {
       title: "Участник",
@@ -90,12 +100,6 @@ const generateColumns = (roundsCount: number, isMobile: boolean) => {
       title: "Сыграно игр",
       dataIndex: "gamesPlayed",
       key: "gamesPlayed",
-      align: "center" as const,
-    },
-    {
-      title: "Лига",
-      dataIndex: "league",
-      key: "league",
       align: "center" as const,
     },
   ];

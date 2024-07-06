@@ -1,5 +1,5 @@
+import { STANDINGS_CACHE_KEY, resetCache } from "@/helpers/cache";
 import { PrismaClient } from "@prisma/client";
-// import { resetCache } from "../standings/route";
 
 const prisma = new PrismaClient();
 
@@ -7,6 +7,22 @@ export async function POST(req: Request) {
   try {
     const { player1Id, player2Id, player1Score, player2Score, result, date } =
       await req.json();
+
+    // Проверка на существование записи с аналогичными данными
+    const existingMatch = await prisma.match.findFirst({
+      where: {
+        player1Id,
+        player2Id,
+      },
+    });
+
+    if (existingMatch) {
+      return new Response(JSON.stringify({ error: "Match already exists" }), {
+        status: 409,
+      });
+    }
+
+    // Создание новой записи
     await prisma.match.create({
       data: {
         player1Id,
@@ -18,13 +34,12 @@ export async function POST(req: Request) {
       },
     });
 
-    // resetCache();
+    // Сброс кэша
+    resetCache(STANDINGS_CACHE_KEY);
 
     return new Response(
       JSON.stringify({ message: "Match recorded successfully" }),
-      {
-        status: 200,
-      }
+      { status: 200 }
     );
   } catch (error) {
     console.error("Post Match Error:", error);
@@ -42,11 +57,10 @@ export async function GET() {
         player2: true,
       },
     });
-    return new Response(JSON.stringify(matches), {
-      status: 200,
-    });
+
+    return new Response(JSON.stringify(matches), { status: 200 });
   } catch (error) {
-    console.error("Get Match Error:", error);
+    console.error("Get Matches Error:", error);
     return new Response(JSON.stringify({ error: "Error fetching matches" }), {
       status: 500,
     });
