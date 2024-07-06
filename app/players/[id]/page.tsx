@@ -26,7 +26,9 @@ async function fetchPlayerData(id: string) {
     return null;
   }
 
-  const matches = [...player.matches1, ...player.matches2];
+  const matches = [...player.matches1, ...player.matches2].sort(
+    (a, b) => a.date.getTime() - b.date.getTime()
+  );
 
   const matchDetails = new Array(10).fill(0).map((_, roundIndex) => ({
     round: roundIndex + 1,

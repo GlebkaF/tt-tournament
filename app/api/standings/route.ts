@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export async function GET(req: NextRequest) {
   const cacheTTL = 10 * 60 * 1000; // 10 minute
 
-  const cache = getCache(STANDINGS_CACHE_KEY);
+  const cache = getCache(STANDINGS_CACHE_KEY, cacheTTL);
 
   if (cache) {
     return NextResponse.json(cache);
@@ -22,7 +22,9 @@ export async function GET(req: NextRequest) {
     });
 
     const standings = players.map((player) => {
-      const matches = [...player.matches1, ...player.matches2];
+      const matches = [...player.matches1, ...player.matches2].sort(
+        (a, b) => a.date.getTime() - b.date.getTime()
+      );
       const totalPoints = matches.reduce((total, match) => {
         if (match.player1Id === player.id) {
           return (
