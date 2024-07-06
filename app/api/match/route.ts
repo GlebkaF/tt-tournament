@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { resetCache } from "../standings/route";
 
 const prisma = new PrismaClient();
 
@@ -16,6 +17,9 @@ export async function POST(req: Request) {
         date: new Date(date),
       },
     });
+
+    resetCache();
+
     return new Response(
       JSON.stringify({ message: "Match recorded successfully" }),
       {

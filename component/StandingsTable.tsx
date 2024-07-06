@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { Table, Typography } from "antd";
 import { useMediaQuery } from "react-responsive";
 
@@ -9,6 +9,7 @@ interface StandingsTableProps {
   standings: {
     position: number;
     player: string;
+    playerId: number; // Added playerId to link to player profile
     rounds: number[];
     totalPoints: number;
     gamesPlayed: number;
@@ -31,6 +32,14 @@ const generateColumns = (roundsCount: number, isMobile: boolean) => {
         dataIndex: "player",
         key: "player",
         align: "left" as const,
+        render: (text: any, record: any) => (
+          <Link
+            style={{ padding: "10px", textDecoration: "underline" }}
+            href={`/players/${record.playerId}`}
+          >
+            {text}
+          </Link>
+        ),
       },
       {
         title: "Итого",
@@ -61,6 +70,14 @@ const generateColumns = (roundsCount: number, isMobile: boolean) => {
       dataIndex: "player",
       key: "player",
       align: "left" as const,
+      render: (text: any, record: any) => (
+        <Link
+          style={{ padding: "10px", textDecoration: "underline" }}
+          href={`/players/${record.playerId}`}
+        >
+          {text}
+        </Link>
+      ),
     },
     ...roundsColumns,
     {
@@ -93,6 +110,7 @@ const StandingsTable: React.FC<StandingsTableProps> = ({ standings }) => {
     key: index + 1,
     position: standing.position,
     player: standing.player,
+    playerId: standing.playerId, // Include playerId in the dataSource
     ...standing.rounds.reduce(
       (obj, round, i) => ({
         ...obj,

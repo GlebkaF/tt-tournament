@@ -21,7 +21,7 @@ const StandingsPage: NextPage = () => {
   }, []);
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div>
       {loading ? (
         <Spin size="large" style={{ marginTop: 32 }} />
       ) : (

@@ -5,6 +5,11 @@ const prisma = new PrismaClient();
 let cache: any = null;
 let cacheTimestamp: number = 0;
 
+export function resetCache() {
+  cache = null;
+  cacheTimestamp = 0;
+}
+
 export async function GET(req: NextRequest) {
   const cacheTTL = 60 * 1000; // 1 minute
 
@@ -75,6 +80,7 @@ export async function GET(req: NextRequest) {
       return {
         position: 0, // Placeholder; will sort and update later
         player: `${player.lastName} ${player.firstName}`,
+        playerId: player.id,
         rounds,
         totalPoints,
         gamesPlayed,
@@ -88,7 +94,7 @@ export async function GET(req: NextRequest) {
       .forEach((player, index) => {
         player.position = index + 1;
         player.league =
-          index < 8 ? "Золото" : index < 16 ? "Серебро" : "Бронза";
+          index < 8 ? "🥇" : index < 16 ? "🥈" : index < 24 ? "🥉" : "";
       });
 
     // Update cache
