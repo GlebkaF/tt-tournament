@@ -38,7 +38,7 @@ const groupMatchesByDate = (matches: Match[]) => {
 };
 
 const getMatchResultStyle = (
-  result: MatchResult,
+  _: any,
   isWinner: boolean,
   isDraw: boolean
 ): React.CSSProperties => {
