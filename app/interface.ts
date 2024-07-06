@@ -10,7 +10,8 @@ export interface Match {
   player2: Player;
   player1Score: number;
   player2Score: number;
-  result: string;
+  result: string; // MatchResult
+  date: string;
 }
 
 export enum MatchResult {
