@@ -5,10 +5,10 @@ const prisma = new PrismaClient();
 let cache: any = null;
 let cacheTimestamp: number = 0;
 
-export function resetCache() {
-  cache = null;
-  cacheTimestamp = 0;
-}
+// export function resetCache() {
+//   cache = null;
+//   cacheTimestamp = 0;
+// }
 
 export async function GET(req: NextRequest) {
   const cacheTTL = 60 * 1000; // 1 minute
