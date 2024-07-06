@@ -39,4 +39,12 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ### запуск команд
 
+#### Произвольная команда
+
 npx dotenv -e .env.local -- npx tsx commands/seed-players.ts
+
+#### Создать миграцию
+
+(!) Добавь DATABASE_URL в .env.local
+
+npx dotenv -e .env.local -- npx prisma migrate dev --name

@@ -8,7 +8,28 @@ generator client {
 }
 
 model User {
-  id        Int    @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   firstName String
   lastName  String
+  matches1  Match[] @relation("Player1")
+  matches2  Match[] @relation("Player2")
+}
+
+model Match {
+  id           Int         @id @default(autoincrement())
+  player1Id    Int
+  player2Id    Int
+  player1Score Int
+  player2Score Int
+  result       MatchResult
+  date         DateTime    @default(now())
+
+  player1 User @relation("Player1", fields: [player1Id], references: [id])
+  player2 User @relation("Player2", fields: [player2Id], references: [id])
+}
+
+enum MatchResult {
+  PLAYER1_WIN
+  PLAYER2_WIN
+  DRAW
 }
