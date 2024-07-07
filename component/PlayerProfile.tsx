@@ -1,6 +1,7 @@
 "use client";
 
 import { Typography, List, Card } from "antd";
+import React from "react";
 
 const { Title, Text } = Typography;
 
@@ -34,16 +35,39 @@ const getMatchResultStyle = (result: string): React.CSSProperties => {
   }
 };
 
+const calculateStatistics = (matchDetails: MatchDetail[]) => {
+  let wins = 0;
+  let draws = 0;
+  let losses = 0;
+
+  matchDetails.forEach((match) => {
+    if (match.result === "PLAYER1_WIN") wins += 1;
+    else if (match.result === "PLAYER2_WIN") losses += 1;
+    else if (match.result === "DRAW") draws += 1;
+  });
+
+  return { wins, draws, losses };
+};
+
 const PlayerProfile: React.FC<PlayerProfileProps> = ({
   player,
   matchDetails,
 }) => {
+  const allMatches = matchDetails.flatMap((round) => round.matches);
+  const { wins, draws, losses } = calculateStatistics(allMatches);
+
   return (
     <div>
       <Title level={2}>Профиль игрока</Title>
       <Card>
         <Title level={3}>{player.name}</Title>
         <Text>Сыграно матчей: {player.gamesPlayed}</Text>
+        <br />
+        <Text>Побед: {wins}</Text>
+        <br />
+        <Text>Ничьих: {draws}</Text>
+        <br />
+        <Text>Поражений: {losses}</Text>
       </Card>
       <Title level={3} style={{ marginTop: "32px" }}>
         Матчи по турам
