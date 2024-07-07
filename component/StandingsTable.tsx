@@ -33,7 +33,7 @@ const generateColumns = (roundsCount: number, isMobile: boolean) => {
         ),
       },
       {
-        title: "Участник",
+        title: "Имя",
         dataIndex: "player",
         key: "player",
         align: "left" as const,
@@ -47,7 +47,13 @@ const generateColumns = (roundsCount: number, isMobile: boolean) => {
         ),
       },
       {
-        title: "Итого",
+        title: "Игры",
+        dataIndex: "gamesPlayed",
+        key: "gamesPlayed",
+        align: "center" as const,
+      },
+      {
+        title: "Очки",
         dataIndex: "totalPoints",
         key: "totalPoints",
         align: "center" as const,
@@ -76,7 +82,7 @@ const generateColumns = (roundsCount: number, isMobile: boolean) => {
       ),
     },
     {
-      title: "Участник",
+      title: "Имя",
       dataIndex: "player",
       key: "player",
       align: "left" as const,
@@ -91,13 +97,13 @@ const generateColumns = (roundsCount: number, isMobile: boolean) => {
     },
     ...roundsColumns,
     {
-      title: "Итого",
+      title: "Очки",
       dataIndex: "totalPoints",
       key: "totalPoints",
       align: "center" as const,
     },
     {
-      title: "Сыграно игр",
+      title: "Игры",
       dataIndex: "gamesPlayed",
       key: "gamesPlayed",
       align: "center" as const,
