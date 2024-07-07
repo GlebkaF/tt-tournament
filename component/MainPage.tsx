@@ -9,7 +9,10 @@ const MainPage: React.FC = () => {
   return (
     <div style={{ padding: "32px" }}>
       <Title level={2} style={{ textAlign: "center", marginBottom: "32px" }}>
-        Администрирование турнира
+        Турнир по настольному тенису
+      </Title>
+      <Title level={3} style={{ textAlign: "center", marginBottom: "32px" }}>
+        Европейский берег 2024
       </Title>
       <Row gutter={[16, 16]}>
         <Col xs={24} md={12} lg={8}>
