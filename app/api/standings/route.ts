@@ -1,18 +1,9 @@
-import { STANDINGS_CACHE_KEY, getCache, setCache } from "@/helpers/cache";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
-  const cacheTTL = 1 * 60 * 1000;
-
-  const cache = getCache(STANDINGS_CACHE_KEY, cacheTTL);
-
-  if (cache) {
-    return NextResponse.json(cache);
-  }
-
   try {
     const players = await prisma.user.findMany({
       include: {
@@ -94,8 +85,6 @@ export async function GET(req: NextRequest) {
         player.league =
           index < 8 ? "🥇" : index < 16 ? "🥈" : index < 24 ? "🥉" : "";
       });
-    // Update cache
-    setCache(STANDINGS_CACHE_KEY, standings);
 
     return NextResponse.json(standings);
   } catch (error) {
