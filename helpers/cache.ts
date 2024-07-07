@@ -1,11 +1,8 @@
-import exp from "constants";
-
 const cache = {};
-let cacheTimestamp: number = 0;
 
 export function resetCache(key: string) {
   // @ts-expect-error
-  cache[key] = undefined;
+  delete cache[key];
 }
 
 export function getCache(key: string, ttl = 60 * 1000) {

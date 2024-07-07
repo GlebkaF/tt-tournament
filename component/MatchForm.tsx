@@ -85,7 +85,6 @@ const MatchForm: React.FC<MatchFormProps> = ({
       message.success("Match recorded successfully!");
       onSubmit(); // Refresh matches after submission
       setPlayer2Id(null);
-      setResult(MatchResult.draw);
     } else {
       message.error("There was an error recording the match.");
     }
@@ -165,7 +164,7 @@ const MatchForm: React.FC<MatchFormProps> = ({
             block
             disabled={!player1Id || !player2Id}
           >
-            Победил {getPlayerName(player1Id)}
+            Победил(а) {getPlayerName(player1Id)}
           </Button>
           <Button
             type={result === MatchResult.draw ? "primary" : "default"}
@@ -183,7 +182,7 @@ const MatchForm: React.FC<MatchFormProps> = ({
             block
             disabled={!player1Id || !player2Id}
           >
-            Победил {getPlayerName(player2Id)}
+            Победил(а) {getPlayerName(player2Id)}
           </Button>
         </div>
       </Form.Item>

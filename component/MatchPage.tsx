@@ -10,6 +10,14 @@ const MatchPage = ({ players }: { players: Player[] }) => {
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [showForm, setShowForm] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (window.location.search === "?showForm") {
+      setShowForm(true);
+    }
+  }, []);
+
   const refreshMatches = async () => {
     const res = await fetch("/api/match");
     const updatedMatches: Match[] = await res.json();
@@ -23,11 +31,13 @@ const MatchPage = ({ players }: { players: Player[] }) => {
 
   return (
     <div className="container mx-auto px-4">
-      <MatchForm
-        players={players}
-        playedMatches={matches}
-        onSubmit={refreshMatches}
-      />
+      {showForm && (
+        <MatchForm
+          players={players}
+          playedMatches={matches}
+          onSubmit={refreshMatches}
+        />
+      )}
       {loading ? (
         <Spin size="large" className="mt-8" />
       ) : (
