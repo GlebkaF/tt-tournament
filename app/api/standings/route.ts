@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
-  const cacheTTL = 10 * 60 * 1000; // 10 minute
+  const cacheTTL = 1 * 60 * 1000;
 
   const cache = getCache(STANDINGS_CACHE_KEY, cacheTTL);
 
