@@ -93,7 +93,10 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
           placeholder="Выберите игроков"
           onChange={handlePlayerSelect}
           filterOption={(input, option) =>
-            option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            (option?.children
+              ?.toString()
+              ?.toLowerCase()
+              ?.indexOf(input.toLowerCase()) ?? -1) >= 0
           }
           showSearch
         >
