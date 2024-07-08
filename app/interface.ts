@@ -19,3 +19,8 @@ export enum MatchResult {
   player1Win = "PLAYER1_WIN",
   player2Win = "PLAYER2_WIN",
 }
+
+export interface Pair {
+  player1: Player;
+  player2: Player;
+}
