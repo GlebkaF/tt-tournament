@@ -37,32 +37,26 @@ async function generatePossiblePairs(playerIds: number[]) {
         pairs.push({
           player1Id,
           player2Id,
+          player1Matches: matches.filter(
+            (match) =>
+              match.player1Id === player1Id || match.player2Id === player1Id
+          ).length,
+          player2Matches: matches.filter(
+            (match) =>
+              match.player1Id === player2Id || match.player2Id === player2Id
+          ).length,
         });
       }
     }
   }
 
-  // Сортируем пары по количеству матчей, в которых участвовали игроки
+  // Сортируем пары по суммарному количеству игр
   pairs.sort((a, b) => {
-    const player1ACount = matches.filter(
-      (match) =>
-        match.player1Id === a.player1Id || match.player2Id === a.player1Id
-    ).length;
-    const player2ACount = matches.filter(
-      (match) =>
-        match.player1Id === a.player2Id || match.player2Id === a.player2Id
-    ).length;
-    const player1BCount = matches.filter(
-      (match) =>
-        match.player1Id === b.player1Id || match.player2Id === b.player1Id
-    ).length;
-    const player2BCount = matches.filter(
-      (match) =>
-        match.player1Id === b.player2Id || match.player2Id === b.player2Id
-    ).length;
-    const totalMatchesA = player1ACount + player2ACount;
-    const totalMatchesB = player1BCount + player2BCount;
-    return totalMatchesA - totalMatchesB;
+    return (
+      a.player1Matches +
+      a.player2Matches -
+      (b.player1Matches + b.player2Matches)
+    );
   });
 
   return pairs;

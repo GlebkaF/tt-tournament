@@ -11,14 +11,17 @@ interface MatchFormProps {
   players: Player[];
   playedMatches: Match[];
   onSubmit: () => void;
+  player1Id?: number;
+  player2Id?: number;
 }
 
 const MatchForm: React.FC<MatchFormProps> = ({
   players,
   playedMatches,
   onSubmit,
+  player1Id: initialPlayer1Id,
+  player2Id: initialPlayer2Id,
 }) => {
-  // Sort players by last name
   const sortedPlayers = useMemo(() => {
     return [...players].sort((a, b) =>
       (a.lastName || "" + a.firstName || "").localeCompare(
@@ -27,8 +30,12 @@ const MatchForm: React.FC<MatchFormProps> = ({
     );
   }, [players]);
 
-  const [player1Id, setPlayer1Id] = useState<number | null>(null);
-  const [player2Id, setPlayer2Id] = useState<number | null>(null);
+  const [player1Id, setPlayer1Id] = useState<number | null>(
+    initialPlayer1Id ?? null
+  );
+  const [player2Id, setPlayer2Id] = useState<number | null>(
+    initialPlayer2Id ?? null
+  );
   const [result, setResult] = useState<MatchResult>(MatchResult.draw);
   const [matchDate, setMatchDate] = useState(dayjs());
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -50,16 +57,19 @@ const MatchForm: React.FC<MatchFormProps> = ({
   );
 
   useEffect(() => {
-    setPlayer2Id(null);
-  }, [player1Id]);
+    if (!initialPlayer2Id || player2Id !== initialPlayer2Id) {
+      setPlayer2Id(null);
+    }
+  }, [player1Id, initialPlayer2Id]);
 
   const handleSubmit = async () => {
     if (player1Id === null || player2Id === null) {
-      setErrorMessage("All fields are required.");
+      setErrorMessage("Все поля обязательны.");
       return;
     }
+
     if (player1Id === player2Id) {
-      setErrorMessage("Players must be different.");
+      setErrorMessage("Игроки должны быть разными.");
       return;
     }
 
@@ -69,6 +79,7 @@ const MatchForm: React.FC<MatchFormProps> = ({
       [MatchResult.draw]: { player1Score: 2, player2Score: 2 },
     };
     const { player1Score, player2Score } = scores[result];
+
     const res = await fetch("/api/match", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -81,12 +92,13 @@ const MatchForm: React.FC<MatchFormProps> = ({
         date: matchDate.format("YYYY-MM-DD"),
       }),
     });
+
     if (res.ok) {
-      message.success("Match recorded successfully!");
-      onSubmit(); // Refresh matches after submission
+      message.success("Результат матча успешно записан!");
+      onSubmit();
       setPlayer2Id(null);
     } else {
-      message.error("There was an error recording the match.");
+      message.error("Ошибка при записи результата матча.");
     }
   };
 
