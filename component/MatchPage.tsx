@@ -4,7 +4,10 @@ import { Match, Player } from "@/app/interface";
 import { useState, useEffect } from "react";
 import MatchForm from "./MatchForm";
 import MatchList from "./MatchList";
-import { Spin } from "antd";
+import { Typography } from "antd";
+import { Loading } from "./Loading";
+
+const { Text } = Typography;
 
 const MatchPage = ({ players }: { players: Player[] }) => {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -30,7 +33,7 @@ const MatchPage = ({ players }: { players: Player[] }) => {
   }, []);
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto">
       {showForm && (
         <MatchForm
           players={players}
@@ -38,11 +41,7 @@ const MatchPage = ({ players }: { players: Player[] }) => {
           onSubmit={refreshMatches}
         />
       )}
-      {loading ? (
-        <Spin size="large" className="mt-8" />
-      ) : (
-        <MatchList matches={matches} />
-      )}
+      {loading ? <Loading></Loading> : <MatchList matches={matches} />}
     </div>
   );
 };

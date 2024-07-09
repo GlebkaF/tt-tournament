@@ -60,7 +60,7 @@ const MatchList: React.FC<MatchListProps> = ({ matches }) => {
   const groupedMatches = groupMatchesByDate(matches);
 
   return (
-    <div style={{ marginTop: 32, padding: "0 16px" }}>
+    <div>
       <Title level={4}>Сыгранно {matches.length} матчей</Title>
       {Object.keys(groupedMatches).map((date) => (
         <Card

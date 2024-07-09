@@ -46,7 +46,9 @@ const calculateStatistics = (matchDetails: MatchDetail[]) => {
     else if (match.result === "DRAW") draws += 1;
   });
 
-  return { wins, draws, losses };
+  let score = wins * 3 + draws * 2 + losses * 1;
+
+  return { wins, draws, losses, score };
 };
 
 const PlayerProfile: React.FC<PlayerProfileProps> = ({
@@ -54,7 +56,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
   matchDetails,
 }) => {
   const allMatches = matchDetails.flatMap((round) => round.matches);
-  const { wins, draws, losses } = calculateStatistics(allMatches);
+  const { wins, draws, losses, score } = calculateStatistics(allMatches);
 
   return (
     <div>
@@ -63,11 +65,11 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
         <Title level={3}>{player.name}</Title>
         <Text>Сыграно матчей: {player.gamesPlayed}</Text>
         <br />
-        <Text>Побед: {wins}</Text>
+        <Text>
+          Побед: {wins}, Ничьих: {draws}, Поражений: {losses}
+        </Text>
         <br />
-        <Text>Ничьих: {draws}</Text>
-        <br />
-        <Text>Поражений: {losses}</Text>
+        <Text>Очков: {score}</Text>
       </Card>
       <Title level={3} style={{ marginTop: "32px" }}>
         Матчи по турам

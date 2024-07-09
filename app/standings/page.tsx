@@ -4,6 +4,7 @@ import type { NextPage } from "next";
 import { useState, useEffect } from "react";
 import { Spin } from "antd";
 import StandingsTable from "@/component/StandingsTable";
+import { Loading } from "@/component/Loading";
 
 const StandingsPage: NextPage = () => {
   const [standings, setStandings] = useState<any[]>([]);
@@ -22,11 +23,7 @@ const StandingsPage: NextPage = () => {
 
   return (
     <div>
-      {loading ? (
-        <Spin size="large" style={{ marginTop: 32 }} />
-      ) : (
-        <StandingsTable standings={standings} />
-      )}
+      {loading ? <Loading /> : <StandingsTable standings={standings} />}
     </div>
   );
 };
