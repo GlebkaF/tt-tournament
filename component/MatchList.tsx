@@ -61,7 +61,7 @@ const MatchList: React.FC<MatchListProps> = ({ matches }) => {
 
   return (
     <div style={{ marginTop: 32, padding: "0 16px" }}>
-      <Title level={4}>Match Results</Title>
+      <Title level={4}>Сыгранно {matches.length} матчей</Title>
       {Object.keys(groupedMatches).map((date) => (
         <Card
           key={date}

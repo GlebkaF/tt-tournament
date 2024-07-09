@@ -1,10 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { Button, List, Select, Spin, Modal, Empty } from "antd";
+import { Button, List, Select, Spin, Modal, Empty, Typography } from "antd";
 import { Player } from "@/app/interface";
 import MatchForm from "./MatchForm";
 
 const { Option } = Select;
+
+const { Title, Text } = Typography;
 
 interface Pair {
   player1Id: number;
@@ -85,7 +87,11 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
 
   return (
     <div className="container mx-auto px-4">
-      <h1>Schedule Matches</h1>
+      <Title level={3}>Расписание</Title>
+      <Text>
+        Отметь игроков которые пришли играть, нажми сформировать пары, вызывай
+        пары играть, заноси резульаты
+      </Text>
       <div>
         <Select
           mode="multiple"
@@ -129,7 +135,11 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
                   return (
                     <List.Item
                       actions={[
-                        <Button type="primary" onClick={() => showModal(pair)}>
+                        <Button
+                          type="primary"
+                          key="1"
+                          onClick={() => showModal(pair)}
+                        >
                           Занести результат
                         </Button>,
                       ]}
@@ -153,10 +163,18 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
                   return (
                     <List.Item
                       actions={[
-                        <Button type="default" onClick={() => fixPair(pair)}>
+                        <Button
+                          type="default"
+                          key="2"
+                          onClick={() => fixPair(pair)}
+                        >
                           Закрепить пару
                         </Button>,
-                        <Button type="primary" onClick={() => showModal(pair)}>
+                        <Button
+                          type="primary"
+                          key="3"
+                          onClick={() => showModal(pair)}
+                        >
                           Занести результат
                         </Button>,
                       ]}
