@@ -86,7 +86,15 @@ export async function GET(req: NextRequest) {
           index < 8 ? "🥇" : index < 16 ? "🥈" : index < 24 ? "🥉" : "";
       });
 
-    return NextResponse.json(standings);
+    return NextResponse.json(standings, {
+      headers: {
+        "Cache-Control":
+          "no-store, no-cache, must-revalidate, proxy-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+        "Surrogate-Control": "no-store",
+      },
+    });
   } catch (error) {
     console.error("Error fetching standings:", error);
     return NextResponse.json(
