@@ -88,11 +88,9 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(standings, {
       headers: {
-        "Cache-Control":
-          "no-store, no-cache, must-revalidate, proxy-revalidate",
-        Pragma: "no-cache",
-        Expires: "0",
-        "Surrogate-Control": "no-store",
+        "Cache-Control": "public, s-maxage=600",
+        "CDN-Cache-Control": "public, s-maxage=600",
+        "Vercel-CDN-Cache-Control": "public, s-maxage=3600",
       },
     });
   } catch (error) {
