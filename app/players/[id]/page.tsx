@@ -150,10 +150,10 @@ async function fetchPlayerData(id: string) {
       image: "/image/profile/default.jpg",
     },
     13: {
-      image: "/image/profile/default.jpg",
+      image: "/image/profile/roldug.jpg",
     },
     14: {
-      image: "/image/profile/default.jpg",
+      image: "/image/profile/аchkas.jpg",
     },
     15: {
       image: "/image/profile/rogoz.jpg",
