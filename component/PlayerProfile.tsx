@@ -1,6 +1,7 @@
 "use client";
 
-import { Typography, List, Card } from "antd";
+import { Typography, List, Card, Row, Col, Flex } from "antd";
+import Image from "next/image";
 import React from "react";
 
 const { Title, Text } = Typography;
@@ -15,6 +16,8 @@ interface PlayerProfileProps {
     id: number;
     name: string;
     gamesPlayed: number;
+    image: string;
+    facts: { title: string; description: string }[];
   };
   matchDetails: {
     round: number;
@@ -60,16 +63,43 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
 
   return (
     <div>
-      <Title level={2}>Профиль игрока</Title>
       <Card>
-        <Title level={3}>{player.name}</Title>
-        <Text>Сыграно матчей: {player.gamesPlayed}</Text>
-        <br />
-        <Text>
-          Побед: {wins}, Ничьих: {draws}, Поражений: {losses}
-        </Text>
-        <br />
-        <Text>Очков: {score}</Text>
+        <Flex wrap="wrap" gap={16}>
+          <Image
+            width={1200}
+            height={1600}
+            src={player.image}
+            style={{
+              maxHeight: "800px",
+              width: "100%",
+              maxWidth: "600px",
+              objectFit: "cover",
+            }}
+            alt="player image"
+          />
+          <div>
+            <Title level={2}>{player.name}</Title>
+            <div>
+              <Title level={4}>Летний турнир 2024</Title>
+              <Text>Сыграно матчей: {player.gamesPlayed}</Text>
+              <br />
+              <Text>
+                Побед: {wins}, Ничьих: {draws}, Поражений: {losses}
+              </Text>
+              <br />
+              <Text>Очков: {score}</Text>
+            </div>
+            <br />
+            {player.facts.map((fact, index) => (
+              <div key={index}>
+                <Title level={4}>{fact.title}</Title>
+                <Text>{fact.description}</Text>
+                <br />
+                <br />
+              </div>
+            ))}
+          </div>
+        </Flex>
       </Card>
       <Title level={3} style={{ marginTop: "32px" }}>
         Матчи по турам
@@ -89,9 +119,9 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                   title={<Text strong>{match.opponent}</Text>}
                   description={
                     match.result === "PLAYER1_WIN"
-                      ? "Победил(а)"
+                      ? "Победа"
                       : match.result === "PLAYER2_WIN"
-                      ? "Проиграл(а)"
+                      ? "Поражение"
                       : "Ничья"
                   }
                 />
