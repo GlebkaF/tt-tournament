@@ -12,7 +12,7 @@ const StandingsPage: NextPage = () => {
 
   useEffect(() => {
     const fetchStandings = async () => {
-      const res = await fetch("/api/standings");
+      const res = await fetch("/api/standings", { method: "POST" });
       const data = await res.json();
       setStandings(data);
       setLoading(false);
