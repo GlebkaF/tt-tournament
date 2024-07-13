@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Button, List, Select, Spin, Modal, Empty, Typography } from "antd";
 import { Player } from "@/app/interface";
 import MatchForm from "./MatchForm";
+import { Loading } from "./Loading";
 
 const { Option } = Select;
 
@@ -39,7 +40,7 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
         body: JSON.stringify({ playerIds: selectedPlayers }),
       });
       const response: Pair[] = await res.json();
-      setPairs(response);
+      setPairs(response.filter((pair) => !fixedPairs.includes(pair)));
       setLoadingPairs(false);
     } catch (error) {
       console.error(error);
@@ -84,6 +85,15 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
       )
     );
   };
+  const unfixPair = (pair: Pair) => {
+    setFixedPairs((prev) =>
+      prev.filter(
+        (p) =>
+          !(p.player1Id === pair.player1Id && p.player2Id === pair.player2Id)
+      )
+    );
+    generatePairs();
+  };
 
   return (
     <div className="container mx-auto px-4">
@@ -121,11 +131,12 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
           Сформировать Пары
         </Button>
         {loadingPairs ? (
-          <Spin />
+          <Loading />
         ) : (
           <>
             {fixedPairs.length > 0 && (
               <List
+                style={{ marginBottom: "16px", backgroundColor: "#52c41a32" }}
                 header={<div>Закрепленные Пары</div>}
                 bordered
                 dataSource={fixedPairs}
@@ -136,8 +147,15 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
                     <List.Item
                       actions={[
                         <Button
-                          type="primary"
+                          type="default"
                           key="1"
+                          onClick={() => unfixPair(pair)}
+                        >
+                          Открепить
+                        </Button>,
+                        <Button
+                          type="primary"
+                          key="2"
                           onClick={() => showModal(pair)}
                         >
                           Занести результат
