@@ -1,36 +1,33 @@
-"use client";
-import { Layout as AntLayout, Menu } from "antd";
-import { HomeOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { ReactNode } from "react";
-
-const { Header, Content } = AntLayout;
 
 interface LayoutProps {
   children: ReactNode;
 }
 
-const items = [
-  { key: "home", label: <Link href="/">Главная</Link>, icon: <HomeOutlined /> },
-  { key: "matches", label: <Link href="/matches">Матчи</Link> },
-  { key: "standings", label: <Link href="/standings">Таблица</Link> },
-];
-
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <AntLayout style={{ minHeight: "100vh" }}>
-      <Header
-        style={{ display: "flex", alignItems: "center", padding: "0 20px" }}
-      >
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          style={{ flex: 1, display: "flex" }}
-          items={items}
-        />
-      </Header>
-      <Content style={{ padding: "20px" }}>{children}</Content>
-    </AntLayout>
+    <div className="flex flex-col min-h-screen">
+      <header className="bg-gray-800 text-white p-4">
+        <nav className="max-w-6xl mx-auto flex justify-between items-center">
+          <div className="flex space-x-4">
+            <Link href="/" className="text-lg ">
+              Главная
+            </Link>
+            <Link href="/matches" className="text-lg">
+              Матчи
+            </Link>
+            <Link href="/standings" className="text-lg">
+              Таблица
+            </Link>
+          </div>
+        </nav>
+      </header>
+
+      <main className="flex-grow px-5">
+        <div className="max-w-6xl mx-auto">{children}</div>
+      </main>
+    </div>
   );
 };
 

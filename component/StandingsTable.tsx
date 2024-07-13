@@ -1,148 +1,67 @@
-"use client";
-import Link from "next/link";
-import { Table, Typography } from "antd";
-import { useMediaQuery } from "react-responsive";
+import { Standings } from "@/app/interface";
+import React from "react";
 
-const { Title } = Typography;
-
-interface StandingsTableProps {
-  standings: {
-    position: number;
-    player: string;
-    playerId: number; // Added playerId to link to player profile
-    rounds: number[];
-    totalPoints: number;
-    gamesPlayed: number;
-    league: string;
-  }[];
-}
-
-const generateColumns = (roundsCount: number, isMobile: boolean) => {
-  if (isMobile) {
-    return [
-      {
-        title: "Место",
-        dataIndex: "position",
-        key: "position",
-        align: "center" as const,
-        render: (text: any, record: any) => (
-          <strong>
-            {text}
-            {record.league}
-          </strong>
-        ),
-      },
-      {
-        title: "Имя",
-        dataIndex: "player",
-        key: "player",
-        align: "left" as const,
-        render: (text: any, record: any) => (
-          <Link
-            style={{ padding: "10px", textDecoration: "underline" }}
-            href={`/players/${record.playerId}`}
-          >
-            {text}
-          </Link>
-        ),
-      },
-      {
-        title: "Игры",
-        dataIndex: "gamesPlayed",
-        key: "gamesPlayed",
-        align: "center" as const,
-      },
-      {
-        title: "Очки",
-        dataIndex: "totalPoints",
-        key: "totalPoints",
-        align: "center" as const,
-      },
-    ];
-  }
-
-  const roundsColumns = Array.from({ length: roundsCount }, (_, index) => ({
-    title: (index + 1).toString(),
-    dataIndex: `round${index + 1}`,
-    key: `round${index + 1}`,
-    align: "center" as const,
-  }));
-
-  return [
-    {
-      title: "Место",
-      dataIndex: "position",
-      key: "position",
-      align: "center" as const,
-      render: (text: any, record: any) => (
-        <strong>
-          {text}
-          {record.league}
-        </strong>
-      ),
-    },
-    {
-      title: "Имя",
-      dataIndex: "player",
-      key: "player",
-      align: "left" as const,
-      render: (text: any, record: any) => (
-        <Link
-          style={{ padding: "10px", textDecoration: "underline" }}
-          href={`/players/${record.playerId}`}
-        >
-          {text}
-        </Link>
-      ),
-    },
-    ...roundsColumns,
-    {
-      title: "Очки",
-      dataIndex: "totalPoints",
-      key: "totalPoints",
-      align: "center" as const,
-    },
-    {
-      title: "Игры",
-      dataIndex: "gamesPlayed",
-      key: "gamesPlayed",
-      align: "center" as const,
-    },
-  ];
-};
-
-const StandingsTable: React.FC<StandingsTableProps> = ({ standings }) => {
-  const isMobile = useMediaQuery({ maxWidth: 767 });
-  const roundsCount = standings.length > 0 ? standings[0].rounds.length : 0;
-  const columns = generateColumns(roundsCount, isMobile);
-
-  const dataSource = standings.map((standing, index) => ({
-    key: index + 1,
-    position: standing.position,
-    player: standing.player,
-    playerId: standing.playerId, // Include playerId in the dataSource
-    ...standing.rounds.reduce(
-      (obj, round, i) => ({
-        ...obj,
-        [`round${i + 1}`]: round,
-      }),
-      {}
-    ),
-    totalPoints: standing.totalPoints,
-    gamesPlayed: standing.gamesPlayed,
-    league: standing.league,
-  }));
+const StandingsTable = ({ standings }: { standings: Standings }) => {
+  const maxRounds = 10;
 
   return (
-    <div>
-      <Title level={3}>Сводная таблица турнира</Title>
-      <Table
-        columns={columns}
-        dataSource={dataSource}
-        pagination={false}
-        bordered
-        size="middle"
-      />
+    <div className="overflow-x-auto">
+      <h2 className="text-2xl font-bold my-4">Летний турнир 2024</h2>
+      <table className="min-w-full bg-white divide-y divide-gray-200">
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="px-4 py-2 text-xs text-gray-700 text-center">
+              Место
+            </th>
+            <th className="px-4 py-2 text-xs text-gray-700 text-left">Игрок</th>
+            {Array.from({ length: maxRounds }, (_, i) => (
+              <th
+                key={i}
+                className="px-1 py-2 text-xs text-gray-700 hidden lg:table-cell text-center"
+              >
+                {i + 1}
+              </th>
+            ))}
+            <th className="px-4 py-2 text-xs text-gray-700 text-center">
+              Очки
+            </th>
+            <th className="px-4 py-2 text-xs text-gray-700 text-center">
+              Игры
+            </th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {standings.map((item, index) => (
+            <tr key={index}>
+              <td className="px-4 py-4 text-sm text-gray-700 text-center">
+                {item.position} {item.league}
+              </td>
+              <td className="px-4 py-4 text-sm text-gray-700 text-left">
+                <a
+                  href={`/players/${item.playerId}`}
+                  className="text-blue-500 underline"
+                >
+                  {item.player}
+                </a>
+              </td>
+              {Array.from({ length: maxRounds }, (_, i) => (
+                <td
+                  key={i}
+                  className="px-1 py-2 text-sm text-gray-700 hidden lg:table-cell text-center"
+                >
+                  {item.rounds[i] !== undefined ? item.rounds[i] : "-"}
+                </td>
+              ))}
+              <td className="px-4 py-4 text-sm text-gray-700 text-center">
+                {item.totalPoints}
+              </td>
+              <td className="px-4 py-4 text-sm text-gray-700 text-center">
+                {item.gamesPlayed}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

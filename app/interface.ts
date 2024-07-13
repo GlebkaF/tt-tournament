@@ -24,3 +24,15 @@ export interface Pair {
   player1: Player;
   player2: Player;
 }
+
+export interface StandingsItem {
+  position: number;
+  player: string;
+  playerId: number;
+  rounds: number[];
+  totalPoints: number;
+  gamesPlayed: number;
+  league: string;
+}
+
+export type Standings = StandingsItem[];
