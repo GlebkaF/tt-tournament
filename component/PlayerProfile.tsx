@@ -62,7 +62,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
   const { wins, draws, losses, score } = calculateStatistics(allMatches);
 
   return (
-    <div>
+    <div className="py-5">
       <Card>
         <Flex wrap="wrap" gap={16}>
           <Image

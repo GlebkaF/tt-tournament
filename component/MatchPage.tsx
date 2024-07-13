@@ -33,7 +33,7 @@ const MatchPage = ({ players }: { players: Player[] }) => {
   }, []);
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto py-5">
       {showForm && (
         <MatchForm
           players={players}
