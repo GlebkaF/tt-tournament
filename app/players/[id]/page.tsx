@@ -204,7 +204,7 @@ async function fetchPlayerData(id: string) {
       image: "/image/profile/default.jpg",
     },
     23: {
-      image: "/image/profile/default.jpg",
+      image: "/image/profile/katrenko.jpg",
     },
     24: {
       image: "/image/profile/kozurin.jpg",
@@ -222,7 +222,7 @@ async function fetchPlayerData(id: string) {
       ],
     },
     27: {
-      image: "/image/profile/default.jpg",
+      image: "/image/profile/ryzkova.jpg",
     },
     28: {
       image: "/image/profile/isaev.jpg",
@@ -238,7 +238,7 @@ async function fetchPlayerData(id: string) {
       ],
     },
     29: {
-      image: "/image/profile/default.jpg",
+      image: "/image/profile/sobolev.jpg",
     },
     30: {
       image: "/image/profile/tam-n.jpg",
@@ -271,7 +271,7 @@ async function fetchPlayerData(id: string) {
       image: "/image/profile/yugai.jpg",
     },
     35: {
-      image: "/image/profile/default.jpg",
+      image: "/image/profile/bojenov-vadim.jpg",
     },
     36: {
       image: "/image/profile/default.jpg",
