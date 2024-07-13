@@ -1,12 +1,12 @@
 import type { NextPage } from "next";
 import StandingsTable from "@/component/StandingsTable";
-import { PrismaClient } from "@prisma/client";
+import { Match, PrismaClient } from "@prisma/client";
 import { Standings } from "../interface";
 import { getCache, setCache, STANDINGS_CACHE_KEY } from "@/helpers/cache";
 
 const prisma = new PrismaClient();
 
-export async function fetchStandings(): Promise<Standings> {
+async function fetchStandings(): Promise<Standings> {
   try {
     // Получаем всех пользователей
     const users = await prisma.user.findMany();
@@ -52,11 +52,13 @@ export async function fetchStandings(): Promise<Standings> {
 
     // Обработка раундов
     playerData.forEach((player) => {
-      player.matches.sort((a, b) => a.date.getTime() - b.date.getTime());
+      player.matches.sort(
+        (a: Match, b: Match) => a.date.getTime() - b.date.getTime()
+      );
       player.rounds = new Array(10).fill(0).map((_, roundIndex) => {
         return player.matches
           .slice(roundIndex * 4, (roundIndex + 1) * 4)
-          .reduce((total, match) => {
+          .reduce((total: number, match: Match) => {
             if (match.player1Id === player.playerId) {
               return (
                 total +
