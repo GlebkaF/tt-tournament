@@ -1,5 +1,12 @@
-import { STANDINGS_CACHE_KEY, resetCache } from "@/helpers/cache";
+import {
+  STANDINGS_CACHE_KEY,
+  getCache,
+  resetCache,
+  setCache,
+} from "@/helpers/cache";
 import { PrismaClient } from "@prisma/client";
+
+const MATCHES_CACHE_KEY = "matches";
 
 const prisma = new PrismaClient();
 
@@ -36,6 +43,7 @@ export async function POST(req: Request) {
 
     // Сброс кэша
     resetCache(STANDINGS_CACHE_KEY);
+    resetCache(MATCHES_CACHE_KEY);
 
     return new Response(
       JSON.stringify({ message: "Match recorded successfully" }),
@@ -51,12 +59,23 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    const matches = await prisma.match.findMany({
-      include: {
-        player1: true,
-        player2: true,
-      },
-    });
+    console.log("matches");
+    const cahcedMatches = getCache(MATCHES_CACHE_KEY);
+
+    if (cahcedMatches) {
+      console.log("hit");
+    }
+
+    const matches = cahcedMatches
+      ? cahcedMatches
+      : await prisma.match.findMany({
+          include: {
+            player1: true,
+            player2: true,
+          },
+        });
+
+    setCache(MATCHES_CACHE_KEY, matches);
 
     return new Response(JSON.stringify(matches), { status: 200 });
   } catch (error) {
