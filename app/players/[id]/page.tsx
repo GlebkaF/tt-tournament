@@ -75,8 +75,11 @@ async function fetchPlayerData(id: string) {
       round: i / 4 + 1,
       matches: combinedMatches.slice(i, i + 4).map(({ match, opponent }) => ({
         opponent: opponent
-          ? `${opponent.lastName} ${opponent.firstName}`
-          : "Неизвестный игрок",
+          ? {
+              id: opponent.id,
+              name: `${opponent.lastName} ${opponent.firstName}`,
+            }
+          : null,
         result:
           match.date <= new Date()
             ? match.player1Id === playerId

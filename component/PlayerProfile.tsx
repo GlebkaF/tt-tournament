@@ -1,13 +1,14 @@
 "use client";
-
-import { Typography, List, Card, Row, Col, Flex } from "antd";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
-const { Title, Text } = Typography;
-
 interface MatchDetail {
-  opponent: string;
+  opponent: {
+    name: string;
+    id: number;
+  };
+
   result: string;
 }
 
@@ -25,16 +26,16 @@ interface PlayerProfileProps {
   }[];
 }
 
-const getMatchResultStyle = (result: string): React.CSSProperties => {
+const getMatchResultStyle = (result: string): string => {
   switch (result) {
     case "PLAYER1_WIN":
-      return { backgroundColor: "#f6ffed", color: "#52c41a" }; // Green for win
+      return "bg-green-100 text-green-500"; // Green for win
     case "PLAYER2_WIN":
-      return { backgroundColor: "#fff1f0", color: "#f5222d" }; // Red for loss
+      return "bg-red-100 text-red-500"; // Red for loss
     case "DRAW":
-      return { backgroundColor: "#fffbe6", color: "#faad14" }; // Yellow for draw
+      return "bg-yellow-100 text-yellow-500"; // Yellow for draw
     default:
-      return {};
+      return "";
   }
 };
 
@@ -52,7 +53,6 @@ const calculateStatistics = (matchDetails: MatchDetail[]) => {
   });
 
   let score = wins * 3 + draws * 2 + losses * 1;
-
   return { wins, draws, losses, score, tbd };
 };
 
@@ -62,80 +62,113 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
 }) => {
   const allMatches = matchDetails.flatMap((round) => round.matches);
   const { wins, draws, losses, score, tbd } = calculateStatistics(allMatches);
+  const totalGames = wins + draws + losses + tbd; // Общее количество игр включает оставшиеся игры
+
+  console.log(matchDetails);
 
   return (
-    <div className="py-5">
-      <Card>
-        <Flex wrap="wrap" gap={16}>
-          <Image
-            width={1200}
-            height={1600}
-            src={player.image}
-            style={{
-              maxHeight: "800px",
-              width: "100%",
-              maxWidth: "600px",
-              objectFit: "cover",
-            }}
-            alt="player image"
-          />
-          <div>
-            <Title level={2}>{player.name}</Title>
-            <div>
-              <Title level={4}>Летний турнир 2024</Title>
-              <Text>Сыграно матчей: {player.gamesPlayed}</Text>
-              <br />
-              <Text>
-                Побед: {wins}, Ничьих: {draws}, Поражений: {losses}
-              </Text>
-              <br />
-              <Text>Очков: {score}</Text>
-              <br />
-              <Text>Осталось игр: {tbd}</Text>
+    <div className="py-5 space-y-8">
+      {/* Player Info */}
+      <div className="flex flex-col md:flex-row items-start space-y-4 md:space-y-0 md:space-x-4">
+        <Image
+          width={1200}
+          height={1600}
+          src={player.image}
+          className="w-full max-h-144 md:max-h-[36rem] md:max-w-sm object-cover rounded-lg"
+          alt="player image"
+        />
+        <div className="w-full">
+          <h2 className="text-3xl font-bold">{player.name}</h2>
+          <div className="mt-4 space-y-4">
+            <h4 className="text-xl font-semibold">Летний турнир 2024</h4>
+
+            <div className="flex justify-between mt-4">
+              <p className="text-gray-700">
+                Сыграно матчей: {player.gamesPlayed}
+              </p>
+              <p className="text-gray-700">Очков: {score}</p>
             </div>
-            <br />
+
+            <div className="w-full h-6 bg-gray-200 rounded-full overflow-hidden mt-2 relative">
+              <div
+                className="h-full bg-green-500 flex items-center justify-center"
+                style={{ width: `${(wins / totalGames) * 100}%` }}
+              >
+                <span className="text-white text-sm">{wins}</span>
+              </div>
+              <div
+                className="h-full bg-yellow-500 absolute top-0 left-0 flex items-center justify-center"
+                style={{
+                  width: `${(draws / totalGames) * 100}%`,
+                  left: `${(wins / totalGames) * 100}%`,
+                }}
+              >
+                <span className="text-white text-sm">{draws}</span>
+              </div>
+              <div
+                className="h-full bg-red-500 absolute top-0 left-0 flex items-center justify-center"
+                style={{
+                  width: `${(losses / totalGames) * 100}%`,
+                  left: `${((wins + draws) / totalGames) * 100}%`,
+                }}
+              >
+                <span className="text-white text-sm">{losses}</span>
+              </div>
+              <div
+                className="h-full bg-gray-400 absolute top-0 left-0 flex items-center justify-center"
+                style={{
+                  width: `${(tbd / totalGames) * 100}%`,
+                  left: `${((wins + draws + losses) / totalGames) * 100}%`,
+                }}
+              >
+                <span className="text-white text-sm">{tbd}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 space-y-4">
             {player.facts.map((fact, index) => (
               <div key={index}>
-                <Title level={4}>{fact.title}</Title>
-                <Text>{fact.description}</Text>
-                <br />
-                <br />
+                <h4 className="text-lg font-semibold">{fact.title}</h4>
+                <p className="text-gray-700">{fact.description}</p>
               </div>
             ))}
           </div>
-        </Flex>
-      </Card>
-      <Title level={3} style={{ marginTop: "32px" }}>
-        Матчи по турам
-      </Title>
-      {matchDetails.map((round) => (
-        <Card
-          key={round.round}
-          title={`Тур ${round.round}`}
-          style={{ marginBottom: "16px" }}
-        >
-          <List
-            itemLayout="horizontal"
-            dataSource={round.matches}
-            renderItem={(match) => (
-              <List.Item style={getMatchResultStyle(match.result)}>
-                <List.Item.Meta
-                  title={<Text strong>{match.opponent}</Text>}
-                  description={
-                    match.result === "PLAYER1_WIN"
+        </div>
+      </div>
+
+      {/* Matches by Rounds */}
+      <div>
+        <h3 className="text-2xl font-bold mb-4">Матчи по турам</h3>
+        {matchDetails.map((round) => (
+          <div key={round.round} className="mb-8">
+            <h4 className="text-xl font-semibold mb-2">Тур {round.round}</h4>
+            <ul className="space-y-2">
+              {round.matches.map((match, index) => (
+                <li
+                  key={index}
+                  className={`flex justify-between items-center py-2 px-4 rounded ${getMatchResultStyle(
+                    match.result
+                  )}`}
+                >
+                  <Link href={`/players/${match.opponent.id}`}>
+                    {match.opponent.name}
+                  </Link>
+                  <span>
+                    {match.result === "PLAYER1_WIN"
                       ? "Победа"
                       : match.result === "PLAYER2_WIN"
                       ? "Поражение"
                       : match.result === "DRAW"
                       ? "Ничья"
-                      : "Не сыграно"
-                  }
-                />
-              </List.Item>
-            )}
-          />
-        </Card>
-      ))}
+                      : "Не сыграно"}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
