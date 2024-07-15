@@ -59,12 +59,7 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    console.log("matches");
     const cahcedMatches = getCache(MATCHES_CACHE_KEY);
-
-    if (cahcedMatches) {
-      console.log("hit");
-    }
 
     const matches = cahcedMatches
       ? cahcedMatches

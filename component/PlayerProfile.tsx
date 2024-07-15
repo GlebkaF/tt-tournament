@@ -64,8 +64,6 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
   const { wins, draws, losses, score, tbd } = calculateStatistics(allMatches);
   const totalGames = wins + draws + losses + tbd; // Общее количество игр включает оставшиеся игры
 
-  console.log(matchDetails);
-
   return (
     <div className="py-5 space-y-8">
       {/* Player Info */}
