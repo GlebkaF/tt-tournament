@@ -42,16 +42,18 @@ const calculateStatistics = (matchDetails: MatchDetail[]) => {
   let wins = 0;
   let draws = 0;
   let losses = 0;
+  let tbd = 0;
 
   matchDetails.forEach((match) => {
     if (match.result === "PLAYER1_WIN") wins += 1;
     else if (match.result === "PLAYER2_WIN") losses += 1;
     else if (match.result === "DRAW") draws += 1;
+    else if (match.result === "TBD") tbd += 1;
   });
 
   let score = wins * 3 + draws * 2 + losses * 1;
 
-  return { wins, draws, losses, score };
+  return { wins, draws, losses, score, tbd };
 };
 
 const PlayerProfile: React.FC<PlayerProfileProps> = ({
@@ -59,7 +61,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
   matchDetails,
 }) => {
   const allMatches = matchDetails.flatMap((round) => round.matches);
-  const { wins, draws, losses, score } = calculateStatistics(allMatches);
+  const { wins, draws, losses, score, tbd } = calculateStatistics(allMatches);
 
   return (
     <div className="py-5">
@@ -88,6 +90,8 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
               </Text>
               <br />
               <Text>Очков: {score}</Text>
+              <br />
+              <Text>Осталось игр: {tbd}</Text>
             </div>
             <br />
             {player.facts.map((fact, index) => (
@@ -122,7 +126,9 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                       ? "Победа"
                       : match.result === "PLAYER2_WIN"
                       ? "Поражение"
-                      : "Ничья"
+                      : match.result === "DRAW"
+                      ? "Ничья"
+                      : "Не сыграно"
                   }
                 />
               </List.Item>
