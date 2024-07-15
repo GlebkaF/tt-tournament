@@ -92,7 +92,12 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                 className="h-full bg-green-500 flex items-center justify-center"
                 style={{ width: `${(wins / totalGames) * 100}%` }}
               >
-                <span className="text-white text-sm">{wins}</span>
+                <span
+                  className="text-white text-sm"
+                  style={{ width: `${(wins / totalGames) * 100}%` }}
+                >
+                  {wins}
+                </span>
               </div>
               <div
                 className="h-full bg-yellow-500 absolute top-0 left-0 flex items-center justify-center"
@@ -101,7 +106,14 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                   left: `${(wins / totalGames) * 100}%`,
                 }}
               >
-                <span className="text-white text-sm">{draws}</span>
+                <span
+                  className="text-white text-sm"
+                  style={{
+                    width: `${(draws / totalGames) * 100}%`,
+                  }}
+                >
+                  {draws}
+                </span>
               </div>
               <div
                 className="h-full bg-red-500 absolute top-0 left-0 flex items-center justify-center"
@@ -110,7 +122,14 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                   left: `${((wins + draws) / totalGames) * 100}%`,
                 }}
               >
-                <span className="text-white text-sm">{losses}</span>
+                <span
+                  className="text-white text-sm"
+                  style={{
+                    width: `${(losses / totalGames) * 100}%`,
+                  }}
+                >
+                  {losses}
+                </span>
               </div>
               <div
                 className="h-full bg-gray-400 absolute top-0 left-0 flex items-center justify-center"
@@ -119,7 +138,14 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                   left: `${((wins + draws + losses) / totalGames) * 100}%`,
                 }}
               >
-                <span className="text-white text-sm">{tbd}</span>
+                <span
+                  className="text-white text-sm"
+                  style={{
+                    width: `${(tbd / totalGames) * 100}%`,
+                  }}
+                >
+                  {tbd}
+                </span>
               </div>
             </div>
           </div>
