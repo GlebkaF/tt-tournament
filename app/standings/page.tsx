@@ -111,3 +111,5 @@ const StandingsPage: NextPage = async () => {
 };
 
 export default StandingsPage;
+
+export const fetchCache = "force-no-store";
