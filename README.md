@@ -48,3 +48,10 @@ npx dotenv -e .env.local -- npx tsx commands/seed-players.ts
 (!) Добавь DATABASE_URL в .env.local
 
 npx dotenv -e .env.local -- npx prisma migrate dev --name
+
+#### Удалить юзера
+
+```
+delete from verceldb.public."Match" where "player2Id" = ? or "player1Id" = ?
+delete from verceldb.public."User" where id = ?
+```
