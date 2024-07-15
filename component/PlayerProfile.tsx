@@ -161,7 +161,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
         </div>
       </div>
 
-      {/* Matches by Rounds */}
+      {/* Matches by !Rounds  */}
       <div>
         <h3 className="text-2xl font-bold mb-4">Матчи по турам</h3>
         {matchDetails.map((round) => (
