@@ -79,7 +79,10 @@ async function fetchPlayerData(id: string) {
               id: opponent.id,
               name: `${opponent.lastName} ${opponent.firstName}`,
             }
-          : null,
+          : {
+              id: 0,
+              name: "Неизвестный",
+            },
         result:
           match.date <= new Date()
             ? match.player1Id === playerId
