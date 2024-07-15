@@ -2,7 +2,7 @@ import { Standings } from "@/app/interface";
 import React from "react";
 
 const StandingsTable = ({ standings }: { standings: Standings }) => {
-  const maxRounds = 10;
+  const maxRounds = 9;
 
   return (
     <div className="overflow-x-auto">
