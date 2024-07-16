@@ -2,7 +2,37 @@ import { Standings } from "@/app/interface";
 import React from "react";
 
 const StandingsTable = ({ standings }: { standings: Standings }) => {
-  const maxRounds = 9;
+  const roundGames = 4;
+  const maxRounds = Math.ceil((standings.length - 1) / roundGames);
+
+  const predict = standings
+    .map((item) => {
+      return {
+        avgScore: Math.round(100 * (item.totalPoints / item.gamesPlayed)) / 100,
+        playerId: item.playerId,
+        score: Math.round(
+          (item.totalPoints / item.gamesPlayed) * standings.length - 1
+        ),
+      };
+    })
+    .sort((a, b) => b.score - a.score)
+    .reduce(
+      (
+        acc: {
+          [key: number]: { score: number; position: number; avgScore: number };
+        },
+        item,
+        index
+      ) => {
+        acc[item.playerId] = {
+          avgScore: item.avgScore,
+          score: item.score,
+          position: index + 1,
+        };
+        return acc;
+      },
+      {}
+    );
 
   return (
     <div className="overflow-x-auto">
@@ -27,6 +57,9 @@ const StandingsTable = ({ standings }: { standings: Standings }) => {
             </th>
             <th className="px-4 py-2 text-xs text-gray-700 text-center">
               Игры
+            </th>
+            <th className="px-4 py-2 text-xs text-gray-700 hidden lg:table-cell text-center">
+              Среднее очков
             </th>
           </tr>
         </thead>
@@ -57,6 +90,21 @@ const StandingsTable = ({ standings }: { standings: Standings }) => {
               </td>
               <td className="px-4 py-4 text-sm text-gray-700 text-center">
                 {item.gamesPlayed}
+              </td>
+              <td className="px-4 py-4 text-sm text-gray-700 text-center hidden lg:table-cell  relative group">
+                <div className="group-hover:block">
+                  {predict[item.playerId].avgScore}
+                </div>
+                <div className="hidden group-hover:block absolute bottom-full mb-2 bg-black text-white text-xs rounded py-1 px-2">
+                  <div>
+                    Прогноз после {standings.length - 1} игр:
+                    <br />
+                    {predict[item.playerId].position} место
+                    <br /> {predict[item.playerId].score} очков
+                  </div>
+
+                  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-0 h-0 w-0 border border-transparent border-t-black"></div>
+                </div>
               </td>
             </tr>
           ))}
