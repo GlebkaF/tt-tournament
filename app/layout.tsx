@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Suspense } from 'react';
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Layout from "@/component/Layout";
-import { WebAnalitics } from "@/component/WebAnalitics";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,10 +19,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className={inter.className}>
-        <Layout>{children}</Layout>
-        <Suspense fallback={<></>}>
-            <WebAnalitics />
-        </Suspense>
+        <Layout>{children}</Layout>       
       </body>
     </html>
   );
