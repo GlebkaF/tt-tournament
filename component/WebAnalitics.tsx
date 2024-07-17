@@ -8,6 +8,12 @@ export function WebAnalitics() {
   const pathName = usePathname();
   const searchParams = useSearchParams();
   useEffect(() => {
+    const ym =
+      // @ts-expect-error
+      window.ym ?? // @ts-expect-error
+      ((...args) => {
+        console.warn("ym не загружена", args);
+      });
     ym(97857603, "hit", window.location.href);
   }, [pathName, searchParams]);
   return (
@@ -27,8 +33,4 @@ export function WebAnalitics() {
       `}
     </Script>
   );
-}
-
-function ym(arg0: number, arg1: string, href: string) {
-    throw new Error("Function not implemented.");
 }
