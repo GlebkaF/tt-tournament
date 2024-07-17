@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from 'react';
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Layout from "@/component/Layout";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { WebAnalitics } from "@/component/WebAnalitics";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,8 +22,9 @@ export default function RootLayout({
     <html lang="ru">
       <body className={inter.className}>
         <Layout>{children}</Layout>
-        <Analytics></Analytics>
-        <SpeedInsights></SpeedInsights>
+        <Suspense fallback={<></>}>
+            <WebAnalitics />
+        </Suspense>
       </body>
     </html>
   );
