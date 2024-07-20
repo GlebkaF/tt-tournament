@@ -94,7 +94,7 @@ const MatchForm: React.FC<MatchFormProps> = ({
     });
 
     if (res.ok) {
-      message.success("Результат матча успешно записан!");
+      message.success("Результат матча записан!");
       onSubmit();
       setPlayer2Id(null);
     } else {

@@ -11,6 +11,10 @@ export const metadata: Metadata = {
   title: "Настольный теннис на ЕБ",
   description:
     "Ежегодный летний турнир по настольному теннису. Европейский берег 2024",
+  verification: {
+    google: "668a84ae7e0f39be",
+    yandex: "ed05bf119b638b47",
+  },
 };
 
 export default function RootLayout({
