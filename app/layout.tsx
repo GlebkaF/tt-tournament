@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     "Ежегодный летний турнир по настольному теннису. Европейский берег 2024",
   verification: {
     google: "668a84ae7e0f39be",
-    yandex: "ed05bf119b638b47",
+    yandex: "bb5ce6944d1e3408",
   },
 };
 
