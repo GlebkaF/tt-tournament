@@ -1,6 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import PlayerProfile from "@/component/PlayerProfile";
 import { playersDB } from "./players";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Профиль игрока",
+};
 
 const prisma = new PrismaClient();
 

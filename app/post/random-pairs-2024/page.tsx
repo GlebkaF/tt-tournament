@@ -44,7 +44,7 @@ const RandomPairs2024 = () => {
       </h1>
       <div className="flex mb-8 justify-between">
         <p className="text-gray-500">Глеб Фокин</p>
-        <p className="text-gray-500">20.07.2024 16:00</p>
+        <p className="text-gray-500">20.07.2024</p>
       </div>
 
       <section className="mb-8">

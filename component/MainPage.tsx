@@ -1,45 +1,24 @@
-"use client";
-
-import { Row, Col, Card, Typography } from "antd";
 import Link from "next/link";
 
-const { Title } = Typography;
-
-const MainPage: React.FC = () => {
+const MainPage = () => {
   return (
-    <div style={{ padding: "32px" }}>
-      <Title level={2} style={{ textAlign: "center", marginBottom: "32px" }}>
-        Турнир по настольному тенису
-      </Title>
-      <Title level={3} style={{ textAlign: "center", marginBottom: "32px" }}>
-        Европейский берег 2024
-      </Title>
-      <Row gutter={[16, 16]}>
-        <Col xs={24} md={12} lg={8}>
-          <Link href="/matches">
-            <Card hoverable style={{ textAlign: "center", height: "100%" }}>
-              <Title level={4}>Матчи</Title>
-              <p>Просмотр и управление матчами турнира</p>
-            </Card>
+    <div className="container pt-8">
+      <h2 className="text-3xl font-bold mb-4">Настольной теннис</h2>
+      <h3 className="text-2xl font-semibold mb-8">Европейский берег</h3>
+      <div className="space-y-8">
+        <div>
+          <Link
+            href="/post/random-pairs-2024"
+            className="text-xl font-semibold text-blue-500 hover:underline"
+          >
+            Случайные пары 2024
           </Link>
-        </Col>
-        <Col xs={24} md={12} lg={8}>
-          <Link href="/standings">
-            <Card hoverable style={{ textAlign: "center", height: "100%" }}>
-              <Title level={4}>Таблица</Title>
-              <p>Просмотр таблицы игроков и очков</p>
-            </Card>
-          </Link>
-        </Col>
-        {/* <Col xs={24} md={12} lg={8}>
-          <Link href="/schedule">
-            <Card hoverable style={{ textAlign: "center", height: "100%" }}>
-              <Title level={4}>Расписание</Title>
-              <p>Просмотр расписания предстоящих матчей</p>
-            </Card>
-          </Link>
-        </Col> */}
-      </Row>
+          <p className="mt-2 text-gray-600">
+            Результаты второго парного турнира "Случайные пары 2024", прошедшего
+            в Новосибирске, на микрорайоне Европейский Берег 20 июля 2024 года.
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

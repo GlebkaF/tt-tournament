@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { Metadata, NextPage } from "next";
 import StandingsTable from "@/component/StandingsTable";
 import { Match, PrismaClient } from "@prisma/client";
 import { Standings } from "../interface";
@@ -99,6 +99,10 @@ async function fetchStandings(): Promise<Standings> {
     return [];
   }
 }
+
+export const metadata: Metadata = {
+  title: "Турнирная таблица. Лето 2024",
+};
 
 const StandingsPage: NextPage = async () => {
   const cachedStandings = getCache(STANDINGS_CACHE_KEY);
