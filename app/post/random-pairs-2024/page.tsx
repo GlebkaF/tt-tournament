@@ -85,7 +85,7 @@ const RandomPairs2024 = () => {
               <li>
                 2-е место:{" "}
                 <a href="/players/35" className="text-blue-500 no-underline">
-                  Вадим Баженов
+                  Вадим Боженов
                 </a>{" "}
                 +{" "}
                 <a href="/players/23" className="text-blue-500 no-underline">
@@ -107,10 +107,7 @@ const RandomPairs2024 = () => {
                 <a href="/players/5" className="text-blue-500 no-underline">
                   Дмитрий Куртеков
                 </a>{" "}
-                +{" "}
-                <a href="/players/18" className="text-blue-500 no-underline">
-                  Игорь Соловьев
-                </a>
+                + Игорь Соловьев
               </li>
             </ul>
           </div>
@@ -122,27 +119,16 @@ const RandomPairs2024 = () => {
                 <a href="/players/4" className="text-blue-500 no-underline">
                   Наталья Зайцева
                 </a>{" "}
-                +{" "}
-                <a href="/players/19" className="text-blue-500 no-underline">
-                  Алексей Егоров
-                </a>
+                + Алексей Егоров
               </li>
               <li>
-                2-е место:{" "}
-                <a href="/players/32" className="text-blue-500 no-underline">
-                  Марина Воробьева
-                </a>{" "}
-                +{" "}
+                2-е место: Марина Воробьева +{" "}
                 <a href="/players/18" className="text-blue-500 no-underline">
                   Николай Соловьев
                 </a>
               </li>
               <li>
-                3-е место:{" "}
-                <a href="/players/1" className="text-blue-500 no-underline">
-                  Виктор Иванов
-                </a>{" "}
-                +{" "}
+                3-е место: Виктор Иванов +{" "}
                 <a href="/players/24" className="text-blue-500 no-underline">
                   Кирилл Козюрин
                 </a>
