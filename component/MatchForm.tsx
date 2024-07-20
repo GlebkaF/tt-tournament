@@ -15,6 +15,8 @@ interface MatchFormProps {
   player2Id?: number;
 }
 
+const PASSWORD_LS_KEY = "auth_password";
+
 const MatchForm: React.FC<MatchFormProps> = ({
   players,
   playedMatches,
@@ -62,6 +64,19 @@ const MatchForm: React.FC<MatchFormProps> = ({
     }
   }, [player1Id, initialPlayer2Id]);
 
+  const getPasswordFromLocalStorage = () => {
+    return localStorage.getItem(PASSWORD_LS_KEY);
+  };
+
+  const requestPassword = () => {
+    const password = prompt("Введите пароль для авторизации:") ?? "";
+    if (password.match(/^[a-zA-Z0-9]+$/)) {
+      return password;
+    }
+
+    return "";
+  };
+
   const handleSubmit = async () => {
     if (player1Id === null || player2Id === null) {
       setErrorMessage("Все поля обязательны.");
@@ -80,23 +95,43 @@ const MatchForm: React.FC<MatchFormProps> = ({
     };
     const { player1Score, player2Score } = scores[result];
 
+    let password = getPasswordFromLocalStorage();
+    if (!password) {
+      password = requestPassword();
+      if (!password) {
+        message.error("Авторизация отменена.");
+        return;
+      }
+    }
+    const username = "admin";
+
+    const headers = new Headers();
+    headers.set("Content-Type", "application/json");
+    headers.set("Authorization", `Basic ${btoa(`${username}:${password}`)}`); // Измените "user" на ваш username
+
+    const requestBody = JSON.stringify({
+      player1Id,
+      player2Id,
+      player1Score,
+      player2Score,
+      result,
+      date: matchDate.format("YYYY-MM-DD"),
+    });
+
     const res = await fetch("/api/match", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        player1Id,
-        player2Id,
-        player1Score,
-        player2Score,
-        result,
-        date: matchDate.format("YYYY-MM-DD"),
-      }),
+      headers: headers,
+      body: requestBody,
     });
 
     if (res.ok) {
       message.success("Результат матча записан!");
       onSubmit();
       setPlayer2Id(null);
+      localStorage.setItem(PASSWORD_LS_KEY, password);
+    } else if (res.status === 401) {
+      message.error("Неверный пароль, попробуйте еще");
+      localStorage.removeItem(PASSWORD_LS_KEY);
     } else {
       message.error("Ошибка при записи результата матча.");
     }
