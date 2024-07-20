@@ -14,7 +14,7 @@ export const playersDB: {
     image: "/image/profile/mih-al.jpg",
     facts: [
       {
-        title: "Турнир открытие 2024 года",
+        title: "Открытие сезона 2024",
         description: "🥈 2 место",
       },
     ],
@@ -38,11 +38,15 @@ export const playersDB: {
     image: "/image/profile/zai.jpg",
     facts: [
       {
-        title: "Турнир открытие 2024 года",
+        title: "Случайные пары 2024",
         description: "🥇 1 место",
       },
       {
-        title: "Турнир Закрытие сезона 2023",
+        title: "Открытие сезона 2024",
+        description: "🥇 1 место",
+      },
+      {
+        title: "Закрытие сезона 2023",
         description: "🥇 1 место",
       },
       {
@@ -58,7 +62,7 @@ export const playersDB: {
     image: "/image/profile/kur-dim.jpg",
     facts: [
       {
-        title: "Парный турнир 2023",
+        title: "Случайные пары 2023",
         description: "🥈 2 место",
       },
     ],
@@ -77,7 +81,11 @@ export const playersDB: {
     image: "/image/profile/fokin-gleb.jpg",
     facts: [
       {
-        title: "Турнир Закрытие сезона 2023",
+        title: "Случайные пары 2024",
+        description: "🥉 3 место",
+      },
+      {
+        title: "Закрытие сезона 2023",
         description: "🥉 3 место",
       },
     ],
@@ -89,7 +97,7 @@ export const playersDB: {
     image: "/image/profile/shkret.jpg",
     facts: [
       {
-        title: "Турнир Закрытие сезона 2023",
+        title: "Закрытие сезона 2023",
         description: "🥈 2 место",
       },
       {
@@ -117,7 +125,7 @@ export const playersDB: {
         description: "Серебряная лига. 🥇 1 место",
       },
       {
-        title: "Парный турнир 2023",
+        title: "Случайные пары 2023",
         description: "🥈 2 место",
       },
     ],
@@ -171,7 +179,7 @@ export const playersDB: {
     image: "/image/profile/efim.jpg",
     facts: [
       {
-        title: "Парный турнир 2023",
+        title: "Случайные пары 2023",
         description: "🥇 1 место",
       },
     ],
@@ -183,7 +191,7 @@ export const playersDB: {
     image: "/image/profile/gerasimov.jpg",
     facts: [
       {
-        title: "Парный турнир 2023",
+        title: "Случайные пары 2023",
         description: "🥉 3 место",
       },
     ],
@@ -193,6 +201,12 @@ export const playersDB: {
     firstName: "noname",
     lastName: "lastname",
     image: "/image/profile/solov.jpg",
+    facts: [
+      {
+        title: "Случайные пары 2024",
+        description: "🥈 2 место",
+      },
+    ],
   },
   19: {
     id: 19,
@@ -206,6 +220,10 @@ export const playersDB: {
     lastName: "lastname",
     image: "/image/profile/gonduh.jpg",
     facts: [
+      {
+        title: "Случайные пары 2024",
+        description: "🥉 3 место",
+      },
       {
         title: "Летний турнир 2023",
         description: "Бронзовая лига. 🥉 2 место",
@@ -289,7 +307,7 @@ export const playersDB: {
     image: "/image/profile/tam-n.jpg",
     facts: [
       {
-        title: "Турнир открытие 2024 года",
+        title: "Открытие сезона 2024",
         description: "🥉 3 место",
       },
       {
@@ -297,7 +315,7 @@ export const playersDB: {
         description: "Серебряная лига. 🥈 2 место",
       },
       {
-        title: "Парный турнир 2023",
+        title: "Случайные пары 2023",
         description: "🥇 1 место",
       },
     ],
@@ -375,4 +393,6 @@ export const playersDB: {
     lastName: "lastname",
     image: "/image/profile/default.jpg",
   },
+  // Марина Воробьева, 2 место парный 2024,
+  // Алексей Егоров, 1 место парный 2024
 };
