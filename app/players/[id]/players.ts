@@ -33,8 +33,8 @@ export const playersDB: {
   },
   4: {
     id: 4,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Наталья",
+    lastName: "Зайцева",
     image: "/image/profile/zai.jpg",
     facts: [
       {
@@ -76,8 +76,8 @@ export const playersDB: {
   },
   7: {
     id: 7,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Глеб",
+    lastName: "Фокин",
     image: "/image/profile/fokin-gleb.jpg",
     facts: [
       {
@@ -198,8 +198,8 @@ export const playersDB: {
   },
   18: {
     id: 18,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Николай",
+    lastName: "Соловьев",
     image: "/image/profile/solov.jpg",
     facts: [
       {
@@ -216,8 +216,8 @@ export const playersDB: {
   },
   20: {
     id: 20,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Дмитрий",
+    lastName: "Гондюхин",
     image: "/image/profile/gonduh.jpg",
     facts: [
       {
@@ -395,4 +395,6 @@ export const playersDB: {
   },
   // Марина Воробьева, 2 место парный 2024,
   // Алексей Егоров, 1 место парный 2024
+  // Мирзо Бронзовая Лига 2023 1
+  //  Иванов Виктор парный 2023 3 место
 };
