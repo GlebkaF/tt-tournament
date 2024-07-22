@@ -19,6 +19,10 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "*",
         disallow: "/matches/",
       },
+      {
+        userAgent: "*",
+        disallow: "/players/",
+      },
     ],
     sitemap: "https://ebtt.ru/sitemap.xml",
   };
