@@ -10,9 +10,9 @@ export default function Home() {
 
       <div className="mb-8">
         <p className="mt-2 text-gray-600">
-          Хотите играть с нами? Напишите в&nbsp;
+          Хотите играть с нами? Присоединяйтесь в&nbsp;
           <Link
-            href="https://t.me/glebkaf"
+            href="https://t.me/+nsoeCj4lNi81Zjg6"
             className="text-xl font-semibold text-blue-500 hover:underline"
             target="_blank" // чтобы открывать ссылку в новом окне
             rel="noopener noreferrer" // для безопасности
