@@ -93,7 +93,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                 style={{ width: `${(wins / totalGames) * 100}%` }}
               >
                 <span
-                  className="text-white text-sm"
+                  className="text-white text-sm text-center"
                   style={{ width: `${(wins / totalGames) * 100}%` }}
                 >
                   {wins}
@@ -107,7 +107,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                 }}
               >
                 <span
-                  className="text-white text-sm"
+                  className="text-white text-sm text-center"
                   style={{
                     width: `${(draws / totalGames) * 100}%`,
                   }}
@@ -123,7 +123,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                 }}
               >
                 <span
-                  className="text-white text-sm"
+                  className="text-white text-sm text-center"
                   style={{
                     width: `${(losses / totalGames) * 100}%`,
                   }}
@@ -139,7 +139,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                 }}
               >
                 <span
-                  className="text-white text-sm"
+                  className="text-white text-sm text-center"
                   style={{
                     width: `${(tbd / totalGames) * 100}%`,
                   }}

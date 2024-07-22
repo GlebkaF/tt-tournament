@@ -2,24 +2,19 @@ import { PrismaClient } from "@prisma/client";
 import PlayerProfile from "@/component/PlayerProfile";
 import { playersDB } from "./players";
 import { Metadata } from "next";
+import { Summer2024Service } from "@/service/summer-2024-service";
 
 export const metadata: Metadata = {
   title: "Профиль игрока",
 };
 
 const prisma = new PrismaClient();
+const summer2024Service = new Summer2024Service(prisma);
 
 async function fetchPlayerData(id: string) {
   const playerId = parseInt(id, 10);
-  const players2 = await prisma.user.findMany();
-  const matches2 = await prisma.match.findMany({
-    where: {
-      OR: [{ player1Id: playerId }, { player2Id: playerId }],
-    },
-    orderBy: {
-      date: "asc",
-    },
-  });
+  const players2 = await summer2024Service.getPlayers();
+  const matches2 = await summer2024Service.getUserMatches(playerId);
 
   const player = players2.find((p) => p.id === playerId);
 
@@ -125,9 +120,7 @@ export default async function PlayerPage({
   params: { id: string };
 }) {
   const { id } = params;
-  console.time("playerData");
   const playerData = await fetchPlayerData(id);
-  console.timeEnd("playerData");
 
   if (!playerData) {
     return {

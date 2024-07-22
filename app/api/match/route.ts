@@ -1,13 +1,9 @@
-import {
-  STANDINGS_CACHE_KEY,
-  getCache,
-  resetCache,
-  setCache,
-} from "@/helpers/cache";
+import { Summer2024Service } from "@/service/summer-2024-service";
 import { PrismaClient } from "@prisma/client";
 
-const MATCHES_CACHE_KEY = "matches";
 const prisma = new PrismaClient();
+
+const summer2024Service = new Summer2024Service(prisma);
 
 function parseBasicAuth(
   authHeader: string
@@ -27,11 +23,6 @@ function validateCredentials(username: string, password: string) {
   const validUsername = process.env.BASIC_AUTH_USERNAME;
   const validPassword = process.env.BASIC_AUTH_PASSWORD;
 
-  console.log({
-    validUsername,
-    validPassword,
-  });
-
   return username === validUsername && password === validPassword;
 }
 
@@ -39,8 +30,6 @@ export async function POST(req: Request) {
   try {
     const authHeader = req.headers.get("Authorization") ?? "";
     const credentials = parseBasicAuth(authHeader);
-
-    console.log({ credentials });
 
     if (
       !credentials ||
@@ -54,42 +43,14 @@ export async function POST(req: Request) {
     const { player1Id, player2Id, player1Score, player2Score, result, date } =
       await req.json();
 
-    // Проверка на существование записи с аналогичными данными
-    const existingMatch = await prisma.match.findFirst({
-      where: {
-        player1Id,
-        player2Id,
-      },
-    });
-    const existingMatch2 = await prisma.match.findFirst({
-      where: {
-        player1Id: player2Id,
-        player2Id: player1Id,
-      },
-    });
-
-    if (existingMatch || existingMatch2) {
-      return new Response(JSON.stringify({ error: "Match already exists" }), {
-        status: 409,
-      });
-    }
-
-    // Создание новой записи
-    await prisma.match.create({
-      data: {
-        player1Id,
-        player2Id,
-        player1Score,
-        player2Score,
-        result,
-        date: new Date(date),
-      },
-    });
-
-    // Сброс кэша
-    resetCache(STANDINGS_CACHE_KEY);
-    resetCache(MATCHES_CACHE_KEY);
-
+    await summer2024Service.createMatch(
+      player1Id,
+      player2Id,
+      player1Score,
+      player2Score,
+      result,
+      new Date(date)
+    );
     return new Response(
       JSON.stringify({ message: "Match recorded successfully" }),
       { status: 200 }
@@ -104,17 +65,8 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    const cahcedMatches = getCache(MATCHES_CACHE_KEY);
-    const matches = cahcedMatches
-      ? cahcedMatches
-      : await prisma.match.findMany({
-          include: {
-            player1: true,
-            player2: true,
-          },
-        });
+    const matches = await summer2024Service.getMatches();
 
-    setCache(MATCHES_CACHE_KEY, matches);
     return new Response(JSON.stringify(matches), { status: 200 });
   } catch (error) {
     console.error("Get Matches Error:", error);

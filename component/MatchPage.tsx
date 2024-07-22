@@ -4,10 +4,7 @@ import { Match, Player } from "@/app/interface";
 import { useState, useEffect } from "react";
 import MatchForm from "./MatchForm";
 import MatchList from "./MatchList";
-import { Typography } from "antd";
 import { Loading } from "./Loading";
-
-const { Text } = Typography;
 
 const MatchPage = ({ players }: { players: Player[] }) => {
   const [matches, setMatches] = useState<Match[]>([]);
