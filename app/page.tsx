@@ -1,10 +1,18 @@
 import { Metadata } from "next";
 import Link from "next/link";
-
+import logo from "./logo.svg";
+import Image from "next/image";
 export default function Home() {
   return (
     <div className="container mx-auto py-5">
       <h1 className="text-3xl font-bold mb-4">
+        <Image
+          src={logo}
+          alt="Логотип"
+          width={70}
+          height={70}
+          className="inline-block"
+        />
         Настольной теннис. Европейский берег
       </h1>
 
