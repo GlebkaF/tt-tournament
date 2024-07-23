@@ -6,7 +6,13 @@ import MatchForm from "./MatchForm";
 import MatchList from "./MatchList";
 import { Loading } from "./Loading";
 
-const MatchPage = ({ players }: { players: Player[] }) => {
+const MatchPage = ({
+  players,
+  totalMatchesCount,
+}: {
+  players: Player[];
+  totalMatchesCount: number;
+}) => {
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -31,6 +37,7 @@ const MatchPage = ({ players }: { players: Player[] }) => {
 
   return (
     <div className="container mx-auto py-5">
+      <h1 className="text-3xl font-bold mb-4"> Матчи летнего турнира 2024</h1>
       {showForm && (
         <MatchForm
           players={players}
@@ -38,7 +45,11 @@ const MatchPage = ({ players }: { players: Player[] }) => {
           onSubmit={refreshMatches}
         />
       )}
-      {loading ? <Loading></Loading> : <MatchList matches={matches} />}
+      {loading ? (
+        <Loading></Loading>
+      ) : (
+        <MatchList totalMatchesCount={totalMatchesCount} matches={matches} />
+      )}
     </div>
   );
 };

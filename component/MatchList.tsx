@@ -8,6 +8,7 @@ const { Title } = Typography;
 
 interface MatchListProps {
   matches: Match[];
+  totalMatchesCount: number;
 }
 
 const groupMatchesByDate = (matches: Match[]) => {
@@ -56,12 +57,17 @@ const getMatchResultStyle = (
   return {};
 };
 
-const MatchList: React.FC<MatchListProps> = ({ matches }) => {
+const MatchList: React.FC<MatchListProps> = ({
+  matches,
+  totalMatchesCount,
+}) => {
   const groupedMatches = groupMatchesByDate(matches);
 
   return (
     <div>
-      <Title level={4}>Сыгранно {matches.length} матчей</Title>
+      <Title level={4}>
+        Сыгранно {matches.length} матчей из {totalMatchesCount}
+      </Title>
       {Object.keys(groupedMatches).map((date) => (
         <Card
           key={date}

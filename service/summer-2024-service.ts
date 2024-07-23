@@ -232,4 +232,24 @@ export class Summer2024Service {
 
     return;
   }
+
+  getTotalMatchesCount(): number {
+    // Функция для вычисления факториала
+    function factorial(num: number): number {
+      if (num === 0 || num === 1) return 1;
+      let result = 1;
+      for (let i = 1; i <= num; i++) {
+        result *= i;
+      }
+      return result;
+    }
+
+    const n = summerTournament2024PlayersIds.length;
+    const k = 2;
+
+    if (k > n) return 0;
+    if (k === n) return 1;
+
+    return factorial(n) / (factorial(k) * factorial(n - k));
+  }
 }

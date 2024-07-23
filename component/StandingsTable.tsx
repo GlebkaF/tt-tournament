@@ -35,8 +35,8 @@ const StandingsTable = ({ standings }: { standings: Standings }) => {
     );
 
   return (
-    <div className="overflow-x-auto">
-      <h2 className="text-2xl font-bold my-4">Летний турнир 2024</h2>
+    <div className="container mx-auto py-5">
+      <h2 className="text-3xl font-bold mb-4">Летний турнир 2024</h2>
       <table className="min-w-full bg-white divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>

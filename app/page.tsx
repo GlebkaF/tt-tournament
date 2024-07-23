@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="container pt-8">
+    <div className="container mx-auto py-5">
       <h1 className="text-3xl font-bold mb-4">
         Настольной теннис. Европейский берег
       </h1>
