@@ -38,16 +38,16 @@ export const metadata: Metadata = {
 
 const RandomPairs2024 = () => {
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-4xl font-bold mb-8">
+    <div className="container mx-auto py-5">
+      <h1 className="text-3xl font-bold mb-4">
         Второй парный турнир по настольному теннису
       </h1>
-      <div className="flex mb-8 justify-between">
+      <div className="flex mb-4 justify-between">
         <p className="text-gray-500">Глеб Фокин</p>
         <p className="text-gray-500">20.07.2024</p>
       </div>
 
-      <section className="mb-8">
+      <section className="mb-4">
         <h2 className="text-2xl font-semibold mb-4">Общие сведения</h2>
         <p>
           20 июля 2024 года в Новосибирске, на микрорайоне Европейский Берег
