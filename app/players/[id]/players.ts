@@ -138,9 +138,9 @@ export const playersDB: {
   },
   11: {
     id: 11,
-    firstName: "noname",
-    lastName: "lastname",
-    image: "/image/profile/default.jpg",
+    firstName: "Роман",
+    lastName: "Аникин",
+    image: "/image/profile/anikin-roman.jpg",
   },
   12: {
     id: 12,
