@@ -2,17 +2,21 @@ import { Standings } from "@/app/interface";
 import React from "react";
 
 const StandingsTable = ({ standings }: { standings: Standings }) => {
+  const totalGames = standings.length - 1;
   const roundGames = 4;
-  const maxRounds = Math.ceil((standings.length - 1) / roundGames);
+  const maxRounds = Math.ceil(totalGames / roundGames);
 
   const predict = standings
     .map((item) => {
+      const avgScore = item.totalPoints / item.gamesPlayed;
+      const currentScore = item.totalPoints;
+      const remainingGames = totalGames - item.gamesPlayed;
+      const score = Math.round(currentScore + remainingGames * avgScore);
+
       return {
         avgScore: Math.round(100 * (item.totalPoints / item.gamesPlayed)) / 100,
         playerId: item.playerId,
-        score: Math.round(
-          (item.totalPoints / item.gamesPlayed) * standings.length - 1
-        ),
+        score,
       };
     })
     .sort((a, b) => b.score - a.score)
