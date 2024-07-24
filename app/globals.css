@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .main-container {
+    @apply container mx-auto py-5;
+  }
+
+  .page-title {
+    @apply text-3xl font-bold;
+  }
+}
+
 :root {
 }
 

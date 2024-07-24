@@ -8,7 +8,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="bg-gray-800 text-white p-4">
+      <header className="bg-[#2F445E] text-white p-4">
         <nav className="max-w-6xl mx-auto flex justify-between items-center">
           <div className="flex space-x-4">
             <Link href="/" className="text-lg ">

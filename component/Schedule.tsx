@@ -96,7 +96,7 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="main-container">
       <Title level={3}>Расписание</Title>
       <Text>
         Отметь игроков которые пришли играть, нажми сформировать пары, вызывай

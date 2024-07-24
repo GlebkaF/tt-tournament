@@ -36,8 +36,8 @@ const MatchPage = ({
   }, []);
 
   return (
-    <div className="container mx-auto py-5">
-      <h1 className="text-3xl font-bold mb-4"> Матчи летнего турнира 2024</h1>
+    <div className="main-container">
+      <h1 className="page-title mb-4"> Матчи летнего турнира 2024</h1>
       {showForm && (
         <MatchForm
           players={players}
