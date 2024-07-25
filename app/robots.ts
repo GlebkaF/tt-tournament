@@ -5,23 +5,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/post/random-pairs-2024",
-      },
-      {
-        userAgent: "*",
-        allow: "/",
-      },
-      {
-        userAgent: "*",
-        disallow: "/standings/",
-      },
-      {
-        userAgent: "*",
-        disallow: "/matches/",
-      },
-      {
-        userAgent: "*",
-        disallow: "/players/",
+        allow: ["/", "/post/random-pairs-2024"],
+        disallow: ["/standings/", "/matches/", "/players/"],
       },
     ],
     sitemap: "https://ebtt.ru/sitemap.xml",
