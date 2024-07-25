@@ -438,7 +438,7 @@ export class UserService {
 
   async getUserProfile(id: number): Promise<PlayerProfile | null> {
     const cacheKey = "profile" + id;
-    const cachedResult = getCache(cacheKey, 10 * 1000);
+    const cachedResult = getCache(cacheKey);
     if (cachedResult) {
       console.log(cacheKey + "_HIT");
       return cachedResult;
