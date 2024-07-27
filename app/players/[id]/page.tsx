@@ -1,12 +1,9 @@
-import { PrismaClient } from "@prisma/client";
 import PlayerProfile from "@/component/PlayerProfile";
 import { Metadata } from "next";
-import { Summer2024Service } from "@/service/summer-2024-service";
-import { UserService } from "@/service/user-service";
 
-const prisma = new PrismaClient();
-const summer2024Service = new Summer2024Service(prisma);
-const userService = new UserService(prisma, summer2024Service);
+import createDeps from "@/service/create-deps";
+
+const { userService } = createDeps();
 
 export async function generateMetadata({
   params,

@@ -1,10 +1,9 @@
 import type { Metadata, NextPage } from "next";
 import StandingsTable from "@/component/StandingsTable";
-import { PrismaClient } from "@prisma/client";
-import { Summer2024Service } from "@/service/summer-2024-service";
 
-const prisma = new PrismaClient();
-const summer2024Service = new Summer2024Service(prisma);
+import createDeps from "@/service/create-deps";
+
+const { summer2024Service } = createDeps();
 
 export const metadata: Metadata = {
   title: "Турнирная таблица. Лето 2024",

@@ -1,9 +1,6 @@
-import { Summer2024Service } from "@/service/summer-2024-service";
-import { PrismaClient } from "@prisma/client";
+import createDeps from "@/service/create-deps";
 
-const prisma = new PrismaClient();
-
-const summer2024Service = new Summer2024Service(prisma);
+const { summer2024Service } = createDeps();
 
 function parseBasicAuth(
   authHeader: string
