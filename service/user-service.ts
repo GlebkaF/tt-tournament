@@ -148,8 +148,8 @@ const playersDB: {
   },
   12: {
     id: 12,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Дмитрий",
+    lastName: "Васильев",
     image: "/image/profile/default.jpg",
   },
   13: {
@@ -242,9 +242,9 @@ const playersDB: {
   },
   22: {
     id: 22,
-    firstName: "noname",
-    lastName: "lastname",
-    image: "/image/profile/default.jpg",
+    firstName: "Илья",
+    lastName: "Кургузов",
+    image: "/image/profile/kurguzov.jpg",
   },
   23: {
     id: 23,
@@ -260,8 +260,8 @@ const playersDB: {
   },
   25: {
     id: 25,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Дмитрий",
+    lastName: "Ластовский",
     image: "/image/profile/default.jpg",
   },
   26: {
@@ -339,9 +339,15 @@ const playersDB: {
   },
   33: {
     id: 33,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Мирзоахад",
+    lastName: "Зайнидинов",
     image: "/image/profile/default.jpg",
+    facts: [
+      {
+        title: "Летний турнир 2023",
+        description: "Бронзовая лига. 🥇 1 место",
+      },
+    ],
   },
   34: {
     id: 34,
@@ -397,10 +403,43 @@ const playersDB: {
     lastName: "lastname",
     image: "/image/profile/default.jpg",
   },
-  // Марина Воробьева, 2 место парный 2024,
-  // Алексей Егоров, 1 место парный 2024
-  // Мирзо Бронзовая Лига 2023 1
-  //  Иванов Виктор парный 2023 3 место
+
+  43: {
+    id: 42,
+    firstName: "Виктор",
+    lastName: "Иванов",
+    image: "/image/profile/ivanov-viktor.jpg",
+    facts: [
+      {
+        title: "Случайные пары 2023",
+        description: "🥉 3 место",
+      },
+    ],
+  },
+  44: {
+    id: 42,
+    firstName: "Алексей",
+    lastName: "Егоров",
+    image: "/image/profile/default.jpg",
+    facts: [
+      {
+        title: "Случайные пары 2024",
+        description: "🥇 1 место",
+      },
+    ],
+  },
+  45: {
+    id: 42,
+    firstName: "Марина",
+    lastName: "Воробьева",
+    image: "/image/profile/default.jpg",
+    facts: [
+      {
+        title: "Случайные пары 2024",
+        description: "🥈 2 место",
+      },
+    ],
+  },
 };
 
 type MatchResult = "PLAYER1_WIN" | "PLAYER2_WIN" | "DRAW" | "TBD";
