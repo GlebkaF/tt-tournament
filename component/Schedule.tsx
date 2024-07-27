@@ -1,12 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Button, List, Select, Spin, Modal, Empty, Typography } from "antd";
 import { Player } from "@/app/interface";
 import MatchForm from "./MatchForm";
 import { Loading } from "./Loading";
 
 const { Option } = Select;
-
 const { Title, Text } = Typography;
 
 interface Pair {
@@ -24,6 +24,48 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
   const [selectedPair, setSelectedPair] = useState<Pair | null>(null);
   const [fixedPairs, setFixedPairs] = useState<Pair[]>([]);
 
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    // Извлечение состояния из URL при загрузке компонента
+    const playersFromUrl = searchParams.get("selectedPlayers");
+    const fixedPairsFromUrl = searchParams.get("fixedPairs");
+
+    if (playersFromUrl) {
+      setSelectedPlayers(playersFromUrl.split(",").map(Number));
+    }
+
+    if (fixedPairsFromUrl) {
+      const parsedFixedPairs = JSON.parse(fixedPairsFromUrl);
+      setFixedPairs(parsedFixedPairs);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    // Обновление URL-параметров при изменении состояния
+    const updateUrl = (players: number[], fixedPairs: Pair[]) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      if (players.length > 0) {
+        params.set("selectedPlayers", players.join(","));
+      } else {
+        params.delete("selectedPlayers");
+      }
+
+      if (fixedPairs.length > 0) {
+        params.set("fixedPairs", JSON.stringify(fixedPairs));
+      } else {
+        params.delete("fixedPairs");
+      }
+
+      const url = `${pathname}?${params.toString()}`;
+      window.history.replaceState({}, "", url);
+    };
+
+    updateUrl(selectedPlayers, fixedPairs);
+  }, [selectedPlayers, fixedPairs, pathname, searchParams]);
+
   const handlePlayerSelect = (selected: number[]) => {
     setSelectedPlayers(selected);
   };
@@ -40,7 +82,7 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
         body: JSON.stringify({ playerIds: selectedPlayers }),
       });
       const response: Pair[] = await res.json();
-      setPairs(response.filter((pair) => !fixedPairs.includes(pair)));
+      setPairs(response);
       setLoadingPairs(false);
     } catch (error) {
       console.error(error);
@@ -78,13 +120,8 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
 
   const fixPair = (pair: Pair) => {
     setFixedPairs((prev) => [...prev, pair]);
-    setPairs((prev) =>
-      prev.filter(
-        (p) =>
-          !(p.player1Id === pair.player1Id && p.player2Id === pair.player2Id)
-      )
-    );
   };
+
   const unfixPair = (pair: Pair) => {
     setFixedPairs((prev) =>
       prev.filter(
@@ -92,7 +129,6 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
           !(p.player1Id === pair.player1Id && p.player2Id === pair.player2Id)
       )
     );
-    generatePairs();
   };
 
   return (
@@ -100,7 +136,7 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
       <Title level={3}>Расписание</Title>
       <Text>
         Отметь игроков которые пришли играть, нажми сформировать пары, вызывай
-        пары играть, заноси резульаты
+        пары играть, заноси результаты
       </Text>
       <div>
         <Select
@@ -108,6 +144,7 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
           style={{ width: "100%", marginBottom: "16px" }}
           placeholder="Выберите игроков"
           onChange={handlePlayerSelect}
+          value={selectedPlayers} // Поддержка состояния при загрузке
           filterOption={(input, option) =>
             (option?.children
               ?.toString()
@@ -130,51 +167,58 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
         >
           Сформировать Пары
         </Button>
+        {fixedPairs.length > 0 && (
+          <List
+            style={{ marginBottom: "16px", backgroundColor: "#52c41a32" }}
+            header={<div>Закрепленные Пары</div>}
+            bordered
+            dataSource={fixedPairs}
+            renderItem={(pair) => {
+              const player1 = findPlayerById(pair.player1Id);
+              const player2 = findPlayerById(pair.player2Id);
+              return (
+                <List.Item
+                  actions={[
+                    <Button
+                      type="default"
+                      key="1"
+                      onClick={() => unfixPair(pair)}
+                    >
+                      Открепить
+                    </Button>,
+                    <Button
+                      type="primary"
+                      key="2"
+                      onClick={() => showModal(pair)}
+                    >
+                      Занести результат
+                    </Button>,
+                  ]}
+                >
+                  {player1 &&
+                    player2 &&
+                    `${player1.firstName} ${player1.lastName} (${pair.player1Matches} игр) vs ${player2.firstName} ${player2.lastName} (${pair.player2Matches} игр)`}
+                </List.Item>
+              );
+            }}
+          />
+        )}
         {loadingPairs ? (
           <Loading />
         ) : (
           <>
-            {fixedPairs.length > 0 && (
-              <List
-                style={{ marginBottom: "16px", backgroundColor: "#52c41a32" }}
-                header={<div>Закрепленные Пары</div>}
-                bordered
-                dataSource={fixedPairs}
-                renderItem={(pair) => {
-                  const player1 = findPlayerById(pair.player1Id);
-                  const player2 = findPlayerById(pair.player2Id);
-                  return (
-                    <List.Item
-                      actions={[
-                        <Button
-                          type="default"
-                          key="1"
-                          onClick={() => unfixPair(pair)}
-                        >
-                          Открепить
-                        </Button>,
-                        <Button
-                          type="primary"
-                          key="2"
-                          onClick={() => showModal(pair)}
-                        >
-                          Занести результат
-                        </Button>,
-                      ]}
-                    >
-                      {player1 &&
-                        player2 &&
-                        `${player1.firstName} ${player1.lastName} (${pair.player1Matches} игр) vs ${player2.firstName} ${player2.lastName} (${pair.player2Matches} игр)`}
-                    </List.Item>
-                  );
-                }}
-              />
-            )}
             {pairs.length > 0 ? (
               <List
                 header={<div>Возможные Пары</div>}
                 bordered
-                dataSource={pairs}
+                dataSource={pairs.filter(
+                  (pair) =>
+                    !fixedPairs.some(
+                      (fixedPair) =>
+                        fixedPair.player1Id === pair.player1Id &&
+                        fixedPair.player2Id === pair.player2Id
+                    )
+                )} // Отфильтровываем закрепленные пары из списка возможных пар
                 renderItem={(pair) => {
                   const player1 = findPlayerById(pair.player1Id);
                   const player2 = findPlayerById(pair.player2Id);
