@@ -1,11 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Button, List, Select, Spin, Modal, Empty, Typography } from "antd";
 import { Player } from "@/app/interface";
 import MatchForm from "./MatchForm";
 import { Loading } from "./Loading";
-
 const { Option } = Select;
 const { Title, Text } = Typography;
 
@@ -16,14 +15,13 @@ interface Pair {
   player2Matches: number;
 }
 
-const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
+const ScheduleComponent: React.FC<{ players: Player[] }> = ({ players }) => {
   const [selectedPlayers, setSelectedPlayers] = useState<number[]>([]);
   const [pairs, setPairs] = useState<Pair[]>([]);
   const [loadingPairs, setLoadingPairs] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedPair, setSelectedPair] = useState<Pair | null>(null);
   const [fixedPairs, setFixedPairs] = useState<Pair[]>([]);
-
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -31,11 +29,9 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
     // Извлечение состояния из URL при загрузке компонента
     const playersFromUrl = searchParams.get("selectedPlayers");
     const fixedPairsFromUrl = searchParams.get("fixedPairs");
-
     if (playersFromUrl) {
       setSelectedPlayers(playersFromUrl.split(",").map(Number));
     }
-
     if (fixedPairsFromUrl) {
       const parsedFixedPairs = JSON.parse(fixedPairsFromUrl);
       setFixedPairs(parsedFixedPairs);
@@ -46,23 +42,19 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
     // Обновление URL-параметров при изменении состояния
     const updateUrl = (players: number[], fixedPairs: Pair[]) => {
       const params = new URLSearchParams(searchParams.toString());
-
       if (players.length > 0) {
         params.set("selectedPlayers", players.join(","));
       } else {
         params.delete("selectedPlayers");
       }
-
       if (fixedPairs.length > 0) {
         params.set("fixedPairs", JSON.stringify(fixedPairs));
       } else {
         params.delete("fixedPairs");
       }
-
       const url = `${pathname}?${params.toString()}`;
       window.history.replaceState({}, "", url);
     };
-
     updateUrl(selectedPlayers, fixedPairs);
   }, [selectedPlayers, fixedPairs, pathname, searchParams]);
 
@@ -273,5 +265,11 @@ const Schedule: React.FC<{ players: Player[] }> = ({ players }) => {
     </div>
   );
 };
+
+const Schedule: React.FC<{ players: Player[] }> = (props) => (
+  <Suspense fallback={<Loading />}>
+    <ScheduleComponent {...props} />
+  </Suspense>
+);
 
 export default Schedule;
