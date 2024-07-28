@@ -6,7 +6,13 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: ["/", "/post/random-pairs-2024"],
-        disallow: ["/standings/", "/matches/", "/players/", "/test/"],
+        disallow: [
+          "/standings/",
+          "/matches/",
+          "/players/",
+          "/test/",
+          "/schedule/",
+        ],
       },
     ],
     sitemap: "https://ebtt.ru/sitemap.xml",
