@@ -13,7 +13,7 @@ export default function Home() {
     <div className="main-container">
       {showBanner ? (
         <div className="hidden sm:block">
-          <Link href="/standings">
+          <Link href="/post/summer-finals-announcement-2024">
             <Image
               src={banner}
               alt="Заглушка для фотографии"
@@ -82,7 +82,19 @@ export default function Home() {
         {/* Column for News Section */}
         <div className="w-full lg:w-1/3 mt-8 lg:mt-0">
           <h2 className="text-2xl font-bold mb-4">Новости</h2>
-          <div className="space-y-8">
+          <div className="mb-4">
+            <div>
+              <Link
+                href="/post/summer-finals-announcement-2024"
+                className="text-xl font-semibold text-blue-500 hover:underline"
+                aria-label="Анонс финалов летнего турнира 2024"
+              >
+                Анонс финалов летнего турнира 2024
+              </Link>
+              <p className=" text-gray-600">Финалы пройдут 17 и 18 августа</p>
+            </div>
+          </div>
+          <div className="mb-4">
             <div>
               <Link
                 href="/post/random-pairs-2024"
@@ -91,7 +103,7 @@ export default function Home() {
               >
                 Случайные пары 2024
               </Link>
-              <p className="mt-2 text-gray-600">
+              <p className=" text-gray-600">
                 Результаты второго парного турнира &ldquo;Случайные пары
                 2024&rdquo;, который прошел 20 июля 2024 года.
               </p>
