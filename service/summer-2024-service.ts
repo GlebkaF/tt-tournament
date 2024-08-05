@@ -10,6 +10,18 @@ const summerTournament2024PlayersIds = [
 const MATCHES_CACHE_KEY = "matches_cache";
 const STANDINGS_CACHE_KEY = "standinmgs_cache";
 
+interface PlayerData {
+  player: string;
+  playerId: number;
+  gamesPlayed: number;
+  winsCount: number;
+  totalPoints: number;
+  rounds: number[];
+  matches: Match[];
+  position: number;
+  league: "🥇" | "🥈" | "🥉" | "";
+}
+
 export class Summer2024Service {
   constructor(private prisma: PrismaClient) {}
 
@@ -50,7 +62,7 @@ export class Summer2024Service {
       });
 
       // Создаем карту для хранения данных о игроках
-      const playerData = new Map<number, any>();
+      const playerData = new Map<number, PlayerData>();
 
       // Инициализация данных игроков
       users.forEach((user) => {
@@ -62,6 +74,9 @@ export class Summer2024Service {
           totalPoints: 0,
           gamesPlayed: 0,
           matches: [],
+          position: 0,
+          league: "",
+          winsCount: 0,
         });
       });
 
@@ -70,27 +85,45 @@ export class Summer2024Service {
         // Обновляем данные для player1
         if (playerData.has(match.player1Id)) {
           const player1Data = playerData.get(match.player1Id);
-          player1Data.gamesPlayed++;
-          player1Data.matches.push(match);
-          player1Data.totalPoints +=
-            match.result === "PLAYER1_WIN"
+
+          if (!player1Data) {
+            console.error("Player1 not found", match.id);
+          } else {
+            const isWin = match.result === "PLAYER1_WIN";
+
+            if (isWin) {
+              player1Data.winsCount++;
+            }
+
+            player1Data.gamesPlayed++;
+            player1Data.matches.push(match);
+            player1Data.totalPoints += isWin
               ? 3
               : match.result === "DRAW"
               ? 2
               : 1;
+          }
         }
 
         // Обновляем данные для player2
         if (playerData.has(match.player2Id)) {
           const player2Data = playerData.get(match.player2Id);
-          player2Data.gamesPlayed++;
-          player2Data.matches.push(match);
-          player2Data.totalPoints +=
-            match.result === "PLAYER2_WIN"
+
+          if (!player2Data) {
+            console.error("Player2 not found", match.id);
+          } else {
+            const isWin = match.result === "PLAYER2_WIN";
+            if (isWin) {
+              player2Data.winsCount++;
+            }
+            player2Data.gamesPlayed++;
+            player2Data.matches.push(match);
+            player2Data.totalPoints += isWin
               ? 3
               : match.result === "DRAW"
               ? 2
               : 1;
+          }
         }
       });
 
@@ -129,8 +162,47 @@ export class Summer2024Service {
       const standings = Array.from(playerData.values());
 
       // Сортируем по общим очкам и обновляем позиции
+      // TODO: написать на это тесты
       standings
-        .sort((a, b) => b.totalPoints - a.totalPoints)
+        .sort((playerA, playerB) => {
+          if (playerB.totalPoints === playerA.totalPoints) {
+            const sharedMatch = playerA.matches.find(
+              (match) =>
+                (match.player1Id === playerA.playerId &&
+                  match.player2Id === playerB.playerId) ||
+                (match.player1Id === playerB.playerId &&
+                  match.player2Id === playerA.playerId)
+            );
+
+            // Если у них ничья или они не играли, смотрим на количество побед
+            if (!sharedMatch || sharedMatch?.result === MatchResult.DRAW) {
+              return playerB.winsCount - playerA.winsCount;
+            }
+
+            // Если у них не ничья, то ставим выше того, кто победил
+            if (sharedMatch.result === MatchResult.PLAYER1_WIN) {
+              if (sharedMatch.player1Id === playerA.playerId) {
+                // playerA won
+                return -1;
+              } else {
+                // playerB won
+                return 1;
+              }
+            }
+
+            if (sharedMatch.result === MatchResult.PLAYER2_WIN) {
+              if (sharedMatch.player2Id === playerA.playerId) {
+                // playerA won
+                return -1;
+              } else {
+                // playerB won
+                return 1;
+              }
+            }
+          }
+
+          return playerB.totalPoints - playerA.totalPoints;
+        })
         .forEach((player, index) => {
           player.position = index + 1;
           player.league =
