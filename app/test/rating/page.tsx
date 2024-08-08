@@ -3,6 +3,8 @@ import { Player } from "@/app/interface";
 import React from "react";
 import { Glicko2 } from "glicko2";
 
+const CALIBRATED_RD = 100;
+
 const prisma = new PrismaClient();
 
 interface PlayerWithRating extends Player {
@@ -30,9 +32,14 @@ const RatingPage = async () => {
 
   const finalRatings = calculateGlicko2Ratings(players, matches);
 
+  const calibrated = finalRatings.filter((player) => player.rd < CALIBRATED_RD);
+  const uncalibrated = finalRatings.filter(
+    (player) => player.rd >= CALIBRATED_RD
+  );
+
   return (
     <div className="main-container">
-      <h2 className="page-title mb-4 text-2xl font-bold">Рейтинг по Glicko2</h2>
+      <h2 className="page-title mb-4">Рейтинг по Glicko2</h2>
       <div className="overflow-x-auto mb-8">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -70,7 +77,7 @@ const RatingPage = async () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {finalRatings.map((player: PlayerWithRating, index: number) => (
+            {calibrated.map((player: PlayerWithRating, index: number) => (
               <tr key={player.id}>
                 <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -90,7 +97,15 @@ const RatingPage = async () => {
           </tbody>
         </table>
       </div>
-      Ы
+
+      <h2 className="page-title mb-4">На калибровке</h2>
+      <ul>
+        {uncalibrated.map((player) => (
+          <li key={player.id}>
+            {player.firstName} {player.lastName}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
@@ -102,7 +117,7 @@ function calculateGlicko2Ratings(
   const INITIAL_SETTINGS = {
     tau: 0.5,
     rating: 1500,
-    rd: 350,
+    rd: 400,
     vol: 0.06,
   };
 

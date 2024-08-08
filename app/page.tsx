@@ -6,7 +6,7 @@ import Image from "next/image";
 
 const date = new Date().getTime();
 const endDate = 1722166190637 + 1000 * 60 * 60 * 24 * 21;
-const showBanner = date < endDate;
+const showBanner = false; // date < endDate;
 
 export default function Home() {
   return (
