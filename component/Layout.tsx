@@ -19,7 +19,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Image
                   src={logoFull}
                   alt="логотип"
-                  className="object-cover w-auto h-12 mr-2 hidden lg:block"
+                  className="object-cover w-auto h-12 mr-2"
                 />
               </Link>
             </div>
