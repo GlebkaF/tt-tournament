@@ -3,10 +3,10 @@ import Schedule from "@/component/Schedule";
 
 import createDeps from "@/service/create-deps";
 
-const { summer2024Service } = createDeps();
+const { tournamentService } = createDeps();
 
 export default async function MatchesPage() {
-  const players: Player[] = await summer2024Service.getPlayers();
+  const players: Player[] = await tournamentService.getPlayers(1);
 
   return <Schedule players={players} />;
 }

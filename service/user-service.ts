@@ -1,6 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-import { Summer2024Service } from "./summer-2024-service";
+import { Match, PrismaClient } from "@prisma/client";
+
 import { getCache, setCache } from "@/helpers/cache";
+import { TournamentService } from "./tournament-service";
 
 const playersDB: {
   [key: number]: {
@@ -472,7 +473,7 @@ interface PlayerProfile {
 export class UserService {
   constructor(
     private prisma: PrismaClient,
-    private summer2024Service: Summer2024Service
+    private tournamentService: TournamentService
   ) {}
 
   async getUserProfile(id: number): Promise<PlayerProfile | null> {
@@ -489,8 +490,8 @@ export class UserService {
       },
     });
 
-    const players2 = await this.summer2024Service.getPlayers();
-    const matches2 = await this.summer2024Service.getUserMatches(id);
+    const players2 = await this.tournamentService.getPlayers(1);
+    const matches2 = await this.getUserMatches(id);
 
     if (!player) {
       return null;
@@ -588,5 +589,16 @@ export class UserService {
     setCache(cacheKey, output);
 
     return output;
+  }
+
+  private async getUserMatches(playerId: number): Promise<Match[]> {
+    return this.prisma.match.findMany({
+      where: {
+        AND: [{ OR: [{ player1Id: playerId }, { player2Id: playerId }] }],
+      },
+      orderBy: {
+        date: "asc",
+      },
+    });
   }
 }
