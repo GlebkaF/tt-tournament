@@ -63,7 +63,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
   const allMatches = matchDetails.flatMap((round) => round.matches);
   const { wins, draws, losses, score, tbd } = calculateStatistics(allMatches);
   const totalGames = wins + draws + losses + tbd; // Общее количество игр включает оставшиеся игры
-
+  console.log(allMatches);
   return (
     <div className="main-container">
       {/* Player Info */}
@@ -78,13 +78,10 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
         <div className="w-full">
           <h2 className="text-3xl font-bold">{player.name}</h2>
           <div className="mt-4 space-y-4">
-            <h4 className="text-xl font-semibold">Летний турнир 2024</h4>
-
             <div className="flex justify-between mt-4">
               <p className="text-gray-700">
                 Сыграно матчей: {player.gamesPlayed}
               </p>
-              <p className="text-gray-700">Очков: {score}</p>
             </div>
 
             <div className="w-full h-6 bg-gray-200 rounded-full overflow-hidden mt-2 relative">
@@ -163,10 +160,9 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
 
       {/* Matches by Rounds  */}
       <div>
-        <h3 className="text-2xl font-bold mb-4">Матчи по турам</h3>
+        <h3 className="text-2xl font-bold mb-4 mt-4">Все матчи</h3>
         {matchDetails.map((round) => (
-          <div key={round.round} className="mb-8">
-            <h4 className="text-xl font-semibold mb-2">Тур {round.round}</h4>
+          <div key={round.round} className="">
             <ul className="space-y-2">
               {round.matches.map((match, index) => (
                 <li

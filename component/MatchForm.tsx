@@ -194,14 +194,14 @@ const MatchForm: React.FC<MatchFormProps> = ({
           ))}
         </Select>
       </Form.Item>
-      <Form.Item label="Дата матча" required>
+      {/* <Form.Item label="Дата матча" required>
         <DatePicker
           value={matchDate}
           onChange={setMatchDate}
           size="large"
           className="w-full"
         />
-      </Form.Item>
+      </Form.Item> */}
       <Form.Item label="Результат" required>
         <div className="space-y-3">
           <Button
@@ -213,7 +213,7 @@ const MatchForm: React.FC<MatchFormProps> = ({
           >
             Победил(а) {getPlayerName(player1Id)}
           </Button>
-          <Button
+          {/* <Button
             type={result === MatchResult.draw ? "primary" : "default"}
             onClick={() => setResult(MatchResult.draw)}
             size="large"
@@ -221,7 +221,7 @@ const MatchForm: React.FC<MatchFormProps> = ({
             disabled={!player1Id || !player2Id}
           >
             Ничья
-          </Button>
+          </Button> */}
           <Button
             type={result === MatchResult.player2Win ? "primary" : "default"}
             onClick={() => setResult(MatchResult.player2Win)}

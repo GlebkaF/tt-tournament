@@ -1,5 +1,4 @@
 import { Player, Standings } from "@/app/interface";
-import { getCache, resetCache, setCache } from "@/helpers/cache";
 import { Match, MatchResult, PrismaClient } from "@prisma/client";
 
 const summerTournament2024PlayersIds = [
@@ -7,22 +6,9 @@ const summerTournament2024PlayersIds = [
   24, 26, 27, 28, 29, 30, 31, 32, 34, 35,
 ];
 
-// Добавить юзеров:
-// Бузургмер Рахматуллоев
-// Андрей Сараев
-// Иван Антонов
-// Михаил Хан
-// Джамал Муцлоев
-// Евгений Васильев
-// Илья Хряков
-// Роман Юсупов
-// Сергей Герковенко
-// Ксения Герковенко
-// Алексей Гусев
-// Владимир Афанасьев
-// Башаев
 const summerTournament2023PlayersIds = [
-  4, 5, 6, 7, 8, 9, 10, 15, 16, 17, 20, 22, 26, 27, 28, 30, 33, 34,
+  4, 5, 6, 7, 8, 9, 10, 15, 16, 17, 20, 22, 26, 27, 28, 30, 33, 34, 58, 57, 56,
+  55, 54, 53, 52, 51, 50, 49, 48, 47, 46,
 ];
 
 interface PlayerData {
@@ -346,6 +332,6 @@ export class TournamentService {
     if (k > n) return 0;
     if (k === n) return 1;
 
-    return factorial(n) / (factorial(k) * factorial(n - k));
+    return Math.round(factorial(n) / (factorial(k) * factorial(n - k)));
   }
 }
