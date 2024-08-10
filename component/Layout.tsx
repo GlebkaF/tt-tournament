@@ -23,14 +23,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 />
               </Link>
             </div>
-            <div className="h-12 flex items-center">
+            {/* <div className="h-12 flex items-center">
               <Link href="/matches" className="text-lg">
                 Матчи
               </Link>
-            </div>
+            </div> */}
             <div className="h-12 flex items-center">
-              <Link href="/standings" className="text-lg">
-                Таблица
+              <Link href="/tournament/1" className="text-lg">
+                Летний турнир 2024
               </Link>
             </div>
           </div>

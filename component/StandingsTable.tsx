@@ -1,7 +1,13 @@
 import { Standings } from "@/app/interface";
 import React from "react";
 
-const StandingsTable = ({ standings }: { standings: Standings }) => {
+const StandingsTable = ({
+  standings,
+  title,
+}: {
+  standings: Standings;
+  title: string;
+}) => {
   const totalGames = standings.length - 1;
   const roundGames = 4;
   const maxRounds = Math.ceil(totalGames / roundGames);
@@ -40,7 +46,7 @@ const StandingsTable = ({ standings }: { standings: Standings }) => {
 
   return (
     <div className="main-container">
-      <h2 className="page-title mb-4">Летний турнир 2024</h2>
+      <h2 className="page-title mb-4">{title}</h2>
       <table className="min-w-full bg-white divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>

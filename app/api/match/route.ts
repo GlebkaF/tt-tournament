@@ -1,6 +1,8 @@
 import createDeps from "@/service/create-deps";
 
-const { summer2024Service } = createDeps();
+const { tournamentService } = createDeps();
+
+const tournamentId = 2;
 
 function parseBasicAuth(
   authHeader: string
@@ -40,13 +42,14 @@ export async function POST(req: Request) {
     const { player1Id, player2Id, player1Score, player2Score, result, date } =
       await req.json();
 
-    await summer2024Service.createMatch(
+    await tournamentService.createMatch(
       player1Id,
       player2Id,
       player1Score,
       player2Score,
       result,
-      new Date(date)
+      new Date(date),
+      tournamentId
     );
     return new Response(
       JSON.stringify({ message: "Match recorded successfully" }),
@@ -62,7 +65,7 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    const matches = await summer2024Service.getMatches();
+    const matches = await tournamentService.getMatches(tournamentId);
 
     return new Response(JSON.stringify(matches), { status: 200 });
   } catch (error) {

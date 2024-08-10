@@ -3,15 +3,18 @@ import MatchPage from "@/component/MatchPage";
 import { Metadata } from "next";
 import createDeps from "@/service/create-deps";
 
-const { summer2024Service } = createDeps();
+const { tournamentService } = createDeps();
 
 export default async function MatchesPage() {
-  const players: Player[] = await summer2024Service.getPlayers();
-  const totalMatchesCount = await summer2024Service.getTotalMatchesCount();
+  const tournamentId = 2;
+  const players: Player[] = await tournamentService.getPlayers(tournamentId);
+  const totalMatchesCount = await tournamentService.getTotalMatchesCount(
+    tournamentId
+  );
 
   return <MatchPage players={players} totalMatchesCount={totalMatchesCount} />;
 }
 
 export const metadata: Metadata = {
-  title: "Матчи летнего турнира",
+  title: "Матчи",
 };

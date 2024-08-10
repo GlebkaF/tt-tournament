@@ -23,9 +23,17 @@ model Match {
   player2Score Int
   result       MatchResult
   date         DateTime    @default(now())
+  player1      User        @relation("Player1", fields: [player1Id], references: [id])
+  player2      User        @relation("Player2", fields: [player2Id], references: [id])
+  tournamentId Int
+  tournament   Tournament  @relation(fields: [tournamentId], references: [id])
+}
 
-  player1 User @relation("Player1", fields: [player1Id], references: [id])
-  player2 User @relation("Player2", fields: [player2Id], references: [id])
+model Tournament {
+  id      Int      @id @default(autoincrement())
+  title   String
+  date    DateTime @default(now())
+  matches Match[]
 }
 
 enum MatchResult {

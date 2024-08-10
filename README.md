@@ -41,17 +41,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 #### Произвольная команда
 
-npx dotenv -e .env.local -- npx tsx commands/seed-players.ts
+npx dotenv -e .env.local -- npx tsx command/seed-players.ts
 
 #### Создать миграцию
 
 (!) Добавь DATABASE_URL в .env.local
 
 npx dotenv -e .env.local -- npx prisma migrate dev --name
-
-#### Удалить юзера
-
-```
-delete from verceldb.public."Match" where "player2Id" = ? or "player1Id" = ?
-delete from verceldb.public."User" where id = ?
-```
