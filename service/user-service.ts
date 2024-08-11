@@ -497,28 +497,6 @@ export class UserService {
       return null;
     }
 
-    // Получаем всех соперников
-    const allOpponents = players2.filter((p) => p.id !== id);
-
-    // Получаем все возможные матчапы для текущего игрока
-    const allPossibleMatches = allOpponents.map((opponent) => ({
-      player1Id: id,
-      player2Id: opponent.id,
-      result: "TBD",
-      date: new Date(),
-    }));
-
-    // Исключаем уже сыгранные матчи
-    const remainingMatches = allPossibleMatches.filter((possibleMatch) => {
-      return !matches2.some(
-        (match) =>
-          (match.player1Id === possibleMatch.player1Id &&
-            match.player2Id === possibleMatch.player2Id) ||
-          (match.player1Id === possibleMatch.player2Id &&
-            match.player2Id === possibleMatch.player1Id)
-      );
-    });
-
     // Сортируем сыгранные матчи по дате
     const completedMatches = matches2.sort(
       (a, b) => a.date.getTime() - b.date.getTime()
@@ -533,14 +511,8 @@ export class UserService {
       ),
     }));
 
-    // Формируем детализированные оставшиеся матчи
-    const remainingDetailedMatches = remainingMatches.map((match) => ({
-      match,
-      opponent: players2.find((p) => p.id === match.player2Id),
-    }));
-
     // Комбинируем сыгранные и оставшиеся матчи
-    const combinedMatches = [...detailedMatches, ...remainingDetailedMatches];
+    const combinedMatches = detailedMatches;
 
     // Группируем матчи по турам (4 матча в каждом туре)
     const groupedMatches: Round[] = [];

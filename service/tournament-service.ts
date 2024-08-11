@@ -7,8 +7,8 @@ const summerTournament2024PlayersIds = [
 ];
 
 const summerTournament2023PlayersIds = [
-  4, 5, 6, 7, 8, 9, 10, 15, 16, 17, 20, 22, 26, 27, 28, 30, 33, 34, 58, 57, 56,
-  55, 54, 53, 52, 51, 50, 49, 48, 47, 46,
+  4, 5, 6, 7, 8, 9, 10, 15, 16, 17, 20, 22, 26, 27, 28, 30, 33, 34, 55, 54, 53,
+  52, 51, 50, 49, 47, 46,
 ];
 
 interface PlayerData {
@@ -272,6 +272,10 @@ export class TournamentService {
     date: Date,
     tournamentId: number
   ) {
+    if ([1, 2].includes(tournamentId)) {
+      throw new Error("Tournament closed");
+    }
+
     const prisma = this.prisma;
     // Проверка на существование записи с аналогичными данными
     const existingMatch = await prisma.match.findFirst({

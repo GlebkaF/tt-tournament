@@ -6,7 +6,7 @@ import createDeps from "@/service/create-deps";
 const { tournamentService } = createDeps();
 
 export const metadata: Metadata = {
-  title: "Турнирная таблица. Лето 2024",
+  title: "Турнирная таблица",
 };
 
 const StandingsPage = async ({ params }: { params: { id: string } }) => {

@@ -1,3 +1,5 @@
+import { Match as DBMatch } from "@prisma/client";
+
 export interface Player {
   id: number;
   firstName: string;
@@ -33,6 +35,7 @@ export interface StandingsItem {
   totalPoints: number;
   gamesPlayed: number;
   league: string;
+  matches: DBMatch[];
 }
 
 export type Standings = StandingsItem[];
