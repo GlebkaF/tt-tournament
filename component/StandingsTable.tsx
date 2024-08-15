@@ -145,13 +145,11 @@ const StandingsTable = ({
                 <td className="px-4 py-4 text-sm text-gray-700 text-center">
                   {item.position} {item.league}
                 </td>
-                <td className="px-4 py-4 text-sm text-gray-700 text-left">
-                  <a
-                    href={`/players/${item.playerId}`}
-                    className="text-blue-500 underline"
-                  >
-                    {item.player}
-                  </a>
+                <td
+                  className="px-4 py-4 text-sm text-blue-500 underline text-left cursor-pointer"
+                  onClick={() => toggleExpand(item.playerId)}
+                >
+                  {item.player}
                 </td>
                 {Array.from({ length: maxRounds }, (_, i) => (
                   <td
@@ -164,10 +162,7 @@ const StandingsTable = ({
                 <td className="px-4 py-4 text-sm text-gray-700 text-center">
                   {item.totalPoints}
                 </td>
-                <td
-                  className="px-4 py-4 text-sm text-gray-700 text-center cursor-pointer"
-                  onClick={() => toggleExpand(item.playerId)}
-                >
+                <td className="px-4 py-4 text-sm text-gray-700 text-center cursor-pointer">
                   {item.gamesPlayed}
                 </td>
                 <td className="px-4 py-4 text-sm text-gray-700 text-center hidden lg:table-cell relative group">
@@ -188,7 +183,13 @@ const StandingsTable = ({
               {expandedPlayer === item.playerId && (
                 <tr>
                   <td colSpan={6} className="p-4">
-                    <ul>
+                    <a
+                      href={`/players/${item.playerId}`}
+                      className="text-blue-500 underline"
+                    >
+                      Профиль {item.player}
+                    </a>
+                    <ul className="mt-4">
                       {getMatches(standings, item).map((match) => (
                         <li
                           key={match.id}
