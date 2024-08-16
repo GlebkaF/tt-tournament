@@ -21,7 +21,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${playerData.player.name} на ЕБ`,
+    title: `${playerData.player.name} — Теннис. Евроберег`,
   };
 }
 

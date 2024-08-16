@@ -1,27 +1,11 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import thisisus from "@/images/thisisus.jpg";
-import banner from "@/images/banner.png";
 import Image from "next/image";
-
-const date = new Date().getTime();
-const endDate = 1722166190637 + 1000 * 60 * 60 * 24 * 21;
-const showBanner = false; // date < endDate;
 
 export default function Home() {
   return (
     <div className="main-container">
-      {showBanner ? (
-        <div className="hidden sm:block">
-          <Link href="/post/summer-finals-announcement-2024">
-            <Image
-              src={banner}
-              alt="Заглушка для фотографии"
-              className="object-cover mb-4 w-full"
-            />
-          </Link>
-        </div>
-      ) : null}
       <div className="block lg:flex lg:space-x-12">
         {/* Column for Text Content */}
         <div className="flex-1">
@@ -115,7 +99,7 @@ export default function Home() {
   );
 }
 
-const title = "Настольный теннис. Европейский Берег";
+const title = "Теннис. Евроберег";
 const description =
   "Играем в настольный теннис на набережной Европейского Берега. Ежегодный летний турнир, ситуационные турниры.";
 export const metadata: Metadata = {

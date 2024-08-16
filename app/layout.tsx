@@ -8,7 +8,7 @@ import { WebAnalitics } from "@/component/WebAnalitics";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Настольный теннис на ЕБ",
+  title: "Теннис. Евроберег",
   description:
     "Ежегодный летний турнир по настольному теннису. Европейский берег 2024",
   verification: {

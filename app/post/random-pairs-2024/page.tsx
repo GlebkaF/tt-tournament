@@ -3,7 +3,7 @@ import poster from "./poster.png";
 import winners from "./winners.jpg";
 import Image from "next/image";
 
-const title = "Случайные пары 2024";
+const title = "Случайные пары 2024 — Теннис. Евроберег";
 const description =
   "Результаты второго парного турнира 'Случайные пары 2024', прошедшего в Новосибирске, на микрорайоне Европейский Берег 20 июля 2024 года.";
 const url = "https://ebtt.ru/post/random-pairs-2024";

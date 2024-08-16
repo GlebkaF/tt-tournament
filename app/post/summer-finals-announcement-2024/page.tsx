@@ -2,7 +2,8 @@ import { Metadata } from "next";
 import Image from "next/image";
 import finalsPhoto from "./finals.png";
 
-const title = "Финалы летнего турнира по настольному теннису 2024";
+const title =
+  "Анонс финалов летнего турнира по настольному теннису 2024 — Теннис. Евроберег";
 const description =
   "Приглашаем всех на финалы летнего турнира по настольному теннису Европейского Берега, которые пройдут 17 и 18 августа 2024 года.";
 const url = "https://ebtt.ru/post/summer-finals-2024";
@@ -46,11 +47,11 @@ const SummerFinalsAnnouncement2024 = () => {
   return (
     <div className="main-container">
       <h1 className="page-title mb-4">
-        Финалы летнего турнира по настольному теннису 2024
+        Анонс финалов летнего турнира по настольному теннису 2024
       </h1>
       <div className="flex mb-4 justify-between">
         <p className="text-gray-500">Глеб Фокин</p>
-        <p className="text-gray-500">Август 2024</p>
+        <p className="text-gray-500">30.07.2024</p>
       </div>
       <Image src={finalsPhoto} alt="Фото" className="mb-4" />
 

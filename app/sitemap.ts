@@ -8,5 +8,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: "https://ebtt.ru/post/random-pairs-2024",
     },
+    {
+      url: "https://ebtt.ru/post/summer-finals-announcement-2024",
+    },
   ];
 }

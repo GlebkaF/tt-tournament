@@ -16,5 +16,5 @@ export default async function MatchesPage() {
 }
 
 export const metadata: Metadata = {
-  title: "Матчи",
+  title: "Матчи летнего турнира 2024 — Теннис. Евроберег",
 };

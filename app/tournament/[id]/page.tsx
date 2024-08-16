@@ -5,9 +5,24 @@ import createDeps from "@/service/create-deps";
 
 const { tournamentService } = createDeps();
 
-export const metadata: Metadata = {
-  title: "Турнирная таблица",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const tournamentId = parseInt(params.id, 10);
+  const tournament = await tournamentService.getTournament(tournamentId);
+
+  if (!tournament) {
+    return {
+      title: "404",
+    };
+  }
+
+  return {
+    title: `${tournament.title} — Теннис. Евроберег`,
+  };
+}
 
 const StandingsPage = async ({ params }: { params: { id: string } }) => {
   const tournamentId = parseInt(params.id, 10);
