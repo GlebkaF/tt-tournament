@@ -69,6 +69,20 @@ export default function Home() {
           <div className="mb-4">
             <div>
               <Link
+                href="/post/summer-finals-2024-day-1"
+                className="text-xl font-semibold text-blue-500 hover:underline"
+                aria-label="Финалы летнего турнира 2024. День 1"
+              >
+                Финалы летнего турнира. День 1
+              </Link>
+              <p className=" text-gray-600">
+                Кто прошел в полуфинал, а кто ушел тренироваться дальше
+              </p>
+            </div>
+          </div>
+          <div className="mb-4">
+            <div>
+              <Link
                 href="/post/summer-finals-announcement-2024"
                 className="text-xl font-semibold text-blue-500 hover:underline"
                 aria-label="Анонс финалов летнего турнира 2024"
