@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import openingPhoto from "./opening.jpg";
+import openingPhoto from "./opening-v2.jpg";
 import glebPhoto from "./gleb.jpg";
 import bronzeTablePhoto from "./bronze-table.png";
 import silverTablePhoto from "./silver-table.png";
@@ -220,12 +220,13 @@ const SummerFinals2024 = () => {
           >
             ITTF, страница 59
           </Link>
-          . По соотношению побед/поражений в полуфинал вышли Назимов и Хомич.
+          . По соотношению побед/поражений в полуфинал вышли Костя Назимов и
+          Виталий Хомич.
         </p>
         <p className="mb-2">
           В группе Б ситуация была более спокойная. Максим Егоров и Никита
-          Рабчевский не смогли набрать свои очки, и в финал вышли Дима Годюхин и
-          Коля Соловьев.
+          Рабчевский не смогли набрать свои очки, и в финал вышли Дима Гондюхин
+          и Коля Соловьев.
         </p>
         <p className="mb-2">
           Игры Бронзовой лиги мы играли два с половиной часа, в процессе все
@@ -294,7 +295,7 @@ const SummerFinals2024 = () => {
                 className="font-semibold text-blue-500 hover:underline"
                 href="/players/20"
               >
-                Годюхин
+                Гондюхин
               </Link>
               , 2 очка
             </li>
@@ -570,7 +571,7 @@ const SummerFinals2024 = () => {
         <Image
           src={glebPhoto}
           alt="Глеб"
-          className="mb-4 h-600px object-fill"
+          className="mb-4 h-[600px] object-cover"
         />
       </section>
     </div>
