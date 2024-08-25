@@ -38,8 +38,8 @@ export const metadata: Metadata = {
 
 const RandomPairs2024 = () => {
   return (
-    <div className="main-container">
-      <h1 className="page-title mb-4">
+    <div className="container pb-32 pt-24">
+      <h1 className="heading-l mb-16">
         Второй парный турнир по настольному теннису
       </h1>
       <div className="flex mb-4 justify-between">

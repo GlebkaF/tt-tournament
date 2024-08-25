@@ -2,32 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .main-container {
-    @apply container mx-auto py-5;
+@layer base {
+  html {
+    font-family: "Inter", system-ui, sans-serif;
+    scrollbar-gutter: stable;
   }
 
-  .page-title {
-    @apply text-3xl font-bold;
+  body {
+    min-height: 100vh;
+    @apply text-m;
   }
-}
 
-:root {
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+  a {
+    @apply text-brand-blue;
   }
-}
 
-body {
+  a:hover {
+    @apply text-brand-red;
+    @apply no-underline;
+  }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .heading-xs {
+    @apply text-heading-xs-desktop tablet:text-heading-xs-mobile;
+  }
+
+  .heading-s {
+    @apply text-heading-s-desktop tablet:text-heading-s-mobile;
+  }
+
+  .heading-m {
+    @apply text-heading-m-desktop tablet:text-heading-m-mobile;
+  }
+
+  .heading-l {
+    @apply text-heading-l-desktop tablet:text-heading-l-mobile;
+  }
+
+  .heading-xl {
+    @apply text-heading-xl-desktop tablet:text-heading-xl-mobile;
+  }
+
+  .text-m {
+    @apply text-text-m-desktop tablet:text-text-m-mobile;
+  }
+
+  .text-l {
+    @apply text-text-l-desktop tablet:text-text-l-mobile;
+  }
+
+  .text-xl {
+    @apply text-text-xl-desktop tablet:text-text-xl-mobile;
+  }
+
+  .text-xxl {
+    @apply text-text-xxl-desktop tablet:text-text-xxl-mobile;
+  }
+
+  .caption-xs {
+    @apply text-caption-xs-desktop tablet:text-caption-xs-mobile;
+  }
+
+  .caption-s {
+    @apply text-caption-s-desktop tablet:text-caption-s-mobile;
+  }
+
+  .caption-m {
+    @apply text-caption-m-desktop tablet:text-caption-m-mobile;
   }
 }

@@ -65,28 +65,26 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
   const totalGames = wins + draws + losses + tbd; // Общее количество игр включает оставшиеся игры
   console.log(allMatches);
   return (
-    <div className="main-container">
+    <div className="container pb-32 pt-24">
       {/* Player Info */}
-      <div className="flex flex-col md:flex-row items-start space-y-4 md:space-y-0 md:space-x-4">
+      <div className="flex flex-col desktop:flex-row items-start space-y-4 desktop:space-y-0 desktop:space-x-16">
         <Image
           width={1200}
           height={1600}
           src={player.image}
-          className="w-full max-h-144 md:max-h-[36rem] md:max-w-sm object-cover rounded-lg"
+          className="w-full max-h-144 desktop:max-h-[36rem] desktop:max-w-sm object-cover rounded-lg"
           alt="player image"
         />
         <div className="w-full">
-          <h2 className="text-3xl font-bold">{player.name}</h2>
+          <h2 className="heading-l">{player.name}</h2>
           <div className="mt-4 space-y-4">
             <div className="flex justify-between mt-4">
-              <p className="text-gray-700">
-                Сыграно матчей: {player.gamesPlayed}
-              </p>
+              <p className="text-l">Сыграно матчей: {player.gamesPlayed}</p>
             </div>
 
-            <div className="w-full h-6 bg-gray-200 rounded-full overflow-hidden mt-2 relative">
+            <div className="w-full h-6 bg-[gray] rounded-full overflow-hidden mt-2 relative">
               <div
-                className="h-full bg-green-500 flex items-center justify-center"
+                className="h-full bg-[green] flex items-center justify-center"
                 style={{ width: `${(wins / totalGames) * 100}%` }}
               >
                 <span
@@ -97,7 +95,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                 </span>
               </div>
               <div
-                className="h-full bg-yellow-500 absolute top-0 left-0 flex items-center justify-center"
+                className="h-full bg-[#caca2a] absolute top-0 left-0 flex items-center justify-center"
                 style={{
                   width: `${(draws / totalGames) * 100}%`,
                   left: `${(wins / totalGames) * 100}%`,
@@ -113,7 +111,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                 </span>
               </div>
               <div
-                className="h-full bg-red-500 absolute top-0 left-0 flex items-center justify-center"
+                className="h-full bg-[tomato] absolute top-0 left-0 flex items-center justify-center"
                 style={{
                   width: `${(losses / totalGames) * 100}%`,
                   left: `${((wins + draws) / totalGames) * 100}%`,
@@ -129,7 +127,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                 </span>
               </div>
               <div
-                className="h-full bg-gray-400 absolute top-0 left-0 flex items-center justify-center"
+                className="h-full bg-secondary-base absolute top-0 left-0 flex items-center justify-center"
                 style={{
                   width: `${(tbd / totalGames) * 100}%`,
                   left: `${((wins + draws + losses) / totalGames) * 100}%`,
@@ -147,11 +145,11 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
             </div>
           </div>
 
-          <div className="mt-6 space-y-4">
+          <div className="mt-20 space-y-4">
             {player.facts.map((fact, index) => (
               <div key={index}>
                 <h4 className="text-lg font-semibold">{fact.title}</h4>
-                <p className="text-gray-700">{fact.description}</p>
+                <p className="text-l">{fact.description}</p>
               </div>
             ))}
           </div>
@@ -159,7 +157,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
       </div>
 
       {/* Matches by Rounds  */}
-      <div>
+      {/* <div>
         <h3 className="text-2xl font-bold mb-4 mt-4">Все матчи</h3>
         {matchDetails.map((round) => (
           <div key={round.round} className="">
@@ -188,7 +186,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
             </ul>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

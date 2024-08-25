@@ -38,8 +38,8 @@ const RatingPage = async () => {
   );
 
   return (
-    <div className="main-container">
-      <h2 className="page-title mb-4">Рейтинг по Glicko2</h2>
+    <div className="container pb-32 pt-24">
+      <h2 className="heading-l mb-16">Рейтинг по Glicko2</h2>
       <div className="overflow-x-auto mb-8">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -98,7 +98,7 @@ const RatingPage = async () => {
         </table>
       </div>
 
-      <h2 className="page-title mb-4">На калибровке</h2>
+      <h2 className="heading-l mb-16">На калибровке</h2>
       <ul>
         {uncalibrated.map((player) => (
           <li key={player.id}>

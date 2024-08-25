@@ -45,8 +45,8 @@ export const metadata: Metadata = {
 
 const SummerFinalsAnnouncement2024 = () => {
   return (
-    <div className="main-container">
-      <h1 className="page-title mb-4">
+    <div className="container pb-32 pt-24">
+      <h1 className="heading-l mb-16">
         Анонс финалов летнего турнира по настольному теннису 2024
       </h1>
       <div className="flex mb-4 justify-between">
