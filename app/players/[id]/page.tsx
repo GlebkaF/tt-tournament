@@ -2,6 +2,7 @@ import PlayerProfile from "@/component/PlayerProfile";
 import { Metadata } from "next";
 
 import createDeps from "@/service/create-deps";
+import { notFound } from "next/navigation";
 
 const { userService } = createDeps();
 
@@ -35,7 +36,7 @@ export default async function PlayerPage({
   const playerData = await userService.getUserProfile(playerId);
 
   if (!playerData) {
-    return <div>404</div>;
+    notFound();
   }
 
   return (

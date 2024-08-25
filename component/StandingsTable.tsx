@@ -116,9 +116,9 @@ const StandingsTable = ({
             {Array.from({ length: maxRounds }, (_, i) => (
               <th
                 key={i}
-                className="heading-xs hidden desktop:table-cell text-center"
+                className="heading-xs hidden desktop:table-cell text-center text-secondary-base"
               >
-                w{i + 1}
+                {i + 1}
               </th>
             ))}
             <th className="heading-xs text-center"> Очки </th>
@@ -182,12 +182,12 @@ const StandingsTable = ({
                           key={match.id}
                           className={
                             match.result === "Win"
-                              ? "text-green-500"
+                              ? "text-primary-positive"
                               : match.result === "Draw"
-                              ? "text-yellow-500"
+                              ? "text-primary-base"
                               : match.result === "Lose"
-                              ? "text-red-500"
-                              : "text-gray-500"
+                              ? "text-primary-negative"
+                              : "text-tetriary-base"
                           }
                         >
                           {match.name} - {match.result}

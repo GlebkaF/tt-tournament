@@ -39,3 +39,18 @@ export interface StandingsItem {
 }
 
 export type Standings = StandingsItem[];
+
+export interface Post {
+  id: number;
+  title: string;
+  description: string;
+  slug: string;
+  content: string;
+  image: {
+    src: string;
+    width: number;
+    height: number;
+  };
+  author: string;
+  date: Date;
+}
