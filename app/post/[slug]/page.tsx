@@ -48,6 +48,16 @@ export async function generateMetadata({
   };
 }
 
+export const generateStaticParams = async (): Promise<{ slug: string }[]> => {
+  const posts = await postService.getAllPosts();
+
+  const routes = posts.map((post) => ({
+    slug: post.slug,
+  }));
+
+  return routes;
+};
+
 export default async function PostPage({
   params,
 }: {

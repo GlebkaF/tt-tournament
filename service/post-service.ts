@@ -153,4 +153,8 @@ export class PostService {
   async getPostBySlug(slug: string): Promise<Post | undefined> {
     return posts.find((post) => post.slug === slug);
   }
+
+  async getAllPosts(): Promise<Post[]> {
+    return posts;
+  }
 }
