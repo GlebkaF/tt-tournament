@@ -106,47 +106,36 @@ const StandingsTable = ({
   );
 
   return (
-    <div className="main-container">
-      <h2 className="page-title mb-4">{title}</h2>
-      <table className="min-w-full bg-white divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-4 py-2 text-xs text-gray-700 text-center">
-              {" "}
-              Место{" "}
-            </th>
-            <th className="px-4 py-2 text-xs text-gray-700 text-left">Игрок</th>
+    <div className="container pb-32 pt-24">
+      <h2 className="heading-l mb-16">{title}</h2>
+      <table className="min-w-full bg-white">
+        <thead className="bg-secondary-base">
+          <tr className="h-40">
+            <th className="heading-xs text-center min-w-40">№</th>
+            <th className="heading-xs text-left">Игрок</th>
             {Array.from({ length: maxRounds }, (_, i) => (
               <th
                 key={i}
-                className="px-1 py-2 text-xs text-gray-700 hidden lg:table-cell text-center"
+                className="heading-xs hidden desktop:table-cell text-center"
               >
-                {i + 1}
+                w{i + 1}
               </th>
             ))}
-            <th className="px-4 py-2 text-xs text-gray-700 text-center">
-              {" "}
-              Очки{" "}
-            </th>
-            <th className="px-4 py-2 text-xs text-gray-700 text-center">
-              {" "}
-              Игры{" "}
-            </th>
-            <th className="px-4 py-2 text-xs text-gray-700 hidden lg:table-cell text-center">
+            <th className="heading-xs text-center"> Очки </th>
+            <th className="heading-xs text-center"> Игры </th>
+            <th className="heading-xs hidden desktop:table-cell text-center">
               {" "}
               Среднее очков{" "}
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="bg-white divide-y divide-tetriary-base">
           {standings.map((item, index) => (
             <React.Fragment key={index}>
-              <tr>
-                <td className="px-4 py-4 text-sm text-gray-700 text-center">
-                  {item.position} {item.league}
-                </td>
+              <tr className="h-40">
+                <td className="text-l text-center">{item.position}</td>
                 <td
-                  className="px-4 py-4 text-sm text-blue-500 underline text-left cursor-pointer"
+                  className="text-l text-left cursor-pointer text-brand-blue"
                   onClick={() => toggleExpand(item.playerId)}
                 >
                   {item.player}
@@ -154,22 +143,20 @@ const StandingsTable = ({
                 {Array.from({ length: maxRounds }, (_, i) => (
                   <td
                     key={i}
-                    className="px-1 py-2 text-sm text-gray-700 hidden lg:table-cell text-center"
+                    className="text-l hidden desktop:table-cell text-center"
                   >
                     {item.rounds[i] !== undefined ? item.rounds[i] : "-"}
                   </td>
                 ))}
-                <td className="px-4 py-4 text-sm text-gray-700 text-center">
-                  {item.totalPoints}
-                </td>
-                <td className="px-4 py-4 text-sm text-gray-700 text-center cursor-pointer">
+                <td className="text-l text-center">{item.totalPoints}</td>
+                <td className="text-l text-center cursor-pointer">
                   {item.gamesPlayed}
                 </td>
-                <td className="px-4 py-4 text-sm text-gray-700 text-center hidden lg:table-cell relative group">
+                <td className="text-l text-center hidden desktop:table-cell relative group">
                   <div className="group-hover:block">
                     {predict[item.playerId].avgScore}
                   </div>
-                  <div className="hidden group-hover:block absolute bottom-full mb-2 bg-black text-white text-xs rounded py-1 px-2">
+                  <div className="hidden group-hover:block absolute bottom-full mb-2 bg-black text-white heading-xs rounded py-1 px-2">
                     <div>
                       Прогноз после {standings.length - 1} игр:
                       <br />

@@ -65,7 +65,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
   const totalGames = wins + draws + losses + tbd; // Общее количество игр включает оставшиеся игры
   console.log(allMatches);
   return (
-    <div className="main-container">
+    <div className="container pb-32 pt-24">
       {/* Player Info */}
       <div className="flex flex-col md:flex-row items-start space-y-4 md:space-y-0 md:space-x-4">
         <Image

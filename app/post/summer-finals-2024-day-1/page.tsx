@@ -48,8 +48,8 @@ export const metadata: Metadata = {
 
 const SummerFinals2024 = () => {
   return (
-    <div className="main-container">
-      <h1 className="page-title mb-4">Финал летнего турнира 2024. День 1</h1>
+    <div className="container pb-32 pt-24">
+      <h1 className="heading-l mb-16">Финал летнего турнира 2024. День 1</h1>
       <div className="flex mb-4 justify-between">
         <p className="text-gray-500">Глеб Фокин</p>
         <p className="text-gray-500">17-08-2024</p>
@@ -61,11 +61,7 @@ const SummerFinals2024 = () => {
         </p>
         <p className="mb-2">
           По результатам{" "}
-          <Link
-            target="_blank"
-            className="font-semibold text-blue-500 hover:underline"
-            href="/tournament/1"
-          >
+          <Link target="_blank" href="/tournament/1">
             группового этапа
           </Link>{" "}
           мы сформировали три лиги:
@@ -76,11 +72,7 @@ const SummerFinals2024 = () => {
           <li>Бронзовую - с 17 по 24 место</li>
         </ul>
         <p className="mb-2">
-          <Link
-            target="_blank"
-            className="font-semibold text-blue-500 hover:underline"
-            href="/players/16"
-          >
+          <Link target="_blank" href="/players/16">
             Максим Ефименко
           </Link>{" "}
           по итогам группы занял 16 место, но не смог поучаствовать в финалах
@@ -122,19 +114,11 @@ const SummerFinals2024 = () => {
         </p>
         <ul className="list-disc ml-8 mb-2">
           <li>
-            <Link
-              target="_blank"
-              className="font-semibold text-blue-500 hover:underline"
-              href="/players/30"
-            >
+            <Link target="_blank" href="/players/30">
               Тамбовцева
             </Link>{" "}
             <strong>3</strong> — 2{" "}
-            <Link
-              target="_blank"
-              className="font-semibold text-blue-500 hover:underline"
-              href="/players/9"
-            >
+            <Link target="_blank" href="/players/9">
               Назимов
             </Link>
           </li>
@@ -145,53 +129,29 @@ const SummerFinals2024 = () => {
         </p>
         <ul className="list-disc ml-8 mb-2">
           <li>
-            <Link
-              target="_blank"
-              className="font-semibold text-blue-500 hover:underline"
-              href="/players/23"
-            >
+            <Link target="_blank" href="/players/23">
               Катренко
             </Link>{" "}
             <strong>3</strong> — 0{" "}
-            <Link
-              target="_blank"
-              className="font-semibold text-blue-500 hover:underline"
-              href="/players/29"
-            >
+            <Link target="_blank" href="/players/29">
               Соболев
             </Link>
           </li>
           <li>
-            <Link
-              target="_blank"
-              className="font-semibold text-blue-500 hover:underline"
-              href="/players/24"
-            >
+            <Link target="_blank" href="/players/24">
               Козюрин
             </Link>{" "}
             <strong>3</strong> — 0{" "}
-            <Link
-              target="_blank"
-              className="font-semibold text-blue-500 hover:underline"
-              href="/players/27"
-            >
+            <Link target="_blank" href="/players/27">
               Рыжкова
             </Link>
           </li>
           <li>
-            <Link
-              target="_blank"
-              className="font-semibold text-blue-500 hover:underline"
-              href="/players/23"
-            >
+            <Link target="_blank" href="/players/23">
               Катренко
             </Link>{" "}
             <strong>3</strong> — 0{" "}
-            <Link
-              target="_blank"
-              className="font-semibold text-blue-500 hover:underline"
-              href="/players/24"
-            >
+            <Link target="_blank" href="/players/24">
               Козюрин
             </Link>
           </li>
@@ -215,7 +175,6 @@ const SummerFinals2024 = () => {
           с равным количеством очков. Итоговые места считали по правилам{" "}
           <Link
             target="_blank"
-            className="font-semibold text-blue-500 hover:underline"
             href="http://www.rustt.ru/b/fils/0/2021-table-tennis-rules.pdf"
           >
             ITTF, страница 59
@@ -237,41 +196,25 @@ const SummerFinals2024 = () => {
           <li>Группа А</li>
           <ul className="list-decimal ml-8 mb-2">
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/9"
-              >
+              <Link target="_blank" href="/players/9">
                 Назимов
               </Link>
               , 2 очка
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/26"
-              >
+              <Link target="_blank" href="/players/26">
                 Хомич
               </Link>
               , 2 очка
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/15"
-              >
+              <Link target="_blank" href="/players/15">
                 Рогозин
               </Link>
               , 2 очка
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/23"
-              >
+              <Link target="_blank" href="/players/23">
                 Катренко
               </Link>
               , 0 очков
@@ -280,41 +223,25 @@ const SummerFinals2024 = () => {
           <li>Группа Б</li>
           <ul className="list-decimal ml-8 mb-2">
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/18"
-              >
+              <Link target="_blank" href="/players/18">
                 Соловьев
               </Link>
               , 3 очка
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/20"
-              >
+              <Link target="_blank" href="/players/20">
                 Гондюхин
               </Link>
               , 2 очка
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/19"
-              >
+              <Link target="_blank" href="/players/19">
                 Егоров
               </Link>
               , 0 очков
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/21"
-              >
+              <Link target="_blank" href="/players/21">
                 Рабчевский
               </Link>
               , 0 очков
@@ -348,41 +275,25 @@ const SummerFinals2024 = () => {
           <li>Группа А</li>
           <ul className="list-decimal ml-8 mb-2">
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/28"
-              >
+              <Link target="_blank" href="/players/28">
                 Исаев
               </Link>
               , 2 очка
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/6"
-              >
+              <Link target="_blank" href="/players/6">
                 Шаламов
               </Link>
               , 2 очка
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/17"
-              >
+              <Link target="_blank" href="/players/17">
                 Герасимов
               </Link>
               , 1 очко
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/30"
-              >
+              <Link target="_blank" href="/players/30">
                 Тамбовцева
               </Link>
               , 0 очков
@@ -391,41 +302,25 @@ const SummerFinals2024 = () => {
           <li>Группа Б</li>
           <ul className="list-decimal ml-8 mb-2">
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/13"
-              >
+              <Link target="_blank" href="/players/13">
                 Ролдугин
               </Link>
               , 3 очка
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/35"
-              >
+              <Link target="_blank" href="/players/35">
                 Боженов
               </Link>
               , 2 очка
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/14"
-              >
+              <Link target="_blank" href="/players/14">
                 Ачкасов
               </Link>
               , 1 очко
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/10"
-              >
+              <Link target="_blank" href="/players/10">
                 Шестернин
               </Link>
               , 0 очков
@@ -470,41 +365,25 @@ const SummerFinals2024 = () => {
           <li>Группа А</li>
           <ul className="list-decimal ml-8 mb-2">
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/8"
-              >
+              <Link target="_blank" href="/players/8">
                 Шкретов
               </Link>
               , 2 очка
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/4"
-              >
+              <Link target="_blank" href="/players/4">
                 Зайцева
               </Link>
               , 2 очка
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/1"
-              >
+              <Link target="_blank" href="/players/1">
                 Михалевич
               </Link>
               , 2 очка
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/7"
-              >
+              <Link target="_blank" href="/players/7">
                 Фокин
               </Link>
               , 0 очков
@@ -513,41 +392,25 @@ const SummerFinals2024 = () => {
           <li>Группа Б</li>
           <ul className="list-decimal ml-8 mb-2">
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/11"
-              >
+              <Link target="_blank" href="/players/11">
                 Аникин
               </Link>
               , 2 очка
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/2"
-              >
+              <Link target="_blank" href="/players/2">
                 Емельянова
               </Link>
               , 2 очка
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/3"
-              >
+              <Link target="_blank" href="/players/3">
                 Тимочкин
               </Link>
               , 1 очко
             </li>
             <li>
-              <Link
-                target="_blank"
-                className="font-semibold text-blue-500 hover:underline"
-                href="/players/5"
-              >
+              <Link target="_blank" href="/players/5">
                 Куртеков
               </Link>
               , 0 очков

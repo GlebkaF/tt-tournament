@@ -11,35 +11,37 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="bg-[#ECF1F8] text-black p-4">
-        <nav className="max-w-6xl mx-auto flex justify-between items-center">
-          <div className="flex space-x-4">
-            <div className="h-12 flex items-center">
-              <Link href="/" className="text-lg">
+      <header className="bg-brand-light text-black p-4">
+        <nav className="container flex justify-between items-center h-80">
+          <div className="flex w-full justify-between desktop:justify-center">
+            <div className="h-48 flex items-center mr-48">
+              <Link href="/">
                 <Image
                   src={logoFull}
                   alt="логотип"
-                  className="object-cover w-auto h-12 mr-2"
+                  className="object-cover w-auto h-48 mr-2"
                 />
               </Link>
             </div>
-            {/* <div className="h-12 flex items-center">
-              <Link href="/matches" className="text-lg">
-                Матчи
-              </Link>
-            </div> */}
-            <div className="h-12 flex items-center">
-              <Link href="/tournament/1" className="text-lg">
+            <div className="h-48 flex-1 items-center space-x-20 hidden tablet:flex desktop:flex">
+              <Link href="/tournament/1" className="text-l text-primary-base">
                 Летний турнир 2024
+              </Link>
+            </div>
+            <div className="h-48 flex items-center space-x-20">
+              <Link
+                href="https://t.me/+nsoeCj4lNi81Zjg6"
+                className="heading-xs text-primary-base"
+                target="_blank"
+              >
+                Хочу с вами!
               </Link>
             </div>
           </div>
         </nav>
       </header>
 
-      <main className="flex-grow px-5">
-        <div className="max-w-6xl mx-auto">{children}</div>
-      </main>
+      <main>{children}</main>
     </div>
   );
 };
