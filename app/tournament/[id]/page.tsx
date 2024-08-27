@@ -5,6 +5,17 @@ import createDeps from "@/service/create-deps";
 
 const { tournamentService } = createDeps();
 
+export const generateStaticParams = async (): Promise<{ id: string }[]> => {
+  return [
+    {
+      id: "1",
+    },
+    {
+      id: "2",
+    },
+  ];
+};
+
 export async function generateMetadata({
   params,
 }: {

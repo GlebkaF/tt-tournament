@@ -3,6 +3,7 @@ import Markdown from "markdown-to-jsx";
 import MarkdownTagA from "./markdown-tag/MarkdownTagA";
 import MarkdownTagUl from "./markdown-tag/MarkdownTagUl";
 import Image from "next/image";
+import PlayoffTable from "./PlayoffTable";
 
 interface Props {
   content: string;
@@ -40,7 +41,6 @@ const MarkdownContent: React.FC<Props> = ({ content }) => {
     <>
       <Markdown
         options={{
-          disableParsingRawHTML: true,
           overrides: {
             a: MarkdownTagA,
             ul: { component: MarkdownTagUl },
@@ -100,6 +100,27 @@ const MarkdownContent: React.FC<Props> = ({ content }) => {
                     height={600}
                   ></Image>
                 );
+              },
+            },
+            PlayoffTable: {
+              component(props) {
+                if (!props.stages) {
+                  return null;
+                }
+                try {
+                  const stages = JSON.parse(props.stages);
+                  return (
+                    <div className="mt-12">
+                      <PlayoffTable stages={stages}></PlayoffTable>
+                    </div>
+                  );
+                } catch (err: any) {
+                  return (
+                    <div className="bg-primary-negative">
+                      Ошибка при парсинге json для PlayoffTable: {err.message}
+                    </div>
+                  );
+                }
               },
             },
           },

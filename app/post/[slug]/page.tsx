@@ -1,4 +1,5 @@
 import MarkdownContent from "@/component/MarkdownContent";
+import PlayoffTable from "@/component/PlayoffTable";
 import createDeps from "@/service/create-deps";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -28,7 +29,7 @@ export async function generateMetadata({
 
   return {
     metadataBase: new URL("https://ebtt.ru/"),
-    title,
+    title: title + " — Теннис. Евроберег",
     description,
     openGraph: {
       title,
@@ -73,7 +74,9 @@ export default async function PostPage({
     <div className="container pb-32 pt-24">
       <div className="flex mb-8 justify-between">
         <p className="text-secondary-base">{post.author}</p>
-        <p className="text-secondary-base">{post.date.toLocaleDateString()}</p>
+        <p className="text-secondary-base">
+          {post.date.toLocaleDateString("ru")}
+        </p>
       </div>
       <MarkdownContent content={post.content}></MarkdownContent>
     </div>

@@ -2,8 +2,14 @@ import { Metadata } from "next";
 import Link from "next/link";
 import thisisus from "@/images/thisisus.jpg";
 import Image from "next/image";
+import createDeps from "@/service/create-deps";
 
-export default function Home() {
+const { postService } = createDeps();
+
+export default async function Home() {
+  let posts = await postService.getAllPosts();
+  posts = posts.reverse();
+
   return (
     <div className="container pb-32 pt-24">
       <div className="block desktop:flex desktop:space-x-24">
@@ -64,48 +70,23 @@ export default function Home() {
           </div>
         </div>
         {/* Column for News Section */}
-        <div className="w-full desktop:w-1/3 mt-8 desktop:mt-0">
+        <div className="w-full desktop:w-1/3 mt-8">
           <h2 className="heading-m font-bold mb-24">Новости</h2>
-          <div className="mb-12">
-            <div>
-              <Link
-                href="/post/summer-finals-2024-day-1"
-                className="text-l"
-                aria-label="Финалы летнего турнира 2024. День 1"
-              >
-                Финалы летнего турнира. День 1
-              </Link>
-              <p className=" text-gray-600">
-                Кто прошел в полуфинал, а кто ушел тренироваться дальше
-              </p>
-            </div>
-          </div>
-          <div className="mb-12">
-            <div>
-              <Link
-                href="/post/summer-finals-announcement-2024"
-                className="text-l"
-                aria-label="Анонс финалов летнего турнира 2024"
-              >
-                Анонс финалов летнего турнира 2024
-              </Link>
-              <p className=" text-gray-600">Финалы пройдут 17 и 18 августа</p>
-            </div>
-          </div>
-          <div className="mb-12">
-            <div>
-              <Link
-                href="/post/random-pairs-2024"
-                className="text-l"
-                aria-label="Результаты второго парного турнира Случайные пары 2024"
-              >
-                Случайные пары 2024
-              </Link>
-              <p className=" text-gray-600">
-                Результаты второго парного турнира &ldquo;Случайные пары
-                2024&rdquo;, который прошел 20 июля 2024 года.
-              </p>
-            </div>
+          <div className="flex flex-col gap-12">
+            {posts.map((post) => {
+              return (
+                <div key={post.id}>
+                  <Link
+                    href={`/post/${post.slug}`}
+                    className="text-l"
+                    aria-label="Финалы летнего турнира 2024. День 1"
+                  >
+                    {post.title}
+                  </Link>
+                  <p className="text-secondary-base">{post.description}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

@@ -6,6 +6,53 @@ import { notFound } from "next/navigation";
 
 const { userService } = createDeps();
 
+export const generateStaticParams = async (): Promise<{ id: string }[]> => {
+  return [
+    {
+      id: "1",
+    },
+
+    {
+      id: "28",
+    },
+    {
+      id: "35",
+    },
+    {
+      id: "13",
+    },
+    {
+      id: "6",
+    },
+
+    {
+      id: "4",
+    },
+    {
+      id: "11",
+    },
+    {
+      id: "2",
+    },
+    {
+      id: "8",
+    },
+
+    {
+      id: "9",
+    },
+    {
+      id: "20",
+    },
+    {
+      id: "18",
+    },
+    {
+      id: "26",
+    },
+  ];
+};
+
 export async function generateMetadata({
   params,
 }: {

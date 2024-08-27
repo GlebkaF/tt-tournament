@@ -296,11 +296,7 @@ export class TournamentService {
     if (existingMatch || existingMatch2) {
       throw new Error("Match already exists");
     }
-    console.log({
-      tournamentId,
-      player1Id,
-      player2Id,
-    });
+
     // Создание новой записи
     await prisma.match.create({
       data: {

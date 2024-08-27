@@ -29,6 +29,12 @@ const playersDB: {
     firstName: "Виктория",
     lastName: "Емельяненко",
     image: "/image/profile/emel.jpg",
+    facts: [
+      {
+        title: "Летний турнир 2024",
+        description: "Золотая лига. 🥇 1 место",
+      },
+    ],
   },
   3: {
     id: 3,
@@ -42,6 +48,10 @@ const playersDB: {
     lastName: "Зайцева",
     image: "/image/profile/zai.jpg",
     facts: [
+      {
+        title: "Летний турнир 2024",
+        description: "Золотая лига. 🥈 2 место",
+      },
       {
         title: "Случайные пары 2024",
         description: "🥇 1 место",
@@ -75,9 +85,14 @@ const playersDB: {
   6: {
     id: 6,
     firstName: "noname",
-    lastName: "lastname",
+    lastName: "Шаламов",
     image: "/image/profile/shal.jpg",
-    facts: [],
+    facts: [
+      {
+        title: "Летний турнир 2024",
+        description: "Серебряная лига. 🥉 3 место",
+      },
+    ],
   },
   7: {
     id: 7,
@@ -102,6 +117,10 @@ const playersDB: {
     image: "/image/profile/shkret.jpg",
     facts: [
       {
+        title: "Летний турнир 2024",
+        description: "Золотая лига. 🥉 3 место",
+      },
+      {
         title: "Закрытие сезона 2023",
         description: "🥈 2 место",
       },
@@ -125,6 +144,10 @@ const playersDB: {
     lastName: "lastname",
     image: "/image/profile/nazim.jpg",
     facts: [
+      {
+        title: "Летний турнир 2024",
+        description: "Бронзовая лига. 🥈 2 место",
+      },
       {
         title: "Летний турнир 2023",
         description: "Серебряная лига. 🥇 1 место",
@@ -158,6 +181,12 @@ const playersDB: {
     firstName: "noname",
     lastName: "lastname",
     image: "/image/profile/roldug.jpg",
+    facts: [
+      {
+        title: "Летний турнир 2024",
+        description: "Серебряная лига. 🥈 2 место",
+      },
+    ],
   },
   14: {
     id: 14,
@@ -208,6 +237,10 @@ const playersDB: {
     image: "/image/profile/solov.jpg",
     facts: [
       {
+        title: "Летний турнир 2024",
+        description: "Бронзовая лига. 🥇 1 место",
+      },
+      {
         title: "Случайные пары 2024",
         description: "🥈 2 место",
       },
@@ -225,6 +258,10 @@ const playersDB: {
     lastName: "Гондюхин",
     image: "/image/profile/gonduh.jpg",
     facts: [
+      {
+        title: "Летний турнир 2024",
+        description: "Бронзовая лига. 🥉 3 место",
+      },
       {
         title: "Случайные пары 2024",
         description: "🥉 3 место",
@@ -285,10 +322,14 @@ const playersDB: {
   },
   28: {
     id: 28,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Илья",
+    lastName: "Исаев",
     image: "/image/profile/isaev.jpg",
     facts: [
+      {
+        title: "Летний турнир 2024",
+        description: "Серебряная лига. 🥇 1 место",
+      },
       {
         title: "Летний турнир 2023",
         description: "Золотая лига. 🥉 3 место",
