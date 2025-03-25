@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 https://www.figma.com/design/weFiVew7WJSYOhHi4okZuf/TTEVB?node-id=0-1&t=gy0cD7EFoDNNGhIr-1
 
-## Getting Started
+## !!Getting Started
 
 First, run the development server:
 
