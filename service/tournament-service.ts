@@ -75,6 +75,9 @@ export class TournamentService {
         },
       });
 
+      const totalRounds = 11;
+      const roundGames = 3;
+
       // Создаем карту для хранения данных о игроках
       const playerData = new Map<number, PlayerData>();
 
@@ -84,7 +87,7 @@ export class TournamentService {
           player: `${user.lastName} ${user.firstName}`,
           playerId: user.id,
           // Зависит от количества юзеров
-          rounds: new Array(10).fill(0),
+          rounds: new Array(totalRounds).fill(0),
           totalPoints: 0,
           gamesPlayed: 0,
           matches: [],
@@ -146,9 +149,9 @@ export class TournamentService {
         player.matches.sort(
           (a: Match, b: Match) => a.date.getTime() - b.date.getTime()
         );
-        player.rounds = new Array(10).fill(0).map((_, roundIndex) => {
+        player.rounds = new Array(totalRounds).fill(0).map((_, roundIndex) => {
           return player.matches
-            .slice(roundIndex * 4, (roundIndex + 1) * 4)
+            .slice(roundIndex * roundGames, (roundIndex + 1) * roundGames)
             .reduce((total: number, match: Match) => {
               if (match.player1Id === player.playerId) {
                 return (

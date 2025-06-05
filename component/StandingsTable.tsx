@@ -62,7 +62,7 @@ const StandingsTable = ({
   title: string;
 }) => {
   const totalGames = standings.length - 1;
-  const roundGames = 4;
+  const roundGames = 3;
   const maxRounds = Math.ceil(totalGames / roundGames);
 
   const [expandedPlayer, setExpandedPlayer] = useState<number | null>(null);
@@ -107,6 +107,8 @@ const StandingsTable = ({
     },
     [expandedPlayer]
   );
+
+  console.log(standings);
 
   return (
     <div className="container pb-32 pt-24">
@@ -159,7 +161,7 @@ const StandingsTable = ({
                   <div className="group-hover:block">
                     {predict[item.playerId].avgScore}
                   </div>
-                  <div className="hidden group-hover:block absolute bottom-full mb-2 bg-black text-white heading-xs rounded py-1 px-2">
+                  <div className="hidden group-hover:block absolute bottom-full mb-2 bg-black text-white heading-xs rounded py-8 px-8 bg-brand-dark">
                     <div>
                       Прогноз после {standings.length - 1} игр:
                       <br />
