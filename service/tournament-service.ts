@@ -11,6 +11,8 @@ const summerTournament2023PlayersIds = [
   52, 51, 50, 49, 47, 46,
 ];
 
+const summerTournament2025PlayersIds = [];
+
 interface PlayerData {
   player: string;
   playerId: number;
