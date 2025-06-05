@@ -589,7 +589,7 @@ const playersDB: {
   },
   63: {
     id: 63,
-    firstName: "noname",
+    firstName: "Борис",
     lastName: "Кусакин",
     image: "/image/profile/default.jpg",
   },
