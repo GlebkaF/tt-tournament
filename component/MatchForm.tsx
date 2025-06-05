@@ -213,7 +213,7 @@ const MatchForm: React.FC<MatchFormProps> = ({
           >
             Победил(а) {getPlayerName(player1Id)}
           </Button>
-          {/* <Button
+          <Button
             type={result === MatchResult.draw ? "primary" : "default"}
             onClick={() => setResult(MatchResult.draw)}
             size="large"
@@ -221,7 +221,7 @@ const MatchForm: React.FC<MatchFormProps> = ({
             disabled={!player1Id || !player2Id}
           >
             Ничья
-          </Button> */}
+          </Button>
           <Button
             type={result === MatchResult.player2Win ? "primary" : "default"}
             onClick={() => setResult(MatchResult.player2Win)}

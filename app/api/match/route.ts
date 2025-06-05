@@ -2,7 +2,7 @@ import createDeps from "@/service/create-deps";
 
 const { tournamentService } = createDeps();
 
-const tournamentId = 2;
+const tournamentId = 3;
 
 function parseBasicAuth(
   authHeader: string
@@ -39,17 +39,9 @@ export async function POST(req: Request) {
       });
     }
 
-    const {
-      player1Id,
-      player2Id,
-      player1Score,
-      player2Score,
-      result,
-      // date
-    } = await req.json();
+    const { player1Id, player2Id, player1Score, player2Score, result, date } =
+      await req.json();
 
-    // Хардкод для второго турнира
-    const date = "2023-06-10";
     await tournamentService.createMatch(
       player1Id,
       player2Id,

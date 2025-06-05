@@ -6,7 +6,7 @@ import createDeps from "@/service/create-deps";
 const { tournamentService } = createDeps();
 
 export default async function MatchesPage() {
-  const tournamentId = 2;
+  const tournamentId = 3;
   const players: Player[] = await tournamentService.getPlayers(tournamentId);
   const totalMatchesCount = await tournamentService.getTotalMatchesCount(
     tournamentId
@@ -16,5 +16,5 @@ export default async function MatchesPage() {
 }
 
 export const metadata: Metadata = {
-  title: "Матчи летнего турнира 2024 — Теннис. Евроберег",
+  title: "Матчи летнего турнира 2025 — Теннис. Евроберег",
 };

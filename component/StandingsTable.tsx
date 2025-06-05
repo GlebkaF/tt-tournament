@@ -74,7 +74,10 @@ const StandingsTable = ({
       const remainingGames = totalGames - item.gamesPlayed;
       const score = Math.round(currentScore + remainingGames * avgScore);
       return {
-        avgScore: Math.round(100 * (item.totalPoints / item.gamesPlayed)) / 100,
+        avgScore:
+          item.gamesPlayed > 0
+            ? Math.round(100 * (item.totalPoints / item.gamesPlayed)) / 100
+            : 0,
         playerId: item.playerId,
         score,
       };

@@ -24,8 +24,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </Link>
             </div>
             <div className="h-48 flex-1 items-center space-x-20 hidden tablet:flex desktop:flex">
-              <Link href="/tournament/1" className="text-l text-primary-base">
-                Летний турнир 2024
+              <Link href="/tournament/3" className="text-l text-primary-base">
+                Летний турнир 2025
               </Link>
             </div>
             <div className="h-48 flex items-center space-x-20">
