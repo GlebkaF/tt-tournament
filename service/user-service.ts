@@ -2,6 +2,10 @@ import { Match, PrismaClient } from "@prisma/client";
 
 import { getCache, setCache } from "@/helpers/cache";
 import { TournamentService } from "./tournament-service";
+import {
+  CURRENT_TOURNAMENT_ID,
+  CURRENT_TOURNAMENT_MATCHES_PER_ROUND,
+} from "@/app/const";
 
 const playersDB: {
   [key: number]: {
@@ -662,7 +666,7 @@ export class UserService {
       },
     });
 
-    const players2 = await this.tournamentService.getPlayers(1);
+    const players2 = await this.tournamentService.getPlayers(3);
     const matches2 = await this.getUserMatches(id);
 
     if (!player) {
@@ -688,29 +692,35 @@ export class UserService {
 
     // Группируем матчи по турам (4 матча в каждом туре)
     const groupedMatches: Round[] = [];
-    for (let i = 0; i < combinedMatches.length; i += 4) {
+    for (
+      let i = 0;
+      i < combinedMatches.length;
+      i += CURRENT_TOURNAMENT_MATCHES_PER_ROUND
+    ) {
       groupedMatches.push({
-        round: i / 4 + 1,
-        matches: combinedMatches.slice(i, i + 4).map(({ match, opponent }) => ({
-          opponent: opponent
-            ? {
-                id: opponent.id,
-                name: `${opponent.lastName} ${opponent.firstName}`,
-              }
-            : {
-                id: 0,
-                name: "Неизвестный",
-              },
-          result: (match.date <= new Date()
-            ? match.player1Id === id
-              ? match.result
-              : match.result === "PLAYER1_WIN"
-              ? "PLAYER2_WIN"
-              : match.result === "PLAYER2_WIN"
-              ? "PLAYER1_WIN"
-              : "DRAW"
-            : "TBD") as MatchResult,
-        })),
+        round: i / CURRENT_TOURNAMENT_MATCHES_PER_ROUND + 1,
+        matches: combinedMatches
+          .slice(i, i + CURRENT_TOURNAMENT_MATCHES_PER_ROUND)
+          .map(({ match, opponent }) => ({
+            opponent: opponent
+              ? {
+                  id: opponent.id,
+                  name: `${opponent.lastName} ${opponent.firstName}`,
+                }
+              : {
+                  id: 0,
+                  name: "Неизвестный",
+                },
+            result: (match.date <= new Date()
+              ? match.player1Id === id
+                ? match.result
+                : match.result === "PLAYER1_WIN"
+                ? "PLAYER2_WIN"
+                : match.result === "PLAYER2_WIN"
+                ? "PLAYER1_WIN"
+                : "DRAW"
+              : "TBD") as MatchResult,
+          })),
       });
     }
 
@@ -738,7 +748,10 @@ export class UserService {
   private async getUserMatches(playerId: number): Promise<Match[]> {
     return this.prisma.match.findMany({
       where: {
-        AND: [{ OR: [{ player1Id: playerId }, { player2Id: playerId }] }],
+        AND: [
+          { tournamentId: CURRENT_TOURNAMENT_ID },
+          { OR: [{ player1Id: playerId }, { player2Id: playerId }] },
+        ],
       },
       orderBy: {
         date: "asc",

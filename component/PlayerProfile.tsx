@@ -1,4 +1,8 @@
 "use client";
+import {
+  CURRENT_TOURNAMENT_NAME,
+  CURRENT_TOURNAMENT_NAME_SHORT,
+} from "@/app/const";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -157,8 +161,10 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
       </div>
 
       {/* Matches by Rounds  */}
-      {/* <div>
-        <h3 className="text-2xl font-bold mb-4 mt-4">Все матчи</h3>
+      <div>
+        <h3 className="text-2xl font-bold mb-4 mt-4">
+          Матчи {CURRENT_TOURNAMENT_NAME_SHORT}
+        </h3>
         {matchDetails.map((round) => (
           <div key={round.round} className="">
             <ul className="space-y-2">
@@ -174,9 +180,9 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                   </Link>
                   <span>
                     {match.result === "PLAYER1_WIN"
-                      ? "Победа"
+                      ? "💥 Победа"
                       : match.result === "PLAYER2_WIN"
-                      ? "Поражение"
+                      ? "🍞 Поражение"
                       : match.result === "DRAW"
                       ? "Ничья"
                       : "Не сыграно"}
@@ -186,7 +192,7 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
             </ul>
           </div>
         ))}
-      </div> */}
+      </div>
     </div>
   );
 };

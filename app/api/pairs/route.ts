@@ -1,3 +1,4 @@
+import { CURRENT_TOURNAMENT_ID } from "@/app/const";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
@@ -5,6 +6,7 @@ async function generatePossiblePairs(playerIds: number[]) {
   // Получаем все матчи, где участвуют выбранные игроки
   const matches = await prisma.match.findMany({
     where: {
+      tournamentId: CURRENT_TOURNAMENT_ID,
       OR: [
         {
           player1Id: {

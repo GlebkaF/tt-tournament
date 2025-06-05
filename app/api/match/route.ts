@@ -1,8 +1,9 @@
+import { CURRENT_TOURNAMENT_ID } from "@/app/const";
 import createDeps from "@/service/create-deps";
 
 const { tournamentService } = createDeps();
 
-const tournamentId = 3;
+const tournamentId = CURRENT_TOURNAMENT_ID;
 
 function parseBasicAuth(
   authHeader: string
