@@ -37,7 +37,7 @@ const MatchPage = ({
 
   return (
     <div className="container pb-32 pt-24">
-      <h1 className="heading-l mb-16">Матчи летнего турнира 2023</h1>
+      <h1 className="heading-l mb-16">Матчи летнего турнира 2025</h1>
       {showForm && (
         <MatchForm
           players={players}

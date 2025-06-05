@@ -37,6 +37,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 #### Произвольная команда
 
 npx dotenv -e .env.local -- npx tsx command/seed-players.ts
+npx dotenv -e .env.local -- npx tsx command/seed-missing-players.ts
 
 #### Создать миграцию
 

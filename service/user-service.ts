@@ -2,6 +2,10 @@ import { Match, PrismaClient } from "@prisma/client";
 
 import { getCache, setCache } from "@/helpers/cache";
 import { TournamentService } from "./tournament-service";
+import {
+  CURRENT_TOURNAMENT_ID,
+  CURRENT_TOURNAMENT_MATCHES_PER_ROUND,
+} from "@/app/const";
 
 const playersDB: {
   [key: number]: {
@@ -27,7 +31,7 @@ const playersDB: {
   2: {
     id: 2,
     firstName: "Виктория",
-    lastName: "Емельяненко",
+    lastName: "Емельянова",
     image: "/image/profile/emel.jpg",
     facts: [
       {
@@ -39,7 +43,7 @@ const playersDB: {
   3: {
     id: 3,
     firstName: "Антон",
-    lastName: "Тимченко",
+    lastName: "Тимочкин",
     image: "/image/profile/timch.jpg",
   },
   4: {
@@ -72,8 +76,8 @@ const playersDB: {
   },
   5: {
     id: 5,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Дмитрий",
+    lastName: "Куртеков",
     image: "/image/profile/kur-dim.jpg",
     facts: [
       {
@@ -84,7 +88,7 @@ const playersDB: {
   },
   6: {
     id: 6,
-    firstName: "noname",
+    firstName: "Артем",
     lastName: "Шаламов",
     image: "/image/profile/shal.jpg",
     facts: [
@@ -112,8 +116,8 @@ const playersDB: {
   },
   8: {
     id: 8,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Евгений",
+    lastName: "Шкретов",
     image: "/image/profile/shkret.jpg",
     facts: [
       {
@@ -140,8 +144,8 @@ const playersDB: {
   },
   9: {
     id: 9,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Константин",
+    lastName: "Назимов",
     image: "/image/profile/nazim.jpg",
     facts: [
       {
@@ -160,8 +164,8 @@ const playersDB: {
   },
   10: {
     id: 10,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Антон",
+    lastName: "Шестернин",
     image: "/image/profile/shest-an.jpg",
   },
   11: {
@@ -178,8 +182,8 @@ const playersDB: {
   },
   13: {
     id: 13,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Кирилл",
+    lastName: "Ролдугин",
     image: "/image/profile/roldug.jpg",
     facts: [
       {
@@ -190,14 +194,14 @@ const playersDB: {
   },
   14: {
     id: 14,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Андрей",
+    lastName: "Ачкасов",
     image: "/image/profile/аchkas.jpg",
   },
   15: {
     id: 15,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Андрей",
+    lastName: "Рогозин",
     image: "/image/profile/rogoz.jpg",
     facts: [
       {
@@ -208,8 +212,8 @@ const playersDB: {
   },
   16: {
     id: 16,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Максим",
+    lastName: "Ефименко",
     image: "/image/profile/efim.jpg",
     facts: [
       {
@@ -220,8 +224,8 @@ const playersDB: {
   },
   17: {
     id: 17,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Виктор",
+    lastName: "Герасимов",
     image: "/image/profile/gerasimov.jpg",
     facts: [
       {
@@ -248,8 +252,8 @@ const playersDB: {
   },
   19: {
     id: 19,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Максим",
+    lastName: "Егоров",
     image: "/image/profile/egorov-maks.jpg",
   },
   20: {
@@ -274,8 +278,8 @@ const playersDB: {
   },
   21: {
     id: 21,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Никита",
+    lastName: "Рабчевский",
     image: "/image/profile/rabch.jpg",
   },
   22: {
@@ -286,26 +290,26 @@ const playersDB: {
   },
   23: {
     id: 23,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Антон",
+    lastName: "Катренко",
     image: "/image/profile/katrenko.jpg",
   },
   24: {
     id: 24,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Кирилл",
+    lastName: "Козюрин",
     image: "/image/profile/kozurin.jpg",
   },
   25: {
     id: 25,
-    firstName: "Дмитрий",
+    firstName: "Димитрий",
     lastName: "Ластовский",
     image: "/image/profile/default.jpg",
   },
   26: {
     id: 26,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Виталий",
+    lastName: "Хомич",
     image: "/image/profile/homich.jpg",
     facts: [
       {
@@ -316,8 +320,8 @@ const playersDB: {
   },
   27: {
     id: 27,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Наталья",
+    lastName: "Рыжкова",
     image: "/image/profile/ryzkova.jpg",
   },
   28: {
@@ -342,14 +346,14 @@ const playersDB: {
   },
   29: {
     id: 29,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Сергей",
+    lastName: "Соболев",
     image: "/image/profile/sobolev.jpg",
   },
   30: {
     id: 30,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Анастасия",
+    lastName: "Тамбовцева",
     image: "/image/profile/tam-n.jpg",
     facts: [
       {
@@ -368,14 +372,14 @@ const playersDB: {
   },
   31: {
     id: 31,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Наталья",
+    lastName: "Боженова",
     image: "/image/profile/bojenova.jpg",
   },
   32: {
     id: 32,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Марина",
+    lastName: "Фокина",
     image: "/image/profile/fokina-marina.jpg",
     facts: [],
   },
@@ -393,61 +397,60 @@ const playersDB: {
   },
   34: {
     id: 34,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Елена",
+    lastName: "Югай",
     image: "/image/profile/yugai.jpg",
   },
   35: {
     id: 35,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Вадим",
+    lastName: "Боженов",
     image: "/image/profile/bojenov-vadim.jpg",
   },
   36: {
     id: 36,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Никита",
+    lastName: "Скляров",
     image: "/image/profile/default.jpg",
   },
   37: {
     id: 37,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Дмитрий",
+    lastName: "Ерзин",
     image: "/image/profile/default.jpg",
   },
   38: {
     id: 38,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Денис",
+    lastName: "Самохин",
     image: "/image/profile/default.jpg",
   },
   39: {
     id: 39,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Сергей",
+    lastName: "Ерзин",
     image: "/image/profile/default.jpg",
   },
   40: {
     id: 40,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Елена",
+    lastName: "Красовская",
     image: "/image/profile/default.jpg",
   },
   41: {
     id: 41,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Сергей",
+    lastName: "Протас",
     image: "/image/profile/default.jpg",
   },
   42: {
     id: 42,
-    firstName: "noname",
-    lastName: "lastname",
+    firstName: "Антон",
+    lastName: "Герасимов",
     image: "/image/profile/default.jpg",
   },
-
   43: {
-    id: 42,
+    id: 43,
     firstName: "Виктор",
     lastName: "Иванов",
     image: "/image/profile/ivanov-viktor.jpg",
@@ -459,7 +462,7 @@ const playersDB: {
     ],
   },
   44: {
-    id: 42,
+    id: 44,
     firstName: "Алексей",
     lastName: "Егоров",
     image: "/image/profile/default.jpg",
@@ -471,7 +474,7 @@ const playersDB: {
     ],
   },
   45: {
-    id: 42,
+    id: 45,
     firstName: "Марина",
     lastName: "Воробьева",
     image: "/image/profile/default.jpg",
@@ -481,6 +484,138 @@ const playersDB: {
         description: "🥈 2 место",
       },
     ],
+  },
+  46: {
+    id: 46,
+    firstName: "Бузургмехр",
+    lastName: "Рахматуллоев",
+    image: "/image/profile/default.jpg",
+  },
+  47: {
+    id: 47,
+    firstName: "Андрей",
+    lastName: "Сараев",
+    image: "/image/profile/default.jpg",
+  },
+  48: {
+    id: 48,
+    firstName: "Иван",
+    lastName: "Антонов",
+    image: "/image/profile/default.jpg",
+  },
+  49: {
+    id: 49,
+    firstName: "Михаил",
+    lastName: "Хан",
+    image: "/image/profile/default.jpg",
+  },
+  50: {
+    id: 50,
+    firstName: "Джамал",
+    lastName: "Муллоев",
+    image: "/image/profile/default.jpg",
+  },
+  51: {
+    id: 51,
+    firstName: "Евгений",
+    lastName: "Васильев",
+    image: "/image/profile/default.jpg",
+  },
+  52: {
+    id: 52,
+    firstName: "Илья",
+    lastName: "Хряков",
+    image: "/image/profile/default.jpg",
+  },
+  53: {
+    id: 53,
+    firstName: "Роман",
+    lastName: "Юсупов",
+    image: "/image/profile/default.jpg",
+  },
+  54: {
+    id: 54,
+    firstName: "Сергей",
+    lastName: "Герковенко",
+    image: "/image/profile/default.jpg",
+  },
+  55: {
+    id: 55,
+    firstName: "Ксения",
+    lastName: "Герковенко",
+    image: "/image/profile/default.jpg",
+  },
+  56: {
+    id: 56,
+    firstName: "Алексей",
+    lastName: "Гусев",
+    image: "/image/profile/default.jpg",
+  },
+  57: {
+    id: 57,
+    firstName: "Владимир",
+    lastName: "Афанасьев",
+    image: "/image/profile/default.jpg",
+  },
+  58: {
+    id: 58,
+    firstName: "Алексей",
+    lastName: "Башаев",
+    image: "/image/profile/default.jpg",
+  },
+  59: {
+    id: 59,
+    firstName: "Никита",
+    lastName: "Скляров",
+    image: "/image/profile/default.jpg",
+  },
+  60: {
+    id: 60,
+    firstName: "Дмитрий",
+    lastName: "Ерзин",
+    image: "/image/profile/default.jpg",
+  },
+  61: {
+    id: 61,
+    firstName: "Сергей",
+    lastName: "Ерзин",
+    image: "/image/profile/default.jpg",
+  },
+  62: {
+    id: 62,
+    firstName: "Елена",
+    lastName: "Красовская",
+    image: "/image/profile/default.jpg",
+  },
+  63: {
+    id: 63,
+    firstName: "Борис",
+    lastName: "Кусакин",
+    image: "/image/profile/default.jpg",
+  },
+  64: {
+    id: 64,
+    firstName: "Сергей",
+    lastName: "Протас",
+    image: "/image/profile/default.jpg",
+  },
+  65: {
+    id: 65,
+    firstName: "Антон",
+    lastName: "Герасимов",
+    image: "/image/profile/default.jpg",
+  },
+  66: {
+    id: 66,
+    firstName: "Александр",
+    lastName: "Максимов",
+    image: "/image/profile/default.jpg",
+  },
+  67: {
+    id: 67,
+    firstName: "Михаил",
+    lastName: "Сафронов",
+    image: "/image/profile/default.jpg",
   },
 };
 
@@ -531,7 +666,7 @@ export class UserService {
       },
     });
 
-    const players2 = await this.tournamentService.getPlayers(1);
+    const players2 = await this.tournamentService.getPlayers(3);
     const matches2 = await this.getUserMatches(id);
 
     if (!player) {
@@ -557,29 +692,35 @@ export class UserService {
 
     // Группируем матчи по турам (4 матча в каждом туре)
     const groupedMatches: Round[] = [];
-    for (let i = 0; i < combinedMatches.length; i += 4) {
+    for (
+      let i = 0;
+      i < combinedMatches.length;
+      i += CURRENT_TOURNAMENT_MATCHES_PER_ROUND
+    ) {
       groupedMatches.push({
-        round: i / 4 + 1,
-        matches: combinedMatches.slice(i, i + 4).map(({ match, opponent }) => ({
-          opponent: opponent
-            ? {
-                id: opponent.id,
-                name: `${opponent.lastName} ${opponent.firstName}`,
-              }
-            : {
-                id: 0,
-                name: "Неизвестный",
-              },
-          result: (match.date <= new Date()
-            ? match.player1Id === id
-              ? match.result
-              : match.result === "PLAYER1_WIN"
-              ? "PLAYER2_WIN"
-              : match.result === "PLAYER2_WIN"
-              ? "PLAYER1_WIN"
-              : "DRAW"
-            : "TBD") as MatchResult,
-        })),
+        round: i / CURRENT_TOURNAMENT_MATCHES_PER_ROUND + 1,
+        matches: combinedMatches
+          .slice(i, i + CURRENT_TOURNAMENT_MATCHES_PER_ROUND)
+          .map(({ match, opponent }) => ({
+            opponent: opponent
+              ? {
+                  id: opponent.id,
+                  name: `${opponent.lastName} ${opponent.firstName}`,
+                }
+              : {
+                  id: 0,
+                  name: "Неизвестный",
+                },
+            result: (match.date <= new Date()
+              ? match.player1Id === id
+                ? match.result
+                : match.result === "PLAYER1_WIN"
+                ? "PLAYER2_WIN"
+                : match.result === "PLAYER2_WIN"
+                ? "PLAYER1_WIN"
+                : "DRAW"
+              : "TBD") as MatchResult,
+          })),
       });
     }
 
@@ -607,7 +748,10 @@ export class UserService {
   private async getUserMatches(playerId: number): Promise<Match[]> {
     return this.prisma.match.findMany({
       where: {
-        AND: [{ OR: [{ player1Id: playerId }, { player2Id: playerId }] }],
+        AND: [
+          { tournamentId: CURRENT_TOURNAMENT_ID },
+          { OR: [{ player1Id: playerId }, { player2Id: playerId }] },
+        ],
       },
       orderBy: {
         date: "asc",
