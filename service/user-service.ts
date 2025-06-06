@@ -543,7 +543,7 @@ const playersDB: {
     id: 55,
     firstName: "Ксения",
     lastName: "Герковенко",
-    image: "/image/profile/default.jpg",
+    image: "/image/profile/ksenya_ger.jpg",
   },
   56: {
     id: 56,
