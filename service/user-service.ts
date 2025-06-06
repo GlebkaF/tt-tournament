@@ -585,7 +585,7 @@ const playersDB: {
     id: 62,
     firstName: "Елена",
     lastName: "Красовская",
-    image: "/image/profile/default.jpg",
+    image: "/image/profile/krasovskaya_elena.jpg",
   },
   63: {
     id: 63,
