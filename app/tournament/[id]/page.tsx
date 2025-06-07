@@ -19,9 +19,10 @@ export const generateStaticParams = async (): Promise<{ id: string }[]> => {
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const tournamentId = parseInt(params.id, 10);
+  const { id } = await params;
+  const tournamentId = parseInt(id, 10);
   const tournament = await tournamentService.getTournament(tournamentId);
 
   if (!tournament) {
@@ -35,8 +36,13 @@ export async function generateMetadata({
   };
 }
 
-const StandingsPage = async ({ params }: { params: { id: string } }) => {
-  const tournamentId = parseInt(params.id, 10);
+const StandingsPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id } = await params;
+  const tournamentId = parseInt(id, 10);
   const tournament = await tournamentService.getTournament(tournamentId);
 
   if (!tournament) {

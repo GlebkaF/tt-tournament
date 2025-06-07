@@ -9,14 +9,15 @@ const { postService } = createDeps();
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const post = await postService.getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await postService.getPostBySlug(slug);
   if (!post) {
     return {};
   }
 
-  const { title, description, slug, image } = post;
+  const { title, description, slug: postSlug, image } = post;
   const url = "https://ebtt.ru/post/" + slug;
   const images = [
     {
@@ -62,9 +63,10 @@ export const generateStaticParams = async (): Promise<{ slug: string }[]> => {
 export default async function PostPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const post = await postService.getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await postService.getPostBySlug(slug);
 
   if (!post) {
     notFound();

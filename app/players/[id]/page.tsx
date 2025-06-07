@@ -56,9 +56,9 @@ export const generateStaticParams = async (): Promise<{ id: string }[]> => {
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const { id } = params;
+  const { id } = await params;
   const playerId = parseInt(id, 10);
   const playerData = await userService.getUserProfile(playerId);
 
@@ -76,9 +76,9 @@ export async function generateMetadata({
 export default async function PlayerPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const { id } = params;
+  const { id } = await params;
   const playerId = parseInt(id, 10);
   const playerData = await userService.getUserProfile(playerId);
 
