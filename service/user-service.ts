@@ -94,7 +94,7 @@ const playersDB: {
     id: 6,
     firstName: "Артем",
     lastName: "Шаламов",
-    image: "/image/profile/shal.jpg",
+    image: "/image/profile/shalamov-2025.jpg",
     facts: [
       {
         title: "Открытие сезона 2025",
@@ -423,8 +423,8 @@ const playersDB: {
   },
   37: {
     id: 37,
-    firstName: "Дмитрий",
-    lastName: "Ерзин",
+    firstName: "noname",
+    lastName: "noname",
     image: "/image/profile/default.jpg",
   },
   38: {
@@ -435,8 +435,8 @@ const playersDB: {
   },
   39: {
     id: 39,
-    firstName: "Сергей",
-    lastName: "Ерзин",
+    firstName: "noname",
+    lastName: "noname ",
     image: "/image/profile/default.jpg",
   },
   40: {
@@ -585,13 +585,13 @@ const playersDB: {
     id: 60,
     firstName: "Дмитрий",
     lastName: "Ерзин",
-    image: "/image/profile/default.jpg",
+    image: "/image/profile/erzin-dima.jpg",
   },
   61: {
     id: 61,
     firstName: "Сергей",
     lastName: "Ерзин",
-    image: "/image/profile/default.jpg",
+    image: "/image/profile/erzin-sergey.jpg",
   },
   62: {
     id: 62,
