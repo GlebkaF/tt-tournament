@@ -19,7 +19,7 @@ const ScheduleComponent: React.FC<{ players: Player[] }> = ({ players }) => {
   const [selectedPlayers, setSelectedPlayers] = useState<number[]>([]);
   const [pairs, setPairs] = useState<Pair[]>([]);
   const [loadingPairs, setLoadingPairs] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPair, setSelectedPair] = useState<Pair | null>(null);
   const [fixedPairs, setFixedPairs] = useState<Pair[]>([]);
   const pathname = usePathname();
@@ -87,16 +87,16 @@ const ScheduleComponent: React.FC<{ players: Player[] }> = ({ players }) => {
 
   const showModal = (pair: Pair) => {
     setSelectedPair(pair);
-    setIsModalVisible(true);
+    setIsModalOpen(true);
   };
 
   const handleCancel = () => {
-    setIsModalVisible(false);
+    setIsModalOpen(false);
     setSelectedPair(null);
   };
 
   const handleFormSubmit = () => {
-    setIsModalVisible(false);
+    setIsModalOpen(false);
     setFixedPairs((prev) =>
       prev.filter(
         (p) =>
@@ -249,7 +249,7 @@ const ScheduleComponent: React.FC<{ players: Player[] }> = ({ players }) => {
       {selectedPair && (
         <Modal
           title="Занести результат"
-          visible={isModalVisible}
+          open={isModalOpen}
           onCancel={handleCancel}
           footer={null}
         >
