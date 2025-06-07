@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Теннис. Евроберег",
   description:
-    "Ежегодный летний турнир по настольному теннису. Европейский берег 2024",
+    "Ежегодный летний турнир по настольному теннису. Европейский берег 2025",
   verification: {
     google: "668a84ae7e0f39be",
     yandex: "bb5ce6944d1e3408",

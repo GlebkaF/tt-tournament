@@ -113,6 +113,17 @@ const StandingsTable = ({
   return (
     <div className="container pb-32 pt-24">
       <h2 className="heading-l mb-16">{title}</h2>
+      <div className="mb-16">
+        <p className="text-l mb-2">
+          Играем два раза в неделю - анонсы в{" "}
+          <a href="https://t.me/+nsoeCj4lNi81Zjg6" target="_blank">
+            телеграм-канале
+          </a>
+        </p>
+        <p className="text-l mb-2">Каждую неделю каждый игрок играет 3 игры</p>
+        <p className="text-l mb-2">В каждой игре две партии</p>
+        <p className="text-l">Очки: победа — 3, ничья — 2, поражение — 1</p>
+      </div>
       <table className="min-w-full bg-white">
         <thead className="bg-secondary-base">
           <tr className="h-40">

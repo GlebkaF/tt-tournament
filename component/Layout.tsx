@@ -26,12 +26,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 />
               </Link>
             </div>
-            <div className="h-48 flex-1 items-center space-x-20 hidden tablet:flex desktop:flex">
+            <div className="h-48 flex-1 items-center space-x-20 flex">
               <Link href={link} className="text-l text-primary-base">
                 {CURRENT_TOURNAMENT_NAME}
               </Link>
             </div>
-            <div className="h-48 flex items-center space-x-20">
+            <div className="h-48 flex items-center space-x-20 hidden tablet:flex desktop:flex">
               <Link
                 href="https://t.me/+nsoeCj4lNi81Zjg6"
                 className="heading-xs text-primary-base"

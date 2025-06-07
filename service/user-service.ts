@@ -23,6 +23,10 @@ const playersDB: {
     image: "/image/profile/mih-al.jpg",
     facts: [
       {
+        title: "Открытие сезона 2025",
+        description: "🥇 1 место",
+      },
+      {
         title: "Открытие сезона 2024",
         description: "🥈 2 место",
       },
@@ -92,6 +96,10 @@ const playersDB: {
     lastName: "Шаламов",
     image: "/image/profile/shal.jpg",
     facts: [
+      {
+        title: "Открытие сезона 2025",
+        description: "🥉 3 место",
+      },
       {
         title: "Летний турнир 2024",
         description: "Серебряная лига. 🥉 3 место",
@@ -455,6 +463,10 @@ const playersDB: {
     lastName: "Иванов",
     image: "/image/profile/ivanov-viktor.jpg",
     facts: [
+      {
+        title: "Открытие сезона 2025",
+        description: "🥈 2 место",
+      },
       {
         title: "Случайные пары 2023",
         description: "🥉 3 место",
