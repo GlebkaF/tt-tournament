@@ -9,7 +9,7 @@ interface MarkdownTagAProps {
 export default function MarkdownTagA({
   children,
   ...props
-}: MarkdownTagAProps): JSX.Element {
+}: MarkdownTagAProps): React.JSX.Element {
   const href: string = (props.href as string) ?? "";
 
   const isExternalLink =

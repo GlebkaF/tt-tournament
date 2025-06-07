@@ -9,7 +9,7 @@ interface MarkdownTagUlProps {
 export default function MarkdownTagUl({
   children,
   ...props
-}: MarkdownTagUlProps): JSX.Element {
+}: MarkdownTagUlProps): React.JSX.Element {
   return (
     // pl-*, а не list-inside, потому что list-inside не работает вместе с <p> внутри <li> списка, верстка ломается
     <ul {...props} className="text-l list-disc pl-20">
