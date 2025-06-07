@@ -108,8 +108,6 @@ const StandingsTable = ({
     [expandedPlayer]
   );
 
-  console.log(standings);
-
   return (
     <div className="container pb-32 pt-24">
       <h2 className="heading-l mb-16">{title}</h2>

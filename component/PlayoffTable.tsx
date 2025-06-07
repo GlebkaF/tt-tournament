@@ -159,8 +159,6 @@ function _mdHelper() {
     ];
 
     const mdString = `<PlayoffTable stages='${JSON.stringify(stages)}' />`;
-
-    console.log(mdString);
   })();
 }
 
