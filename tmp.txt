@@ -1,0 +1,11 @@
+"mcp-memory-bank": {
+      "command": "/Users/skyeng/.local/bin/uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/ipospelov/mcp-memory-bank",
+        "mcp_memory_bank"
+      ],
+      "env": {
+        "PATH": "/Users/skyeng/.local/bin:/usr/local/bin:/usr/bin:/bin"
+      }
+    },
