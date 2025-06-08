@@ -112,33 +112,7 @@ function generateSuggestedQueue(allPairs: Pair[], fixedPairs: Pair[]): Pair[] {
   return suggestedQueue;
 }
 
-// Функция для получения оставшихся пар (исключая предложенную очередь и закрепленные)
-function getRemainingPairs(
-  allPairs: Pair[],
-  suggestedQueue: Pair[],
-  fixedPairs: Pair[]
-): Pair[] {
-  // Все занятые игроки (из очереди и закрепленных)
-  const occupiedPlayerIds = new Set<number>();
-
-  [...suggestedQueue, ...fixedPairs].forEach((pair) => {
-    occupiedPlayerIds.add(pair.player1Id);
-    occupiedPlayerIds.add(pair.player2Id);
-  });
-
-  // Возвращаем пары, которых нет в предложенной очереди и закрепленных парах
-  return allPairs.filter(
-    (pair) =>
-      !suggestedQueue.some(
-        (sp) =>
-          sp.player1Id === pair.player1Id && sp.player2Id === pair.player2Id
-      ) &&
-      !fixedPairs.some(
-        (fp) =>
-          fp.player1Id === pair.player1Id && fp.player2Id === pair.player2Id
-      )
-  );
-}
+// Функция getRemainingPairs удалена - теперь показываем все пары в "Возможных парах"
 
 const ScheduleComponent: React.FC<{ players: Player[] }> = ({ players }) => {
   const [selectedPlayers, setSelectedPlayers] = useState<number[]>([]);
@@ -330,6 +304,43 @@ const ScheduleComponent: React.FC<{ players: Player[] }> = ({ players }) => {
           Сформировать Пары
         </Button>
 
+        {fixedPairs.length > 0 && (
+          <List
+            style={{ marginBottom: "16px", backgroundColor: "#52c41a32" }}
+            header={<div>Закрепленные Пары</div>}
+            bordered
+            dataSource={fixedPairs}
+            renderItem={(pair) => {
+              const player1 = findPlayerById(pair.player1Id);
+              const player2 = findPlayerById(pair.player2Id);
+              return (
+                <List.Item
+                  actions={[
+                    <Button
+                      type="default"
+                      key="1"
+                      onClick={() => unfixPair(pair)}
+                    >
+                      Открепить
+                    </Button>,
+                    <Button
+                      type="primary"
+                      key="2"
+                      onClick={() => showModal(pair)}
+                    >
+                      Занести результат
+                    </Button>,
+                  ]}
+                >
+                  {player1 &&
+                    player2 &&
+                    `${player1.firstName} ${player1.lastName} (${pair.player1Matches} игр) vs ${player2.firstName} ${player2.lastName} (${pair.player2Matches} игр)`}
+                </List.Item>
+              );
+            }}
+          />
+        )}
+
         {/* Новый блок: Предложенная очередь */}
         {suggestedQueue.length > 0 && !loadingPairs && (
           <List
@@ -368,42 +379,6 @@ const ScheduleComponent: React.FC<{ players: Player[] }> = ({ players }) => {
           />
         )}
 
-        {fixedPairs.length > 0 && (
-          <List
-            style={{ marginBottom: "16px", backgroundColor: "#52c41a32" }}
-            header={<div>Закрепленные Пары</div>}
-            bordered
-            dataSource={fixedPairs}
-            renderItem={(pair) => {
-              const player1 = findPlayerById(pair.player1Id);
-              const player2 = findPlayerById(pair.player2Id);
-              return (
-                <List.Item
-                  actions={[
-                    <Button
-                      type="default"
-                      key="1"
-                      onClick={() => unfixPair(pair)}
-                    >
-                      Открепить
-                    </Button>,
-                    <Button
-                      type="primary"
-                      key="2"
-                      onClick={() => showModal(pair)}
-                    >
-                      Занести результат
-                    </Button>,
-                  ]}
-                >
-                  {player1 &&
-                    player2 &&
-                    `${player1.firstName} ${player1.lastName} (${pair.player1Matches} игр) vs ${player2.firstName} ${player2.lastName} (${pair.player2Matches} игр)`}
-                </List.Item>
-              );
-            }}
-          />
-        )}
         {loadingPairs ? (
           <Loading />
         ) : (
@@ -412,11 +387,14 @@ const ScheduleComponent: React.FC<{ players: Player[] }> = ({ players }) => {
               <List
                 header={<div>Возможные Пары</div>}
                 bordered
-                dataSource={getRemainingPairs(
-                  pairs,
-                  suggestedQueue,
-                  fixedPairs
-                )} // Используем новую функцию для фильтрации
+                dataSource={pairs.filter(
+                  (pair) =>
+                    !fixedPairs.some(
+                      (fixedPair) =>
+                        fixedPair.player1Id === pair.player1Id &&
+                        fixedPair.player2Id === pair.player2Id
+                    )
+                )} // Показываем все пары кроме закрепленных
                 renderItem={(pair) => {
                   const player1 = findPlayerById(pair.player1Id);
                   const player2 = findPlayerById(pair.player2Id);
