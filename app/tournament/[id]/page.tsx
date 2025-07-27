@@ -57,3 +57,4 @@ const StandingsPage = async ({
 export default StandingsPage;
 
 export const fetchCache = "force-no-store";
+export const dynamic = "force-dynamic";
