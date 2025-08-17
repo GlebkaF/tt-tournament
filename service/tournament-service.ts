@@ -13,8 +13,7 @@ const summerTournament2023PlayersIds = [
 
 const summerTournament2025PlayersIds = [
   55, 5, 4, 6,  7, 27, 1, 23, 36, 19, 37, 39, 40, 2, 63, 22, 9, 43,
- 15, 10, 54, 13, 41, 42, 16, 67, 59, 60, 61, 62, 65,
-  68, 69, 21,
+ 15, 10, 54, 13, 41, 42, 16, 59, 60, 61, 62, 65, 68, 69, 21,
 ];
 
 interface PlayerData {
