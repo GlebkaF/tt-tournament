@@ -57,9 +57,11 @@ function getMatches(standings: Standings, item: StandingsItem) {
 const StandingsTable = ({
   standings,
   title,
+  simple = false,
 }: {
   standings: Standings;
   title: string;
+  simple?: boolean;
 }) => {
   const totalGames = standings.length - 1;
   const roundGames = 3;
@@ -67,39 +69,45 @@ const StandingsTable = ({
 
   const [expandedPlayer, setExpandedPlayer] = useState<number | null>(null);
 
-  const predict = standings
-    .map((item) => {
-      const avgScore = item.totalPoints / item.gamesPlayed;
-      const currentScore = item.totalPoints;
-      const remainingGames = totalGames - item.gamesPlayed;
-      const score = Math.round(currentScore + remainingGames * avgScore);
-      return {
-        avgScore:
-          item.gamesPlayed > 0
-            ? Math.round(100 * (item.totalPoints / item.gamesPlayed)) / 100
-            : 0,
-        playerId: item.playerId,
-        score,
-      };
-    })
-    .sort((a, b) => b.score - a.score)
-    .reduce(
-      (
-        acc: {
-          [key: number]: { score: number; position: number; avgScore: number };
-        },
-        item,
-        index
-      ) => {
-        acc[item.playerId] = {
-          avgScore: item.avgScore,
-          score: item.score,
-          position: index + 1,
-        };
-        return acc;
-      },
-      {}
-    );
+  const predict = !simple
+    ? standings
+        .map((item) => {
+          const avgScore = item.totalPoints / item.gamesPlayed;
+          const currentScore = item.totalPoints;
+          const remainingGames = totalGames - item.gamesPlayed;
+          const score = Math.round(currentScore + remainingGames * avgScore);
+          return {
+            avgScore:
+              item.gamesPlayed > 0
+                ? Math.round(100 * (item.totalPoints / item.gamesPlayed)) / 100
+                : 0,
+            playerId: item.playerId,
+            score,
+          };
+        })
+        .sort((a, b) => b.score - a.score)
+        .reduce(
+          (
+            acc: {
+              [key: number]: {
+                score: number;
+                position: number;
+                avgScore: number;
+              };
+            },
+            item,
+            index
+          ) => {
+            acc[item.playerId] = {
+              avgScore: item.avgScore,
+              score: item.score,
+              position: index + 1,
+            };
+            return acc;
+          },
+          {}
+        )
+    : ({} as any);
 
   const toggleExpand = useCallback(
     (playerId: number) => {
@@ -111,36 +119,41 @@ const StandingsTable = ({
   return (
     <div className="container pb-32 pt-24">
       <h2 className="heading-l mb-16">{title}</h2>
-      <div className="mb-16">
-        <p className="text-l mb-2">
-          Играем два раза в неделю - анонсы в{" "}
-          <a href="https://t.me/+nsoeCj4lNi81Zjg6" target="_blank">
-            телеграм-канале
-          </a>
-        </p>
-        <p className="text-l mb-2">Каждую неделю каждый игрок играет 3 игры</p>
-        <p className="text-l mb-2">В каждой игре две партии</p>
-        <p className="text-l">Очки: победа — 3, ничья — 2, поражение — 1</p>
-      </div>
+      {!simple && (
+        <div className="mb-16">
+          <p className="text-l mb-2">
+            Играем два раза в неделю - анонсы в{" "}
+            <a href="https://t.me/+nsoeCj4lNi81Zjg6" target="_blank">
+              телеграм-канале
+            </a>
+          </p>
+          <p className="text-l mb-2">Каждую неделю каждый игрок играет 3 игры</p>
+          <p className="text-l mb-2">В каждой игре две партии</p>
+          <p className="text-l">Очки: победа — 3, ничья — 2, поражение — 1</p>
+        </div>
+      )}
       <table className="min-w-full bg-white">
         <thead className="bg-secondary-base">
           <tr className="h-40">
             <th className="heading-xs text-center min-w-40">№</th>
             <th className="heading-xs text-left">Игрок</th>
-            {Array.from({ length: maxRounds }, (_, i) => (
-              <th
-                key={i}
-                className="heading-xs hidden desktop:table-cell text-center text-secondary-base"
-              >
-                {i + 1}
-              </th>
-            ))}
+            {!simple &&
+              Array.from({ length: maxRounds }, (_, i) => (
+                <th
+                  key={i}
+                  className="heading-xs hidden desktop:table-cell text-center text-secondary-base"
+                >
+                  {i + 1}
+                </th>
+              ))}
             <th className="heading-xs text-center"> Очки </th>
             <th className="heading-xs text-center"> Игры </th>
-            <th className="heading-xs hidden desktop:table-cell text-center">
-              {" "}
-              Среднее очков{" "}
-            </th>
+            {!simple && (
+              <th className="heading-xs hidden desktop:table-cell text-center">
+                {" "}
+                Среднее очков{" "}
+              </th>
+            )}
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-tetriary-base">
@@ -149,39 +162,46 @@ const StandingsTable = ({
               <tr className="h-40">
                 <td className="text-l text-center">{item.position}</td>
                 <td
-                  className="text-l text-left cursor-pointer text-brand-blue"
-                  onClick={() => toggleExpand(item.playerId)}
+                  className={
+                    simple
+                      ? "text-l text-left"
+                      : "text-l text-left cursor-pointer text-brand-blue"
+                  }
+                  {...(!simple && {
+                    onClick: () => toggleExpand(item.playerId),
+                  })}
                 >
                   {item.player}
                 </td>
-                {Array.from({ length: maxRounds }, (_, i) => (
-                  <td
-                    key={i}
-                    className="text-l hidden desktop:table-cell text-center"
-                  >
-                    {item.rounds[i] !== undefined ? item.rounds[i] : "-"}
-                  </td>
-                ))}
+                {!simple &&
+                  Array.from({ length: maxRounds }, (_, i) => (
+                    <td
+                      key={i}
+                      className="text-l hidden desktop:table-cell text-center"
+                    >
+                      {item.rounds[i] !== undefined ? item.rounds[i] : "-"}
+                    </td>
+                  ))}
                 <td className="text-l text-center">{item.totalPoints}</td>
-                <td className="text-l text-center cursor-pointer">
-                  {item.gamesPlayed}
-                </td>
-                <td className="text-l text-center hidden desktop:table-cell relative group">
-                  <div className="group-hover:block">
-                    {predict[item.playerId].avgScore}
-                  </div>
-                  <div className="hidden group-hover:block absolute bottom-full mb-2 bg-black text-white heading-xs rounded py-8 px-8 bg-brand-dark">
-                    <div>
-                      Прогноз после {standings.length - 1} игр:
-                      <br />
-                      {predict[item.playerId].position} место
-                      <br /> {predict[item.playerId].score} очков
+                <td className="text-l text-center">{item.gamesPlayed}</td>
+                {!simple && (
+                  <td className="text-l text-center hidden desktop:table-cell relative group">
+                    <div className="group-hover:block">
+                      {predict[item.playerId].avgScore}
                     </div>
-                    <div className="absolute left-1/2 transform -translate-x-1/2 bottom-0 h-0 w-0 border border-transparent border-t-black"></div>
-                  </div>
-                </td>
+                    <div className="hidden group-hover:block absolute bottom-full mb-2 bg-black text-white heading-xs rounded py-8 px-8 bg-brand-dark">
+                      <div>
+                        Прогноз после {standings.length - 1} игр:
+                        <br />
+                        {predict[item.playerId].position} место
+                        <br /> {predict[item.playerId].score} очков
+                      </div>
+                      <div className="absolute left-1/2 transform -translate-x-1/2 bottom-0 h-0 w-0 border border-transparent border-t-black"></div>
+                    </div>
+                  </td>
+                )}
               </tr>
-              {expandedPlayer === item.playerId && (
+              {!simple && expandedPlayer === item.playerId && (
                 <tr>
                   <td colSpan={6} className="p-4">
                     <a
