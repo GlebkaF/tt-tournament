@@ -50,8 +50,30 @@ const StandingsPage = async ({
   }
 
   const standings = await tournamentService.getStandings(tournamentId);
+  const eliminatedIds = await tournamentService.getEliminatedPlayerIds(
+    tournamentId
+  );
+  const activeStandings = standings.filter(
+    (s) => !eliminatedIds.includes(s.playerId)
+  );
+  const eliminatedStandings = standings.filter((s) =>
+    eliminatedIds.includes(s.playerId)
+  );
 
-  return <StandingsTable title={tournament.title} standings={standings} />;
+  return (
+    <>
+      <StandingsTable title={tournament.title} standings={activeStandings} />
+      {eliminatedStandings.length > 0 && (
+        <div className="mt-24">
+          <StandingsTable
+            title="Выбывшие"
+            standings={eliminatedStandings}
+            simple
+          />
+        </div>
+      )}
+    </>
+  );
 };
 
 export default StandingsPage;

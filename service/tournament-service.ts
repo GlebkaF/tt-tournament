@@ -5,16 +5,19 @@ const summerTournament2024PlayersIds = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
   24, 26, 27, 28, 29, 30, 31, 32, 34, 35,
 ];
+const summerTournament2024EliminatedPlayersIds: number[] = [];
 
 const summerTournament2023PlayersIds = [
   4, 5, 6, 7, 8, 9, 10, 15, 16, 17, 20, 22, 26, 27, 28, 30, 33, 34, 55, 54, 53,
   52, 51, 50, 49, 47, 46,
 ];
+const summerTournament2023EliminatedPlayersIds: number[] = [];
 
 const summerTournament2025PlayersIds = [
-  55, 5, 4, 6,  7, 27, 1, 23, 36, 19, 37, 39, 40, 2, 63, 22, 9, 43,
- 15, 10, 54, 13, 41, 42, 16, 59, 60, 61, 62, 65, 68, 69, 21,
+  55, 5, 4, 6, 7, 27, 1, 23, 36, 19, 37, 39, 40, 2, 63, 22, 9, 43,
+  15, 10, 54, 13, 41, 42, 16, 59, 60, 61, 62, 69, 21,
 ];
+const summerTournament2025EliminatedPlayersIds = [65, 68];
 
 interface PlayerData {
   player: string;
@@ -49,8 +52,12 @@ export class TournamentService {
     });
   }
 
+  async getEliminatedPlayerIds(tournamentId: number): Promise<number[]> {
+    return this.getEliminatedPlayersByTournamentId(tournamentId);
+  }
+
   async getStandings(tournamentId: number): Promise<Standings> {
-    const tournamentsPlayers = await this.getPlayersByTournamentId(
+    const tournamentsPlayers = await this.getAllPlayersByTournamentId(
       tournamentId
     );
     try {
@@ -250,8 +257,36 @@ export class TournamentService {
     return [];
   }
 
+  private async getEliminatedPlayersByTournamentId(
+    tournamentId: number
+  ): Promise<number[]> {
+    if (tournamentId === 1) {
+      return summerTournament2024EliminatedPlayersIds;
+    }
+
+    if (tournamentId === 2) {
+      return summerTournament2023EliminatedPlayersIds;
+    }
+
+    if (tournamentId === 3) {
+      return summerTournament2025EliminatedPlayersIds;
+    }
+
+    return [];
+  }
+
+  private async getAllPlayersByTournamentId(
+    tournamentId: number
+  ): Promise<number[]> {
+    const players = await this.getPlayersByTournamentId(tournamentId);
+    const eliminated = await this.getEliminatedPlayersByTournamentId(
+      tournamentId
+    );
+    return [...players, ...eliminated];
+  }
+
   async getMatches(tournamentId: number): Promise<Match[]> {
-    const tournamentsPlayers = await this.getPlayersByTournamentId(
+    const tournamentsPlayers = await this.getAllPlayersByTournamentId(
       tournamentId
     );
 
