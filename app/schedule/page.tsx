@@ -1,4 +1,4 @@
-import { Player } from "@/app/interface";
+export const dynamic = "force-dynamic"; import { Player } from "@/app/interface";
 import Schedule from "@/component/Schedule";
 
 import createDeps from "@/service/create-deps";
