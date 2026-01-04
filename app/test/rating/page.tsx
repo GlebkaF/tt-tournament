@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { Match, PrismaClient } from "@prisma/client";
 import { Player } from "@/app/interface";
 import React from "react";
