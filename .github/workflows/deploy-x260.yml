@@ -1,0 +1,23 @@
+# Push to main → deploy on x260 (self-hosted runner). Runs in parallel with Vercel.
+
+name: Deploy to x260
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, x260, linux]
+    if: github.repository == 'GlebkaF/tt-tournament'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build and run with docker compose
+        run: docker compose up -d --build --force-recreate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          BASIC_AUTH_USERNAME: ${{ secrets.BASIC_AUTH_USERNAME }}
+          BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}

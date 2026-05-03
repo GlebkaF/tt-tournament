@@ -1,0 +1,24 @@
+# Deploy: docker compose up -d --build --force-recreate
+# Env: GitHub Actions workflow passes secrets directly into this compose file
+
+services:
+  tt-tournament:
+    build:
+      context: .
+      secrets:
+        - database_url
+    image: tt-tournament
+    container_name: tt-tournament
+    restart: unless-stopped
+    ports:
+      - "3010:3000"
+    environment:
+      - TZ=Europe/Moscow
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - BASIC_AUTH_USERNAME=${BASIC_AUTH_USERNAME}
+      - BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}
+
+secrets:
+  database_url:
+    environment: DATABASE_URL
