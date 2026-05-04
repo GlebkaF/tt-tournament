@@ -4,6 +4,7 @@ const isStandalone = process.env.BUILD_STANDALONE === "1";
 const nextConfig = {
   output: isStandalone ? "standalone" : undefined,
   experimental: isStandalone ? { cpus: 1, workerThreads: false } : undefined,
+  staticPageGenerationTimeout: isStandalone ? 300 : 60,
   async redirects() {
     return [
       {
