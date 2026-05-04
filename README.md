@@ -44,3 +44,13 @@ npx dotenv -e .env.local -- npx tsx command/seed-missing-players.ts
 (!) Добавь DATABASE_URL в .env.local
 
 npx dotenv -e .env.local -- npx prisma migrate dev --name
+
+### Бэкапы БД
+
+Дневные дампы Postgres с x260 пушатся в приватный репозиторий: https://github.com/GlebkaF/tt-tournament-backups (cron 04:00 UTC = 07:00 МСК, скрипт `/opt/tt-tournament-data/backup.sh` на x260).
+
+Восстановление:
+
+```
+gunzip -c dumps/tt-LATEST.sql.gz | docker exec -i tt-tournament-postgres psql -U tt -d tt
+```
