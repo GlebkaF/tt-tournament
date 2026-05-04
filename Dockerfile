@@ -9,12 +9,15 @@ RUN npm ci
 
 FROM node:20-slim AS builder
 WORKDIR /app
+ENV BUILD_STANDALONE=1
 RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN --mount=type=secret,id=database_url \
-    DATABASE_URL="$(cat /run/secrets/database_url)" npm run build
+    URL="$(cat /run/secrets/database_url)"; \
+    case "$URL" in *\?*) SEP='&' ;; *) SEP='?' ;; esac; \
+    DATABASE_URL="${URL}${SEP}connection_limit=20&pool_timeout=30" npm run build
 
 FROM node:20-slim AS runner
 WORKDIR /app
