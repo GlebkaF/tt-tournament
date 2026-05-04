@@ -19,6 +19,5 @@ jobs:
         run: docker compose up -d --build --force-recreate
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          BUILD_DATABASE_URL: ${{ secrets.BUILD_DATABASE_URL }}
           BASIC_AUTH_USERNAME: ${{ secrets.BASIC_AUTH_USERNAME }}
           BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}

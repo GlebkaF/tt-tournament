@@ -1,10 +1,6 @@
-const isStandalone = process.env.BUILD_STANDALONE === "1";
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: isStandalone ? "standalone" : undefined,
-  experimental: isStandalone ? { cpus: 1, workerThreads: false } : undefined,
-  staticPageGenerationTimeout: isStandalone ? 300 : 60,
+  output: process.env.BUILD_STANDALONE === "1" ? "standalone" : undefined,
   async redirects() {
     return [
       {

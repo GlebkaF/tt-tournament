@@ -14,10 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-cert
     && rm -rf /var/lib/apt/lists/*
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN --mount=type=secret,id=build_database_url \
-    URL="$(cat /run/secrets/build_database_url)"; \
-    case "$URL" in *\?*) SEP='&' ;; *) SEP='?' ;; esac; \
-    DATABASE_URL="${URL}${SEP}connection_limit=20&pool_timeout=30" npm run build
+RUN npm run build
 
 FROM node:20-slim AS runner
 WORKDIR /app

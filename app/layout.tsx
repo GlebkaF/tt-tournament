@@ -8,6 +8,8 @@ import { WebAnalitics } from "@/component/WebAnalitics";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Теннис. Евроберег",
   description:

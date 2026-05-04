@@ -3,10 +3,7 @@
 
 services:
   tt-tournament:
-    build:
-      context: .
-      secrets:
-        - build_database_url
+    build: .
     image: tt-tournament
     container_name: tt-tournament
     restart: unless-stopped
@@ -18,7 +15,3 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - BASIC_AUTH_USERNAME=${BASIC_AUTH_USERNAME}
       - BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}
-
-secrets:
-  build_database_url:
-    environment: BUILD_DATABASE_URL
