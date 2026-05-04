@@ -1,12 +1,34 @@
 # Deploy: docker compose up -d --build --force-recreate
 # Env: GitHub Actions workflow passes secrets directly into this compose file
+# Postgres init dump lives at /opt/tt-tournament-data/init on the host
+# (loaded by postgres image only when the data volume is empty).
 
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: tt-tournament-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tt
+      POSTGRES_USER: tt
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - tt_pg_data:/var/lib/postgresql/data
+      - /opt/tt-tournament-data/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tt -d tt"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
   tt-tournament:
     build: .
     image: tt-tournament
     container_name: tt-tournament
     restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
     ports:
       - "3010:3000"
     environment:
@@ -15,3 +37,6 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - BASIC_AUTH_USERNAME=${BASIC_AUTH_USERNAME}
       - BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}
+
+volumes:
+  tt_pg_data:
