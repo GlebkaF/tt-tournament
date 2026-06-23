@@ -415,46 +415,10 @@ const playersDB: {
     lastName: "Боженов",
     image: "/image/profile/bojenov-vadim.jpg",
   },
-  36: {
-    id: 36,
-    firstName: "Никита",
-    lastName: "Скляров",
-    image: "/image/profile/default.jpg",
-  },
-  37: {
-    id: 37,
-    firstName: "noname",
-    lastName: "noname",
-    image: "/image/profile/default.jpg",
-  },
   38: {
     id: 38,
     firstName: "Денис",
     lastName: "Самохин",
-    image: "/image/profile/default.jpg",
-  },
-  39: {
-    id: 39,
-    firstName: "noname",
-    lastName: "noname ",
-    image: "/image/profile/default.jpg",
-  },
-  40: {
-    id: 40,
-    firstName: "Елена",
-    lastName: "Красовская",
-    image: "/image/profile/default.jpg",
-  },
-  41: {
-    id: 41,
-    firstName: "Сергей",
-    lastName: "Протас",
-    image: "/image/profile/default.jpg",
-  },
-  42: {
-    id: 42,
-    firstName: "Антон",
-    lastName: "Герасимов",
     image: "/image/profile/default.jpg",
   },
   43: {
@@ -579,7 +543,7 @@ const playersDB: {
     id: 59,
     firstName: "Никита",
     lastName: "Скляров",
-    image: "/image/profile/default.jpg",
+    image: "/image/profile/sklyarov-nikita.jpg",
   },
   60: {
     id: 60,

@@ -12,8 +12,13 @@ const summerTournament2023PlayersIds = [
 ];
 
 const summerTournament2025PlayersIds = [
-  55, 5, 4, 6,  7, 27, 1, 23, 36, 19, 37, 39, 40, 2, 63, 22, 9, 43,
- 15, 10, 54, 13, 41, 42, 16, 59, 60, 61, 62, 65, 68, 69, 21,
+  55, 5, 4, 6, 7, 27, 1, 23, 19, 2, 63, 22, 9, 43, 15, 10, 54, 13, 16, 59, 60,
+  61, 62, 65, 21,
+];
+
+// Состав летнего турнира 2026 — 19 участников (см. опрос в Telegram)
+const summerTournament2026PlayersIds = [
+  5, 67, 22, 1, 15, 20, 19, 65, 62, 60, 54, 55, 21, 59, 7, 16, 23, 2, 68,
 ];
 
 interface PlayerData {
@@ -247,6 +252,10 @@ export class TournamentService {
       return summerTournament2025PlayersIds;
     }
 
+    if (tournamentId === 4) {
+      return summerTournament2026PlayersIds;
+    }
+
     return [];
   }
 
@@ -284,7 +293,7 @@ export class TournamentService {
     date: Date,
     tournamentId: number
   ) {
-    if ([1, 2].includes(tournamentId)) {
+    if ([1, 2, 3].includes(tournamentId)) {
       throw new Error("Tournament closed");
     }
 

@@ -118,9 +118,15 @@ const StandingsTable = ({
             телеграм-канале
           </a>
         </p>
-        <p className="text-l mb-2">Каждую неделю каждый игрок играет 3 игры</p>
-        <p className="text-l mb-2">В каждой игре две партии</p>
-        <p className="text-l">Очки: победа — 3, ничья — 2, поражение — 1</p>
+        <p className="text-l mb-2">
+          Задача — отыграть личные встречи со всеми участниками
+        </p>
+        <p className="text-l mb-2">Каждая встреча — до 2 побед из 3 партий</p>
+        <p className="text-l mb-2">
+          Ближе к финалам участники распределяются по лигам: «Золотая»,
+          «Серебряная», «Бронзовая». Финалы лиг — 29–30 августа
+        </p>
+        <p className="text-l">Очки: победа — 3, поражение — 1</p>
       </div>
       <table className="min-w-full bg-white">
         <thead className="bg-secondary-base">
