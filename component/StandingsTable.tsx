@@ -1,6 +1,7 @@
 "use client";
 import { Standings, StandingsItem } from "@/app/interface";
 import React, { useState, useCallback } from "react";
+import Link from "next/link";
 
 function getMatches(standings: Standings, item: StandingsItem) {
   const playedMatches = item.matches
@@ -113,20 +114,18 @@ const StandingsTable = ({
       <h2 className="heading-l mb-16">{title}</h2>
       <div className="mb-16">
         <p className="text-l mb-2">
-          Играем два раза в неделю - анонсы в{" "}
-          <a href="https://t.me/+nsoeCj4lNi81Zjg6" target="_blank">
-            телеграм-канале
-          </a>
-        </p>
-        <p className="text-l mb-2">
-          Задача — отыграть личные встречи со всеми участниками
+          Задача — отыграть личные встречи со всеми участниками. Ориентир —
+          примерно 2 игры в неделю, но это не обязательно: играем в удобное
+          время.
         </p>
         <p className="text-l mb-2">Каждая встреча — до 2 побед из 3 партий</p>
-        <p className="text-l mb-2">
-          Ближе к финалам участники распределяются по лигам: «Золотая»,
-          «Серебряная», «Бронзовая». Финалы лиг — 29–30 августа
+        <p className="text-l mb-2">Очки: победа — 3, поражение — 1</p>
+        <p className="text-l">
+          Как всё устроено и подробные правила —{" "}
+          <Link href="/rules" className="text-primary-base underline">
+            на странице правил турнира
+          </Link>
         </p>
-        <p className="text-l">Очки: победа — 3, поражение — 1</p>
       </div>
       <table className="min-w-full bg-white">
         <thead className="bg-secondary-base">

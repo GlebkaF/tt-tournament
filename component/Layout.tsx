@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import logoFull from "@/images/logo-v3-light-bg.png";
 import logoMin from "@/images/logo.svg";
 import Image from "next/image";
@@ -11,6 +14,13 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const link = `/tournament/${CURRENT_TOURNAMENT_ID}`;
+  const pathname = usePathname();
+
+  // Главная — самостоятельный лендинг со своей шапкой и подвалом,
+  // поэтому общий хедер на ней не рендерим.
+  if (pathname === "/") {
+    return <>{children}</>;
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -29,6 +39,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <div className="h-48 flex-1 items-center space-x-20 flex">
               <Link href={link} className="text-l text-primary-base">
                 {CURRENT_TOURNAMENT_NAME}
+              </Link>
+              <Link href="/rules" className="text-l text-primary-base">
+                Правила
               </Link>
             </div>
             <div className="h-48 flex items-center space-x-20 hidden tablet:flex desktop:flex">
