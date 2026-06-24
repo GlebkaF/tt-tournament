@@ -1,18 +1,14 @@
 "use client";
-import {
-  CURRENT_TOURNAMENT_NAME,
-  CURRENT_TOURNAMENT_NAME_SHORT,
-} from "@/app/const";
+import { CURRENT_TOURNAMENT_NAME } from "@/app/const";
+import { CURRENT_TOURNAMENT_ID } from "@/app/const";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 interface MatchDetail {
   opponent: {
     name: string;
     id: number;
   };
-
   result: string;
 }
 
@@ -30,168 +26,227 @@ interface PlayerProfileProps {
   }[];
 }
 
-const getMatchResultStyle = (result: string): string => {
-  switch (result) {
-    case "PLAYER1_WIN":
-      return "bg-green-100 text-green-500"; // Green for win
-    case "PLAYER2_WIN":
-      return "bg-red-100 text-red-500"; // Red for loss
-    case "DRAW":
-      return "bg-yellow-100 text-yellow-500"; // Yellow for draw
-    default:
-      return "";
-  }
-};
+const Eyebrow = ({ children }: { children: React.ReactNode }) => (
+  <p className="caption-s font-semibold uppercase tracking-[0.18em] text-poster-clay-deep">
+    {children}
+  </p>
+);
 
-const calculateStatistics = (matchDetails: MatchDetail[]) => {
+const calculateStatistics = (matches: MatchDetail[]) => {
   let wins = 0;
   let draws = 0;
   let losses = 0;
   let tbd = 0;
+  for (const m of matches) {
+    if (m.result === "PLAYER1_WIN") wins += 1;
+    else if (m.result === "PLAYER2_WIN") losses += 1;
+    else if (m.result === "DRAW") draws += 1;
+    else if (m.result === "TBD") tbd += 1;
+  }
+  const score = wins * 3 + draws * 2 + losses * 1;
+  return { wins, draws, losses, tbd, score };
+};
 
-  matchDetails.forEach((match) => {
-    if (match.result === "PLAYER1_WIN") wins += 1;
-    else if (match.result === "PLAYER2_WIN") losses += 1;
-    else if (match.result === "DRAW") draws += 1;
-    else if (match.result === "TBD") tbd += 1;
-  });
+const StatTile = ({
+  value,
+  label,
+  accent,
+}: {
+  value: number | string;
+  label: string;
+  accent?: "clay" | "court" | "ink";
+}) => {
+  const color =
+    accent === "clay"
+      ? "text-poster-clay"
+      : accent === "court"
+      ? "text-poster-court"
+      : "text-poster-ink";
+  return (
+    <div className="flex-1 border-2 border-poster-ink bg-poster-cream px-12 py-12 text-center">
+      <div className={`font-black leading-none text-[clamp(26px,4vw,40px)] ${color}`}>
+        {value}
+      </div>
+      <div className="mt-4 caption-xs uppercase tracking-[0.1em] text-poster-muted">
+        {label}
+      </div>
+    </div>
+  );
+};
 
-  let score = wins * 3 + draws * 2 + losses * 1;
-  return { wins, draws, losses, score, tbd };
+const RESULT_META: Record<
+  string,
+  { label: string; chip: string; mark: string }
+> = {
+  PLAYER1_WIN: {
+    label: "Победа",
+    chip: "border-poster-court text-poster-court",
+    mark: "▲",
+  },
+  PLAYER2_WIN: {
+    label: "Поражение",
+    chip: "border-poster-clay text-poster-clay-deep",
+    mark: "▼",
+  },
+  DRAW: {
+    label: "Ничья",
+    chip: "border-poster-muted text-poster-muted",
+    mark: "—",
+  },
+  TBD: {
+    label: "Не сыграно",
+    chip: "border-poster-muted text-poster-muted border-dashed",
+    mark: "·",
+  },
 };
 
 const PlayerProfile: React.FC<PlayerProfileProps> = ({
   player,
   matchDetails,
 }) => {
-  const allMatches = matchDetails.flatMap((round) => round.matches);
-  const { wins, draws, losses, score, tbd } = calculateStatistics(allMatches);
-  const totalGames = wins + draws + losses + tbd; // Общее количество игр включает оставшиеся игры
+  const allMatches = matchDetails.flatMap((r) => r.matches);
+  const { wins, draws, losses, tbd, score } = calculateStatistics(allMatches);
+  const played = wins + draws + losses;
+
+  const seg = (n: number) => (played > 0 ? (n / played) * 100 : 0);
 
   return (
-    <div className="container pb-32 pt-24">
-      {/* Player Info */}
-      <div className="flex flex-col desktop:flex-row items-start space-y-4 desktop:space-y-0 desktop:space-x-16">
-        <Image
-          width={1200}
-          height={1600}
-          src={player.image}
-          className="w-full max-h-144 desktop:max-h-[36rem] desktop:max-w-sm object-cover rounded-lg"
-          alt="player image"
-        />
-        <div className="w-full">
-          <h2 className="heading-l">{player.name}</h2>
-          <div className="mt-4 space-y-4">
-            <div className="flex justify-between mt-4">
-              <p className="text-l">Сыграно матчей: {player.gamesPlayed}</p>
-            </div>
+    <div className="poster-scope min-h-screen bg-poster-paper text-poster-ink">
+      <div className="container pb-60 pt-24">
+        <Link
+          href={`/tournament/${CURRENT_TOURNAMENT_ID}`}
+          className="caption-s font-semibold uppercase tracking-[0.1em] text-poster-muted no-underline hover:text-poster-clay"
+        >
+          ← Турнирная таблица
+        </Link>
 
-            <div className="w-full h-6 bg-[gray] rounded-full overflow-hidden mt-2 relative">
-              <div
-                className="h-full bg-[green] flex items-center justify-center"
-                style={{ width: `${(wins / totalGames) * 100}%` }}
-              >
-                <span
-                  className="text-white text-sm text-center"
-                  style={{ width: `${(wins / totalGames) * 100}%` }}
-                >
-                  {wins}
-                </span>
-              </div>
-              <div
-                className="h-full bg-[#caca2a] absolute top-0 left-0 flex items-center justify-center"
-                style={{
-                  width: `${(draws / totalGames) * 100}%`,
-                  left: `${(wins / totalGames) * 100}%`,
-                }}
-              >
-                <span
-                  className="text-white text-sm text-center"
-                  style={{
-                    width: `${(draws / totalGames) * 100}%`,
-                  }}
-                >
-                  {draws}
-                </span>
-              </div>
-              <div
-                className="h-full bg-[tomato] absolute top-0 left-0 flex items-center justify-center"
-                style={{
-                  width: `${(losses / totalGames) * 100}%`,
-                  left: `${((wins + draws) / totalGames) * 100}%`,
-                }}
-              >
-                <span
-                  className="text-white text-sm text-center"
-                  style={{
-                    width: `${(losses / totalGames) * 100}%`,
-                  }}
-                >
-                  {losses}
-                </span>
-              </div>
-              <div
-                className="h-full bg-secondary-base absolute top-0 left-0 flex items-center justify-center"
-                style={{
-                  width: `${(tbd / totalGames) * 100}%`,
-                  left: `${((wins + draws + losses) / totalGames) * 100}%`,
-                }}
-              >
-                <span
-                  className="text-white text-sm text-center"
-                  style={{
-                    width: `${(tbd / totalGames) * 100}%`,
-                  }}
-                >
-                  {tbd}
-                </span>
-              </div>
-            </div>
+        {/* Герой */}
+        <div className="mt-16 flex flex-col gap-24 desktop:flex-row desktop:items-start">
+          <div className="w-full shrink-0 border-2 border-poster-ink desktop:w-[340px]">
+            <Image
+              width={1200}
+              height={1600}
+              src={player.image}
+              alt={player.name}
+              className="aspect-[4/5] w-full object-cover"
+            />
           </div>
 
-          <div className="mt-20 space-y-4">
-            {player.facts.map((fact, index) => (
-              <div key={index}>
-                <h4 className="text-lg font-semibold">{fact.title}</h4>
-                <p className="text-l">{fact.description}</p>
+          <div className="w-full">
+            <Eyebrow>Профиль игрока</Eyebrow>
+            <h1 className="mt-8 font-black uppercase leading-[0.9] tracking-[-0.02em] text-[clamp(34px,5.5vw,60px)]">
+              {player.name}
+            </h1>
+
+            {/* Плитки статистики */}
+            <div className="mt-16 flex flex-wrap gap-8">
+              <StatTile value={player.gamesPlayed} label="Игр" />
+              <StatTile value={wins} label="Побед" accent="court" />
+              <StatTile value={losses} label="Поражений" accent="clay" />
+              <StatTile value={score} label="Очков" accent="clay" />
+            </div>
+
+            {/* Полоса побед/поражений */}
+            {played > 0 && (
+              <div className="mt-16">
+                <div className="flex h-12 w-full overflow-hidden border-2 border-poster-ink">
+                  <div
+                    className="h-full bg-poster-court"
+                    style={{ width: `${seg(wins)}%` }}
+                  />
+                  <div
+                    className="h-full bg-poster-muted"
+                    style={{ width: `${seg(draws)}%` }}
+                  />
+                  <div
+                    className="h-full bg-poster-clay"
+                    style={{ width: `${seg(losses)}%` }}
+                  />
+                </div>
+                <div className="mt-8 flex flex-wrap gap-x-16 gap-y-4 caption-xs uppercase tracking-[0.08em] text-poster-muted">
+                  <span>
+                    <span className="text-poster-court">■</span> Победы {wins}
+                  </span>
+                  {draws > 0 && (
+                    <span>
+                      <span className="text-poster-muted">■</span> Ничьи {draws}
+                    </span>
+                  )}
+                  <span>
+                    <span className="text-poster-clay">■</span> Поражения{" "}
+                    {losses}
+                  </span>
+                </div>
               </div>
-            ))}
+            )}
+
+            {/* Достижения */}
+            {player.facts.length > 0 && (
+              <div className="mt-24">
+                <Eyebrow>Достижения</Eyebrow>
+                <div className="mt-12 grid grid-cols-1 gap-8 tablet:grid-cols-2 desktop:grid-cols-2">
+                  {player.facts.map((fact, i) => (
+                    <div
+                      key={i}
+                      className="border-2 border-poster-ink bg-poster-cream p-12"
+                    >
+                      <div className="font-black uppercase tracking-[-0.01em] text-poster-ink">
+                        {fact.title}
+                      </div>
+                      <div className="mt-2 text-m text-poster-muted">
+                        {fact.description}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
-      </div>
 
-      {/* Matches by Rounds  */}
-      <div>
-        <h3 className="text-2xl font-bold mb-4 mt-4">
-          Матчи {CURRENT_TOURNAMENT_NAME_SHORT}
-        </h3>
-        {matchDetails.map((round) => (
-          <div key={round.round} className="">
-            <ul className="space-y-2">
-              {round.matches.map((match, index) => (
-                <li
-                  key={index}
-                  className={`flex justify-between items-center py-2 px-4 rounded ${getMatchResultStyle(
-                    match.result
-                  )}`}
-                >
-                  <Link href={`/players/${match.opponent.id}`}>
-                    {match.opponent.name}
-                  </Link>
-                  <span>
-                    {match.result === "PLAYER1_WIN"
-                      ? "💥 Победа"
-                      : match.result === "PLAYER2_WIN"
-                      ? "🍞 Поражение"
-                      : match.result === "DRAW"
-                      ? "Ничья"
-                      : "Не сыграно"}
-                  </span>
-                </li>
+        {/* Матчи */}
+        <section className="mt-32">
+          <Eyebrow>Матчи · {CURRENT_TOURNAMENT_NAME}</Eyebrow>
+          {played === 0 && tbd === 0 ? (
+            <div className="mt-12 border-2 border-dashed border-poster-muted bg-poster-cream p-24 text-center text-m text-poster-muted">
+              Пока нет сыгранных матчей.
+            </div>
+          ) : (
+            <div className="mt-12 space-y-16">
+              {matchDetails.map((round) => (
+                <div key={round.round}>
+                  <div className="mb-4 caption-xs uppercase tracking-[0.12em] text-poster-muted">
+                    Тур {round.round}
+                  </div>
+                  <ul className="border-2 border-poster-ink bg-poster-cream">
+                    {round.matches.map((match, i) => {
+                      const meta =
+                        RESULT_META[match.result] ?? RESULT_META.TBD;
+                      return (
+                        <li
+                          key={i}
+                          className="flex items-center justify-between gap-12 border-t border-poster-ink/15 px-12 py-8 first:border-t-0"
+                        >
+                          <Link
+                            href={`/players/${match.opponent.id}`}
+                            className="font-bold uppercase tracking-[-0.01em] text-poster-ink no-underline hover:text-poster-clay"
+                          >
+                            {match.opponent.name}
+                          </Link>
+                          <span
+                            className={`shrink-0 border px-8 py-2 caption-xs font-semibold uppercase tracking-[0.08em] ${meta.chip}`}
+                          >
+                            {meta.mark} {meta.label}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
               ))}
-            </ul>
-          </div>
-        ))}
+            </div>
+          )}
+        </section>
       </div>
     </div>
   );

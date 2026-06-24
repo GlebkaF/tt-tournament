@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { CURRENT_TOURNAMENT_ID, CURRENT_TOURNAMENT_NAME } from "@/app/const";
+import { CURRENT_TOURNAMENT_ID } from "@/app/const";
 import createDeps from "@/service/create-deps";
 import "./landing-affiche.css";
 
@@ -30,28 +30,6 @@ export default async function Home() {
 
   return (
     <div className="affiche-root">
-      <nav className="site-nav">
-        <div className="wrap nav-in">
-          <div className="brand">
-            <img src="/image/landing/logo-mark.svg" alt="" />
-            <span className="brand-name">ТЕННИС.ЕВРОБЕРЕГ</span>
-          </div>
-          <div className="nav-links">
-            <a href="#leagues">Лиги</a>
-            <Link href={tournamentLink}>{CURRENT_TOURNAMENT_NAME}</Link>
-            <a
-              href={TELEGRAM_URL}
-              className="nav-cta"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="cta-full">В чат турнира</span>
-              <span className="cta-short">В чат</span>
-            </a>
-          </div>
-        </div>
-      </nav>
-
       <header className="poster">
         <div className="poster-in">
           <div className="poster-left">

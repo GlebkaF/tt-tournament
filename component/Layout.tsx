@@ -2,9 +2,7 @@
 
 import Link from "next/link";
 import { ReactNode } from "react";
-import { usePathname } from "next/navigation";
 import logoFull from "@/images/logo-v3-light-bg.png";
-import logoMin from "@/images/logo.svg";
 import Image from "next/image";
 import { CURRENT_TOURNAMENT_ID, CURRENT_TOURNAMENT_NAME } from "@/app/const";
 
@@ -14,50 +12,43 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const link = `/tournament/${CURRENT_TOURNAMENT_ID}`;
-  const pathname = usePathname();
-
-  // Главная — самостоятельный лендинг со своей шапкой и подвалом,
-  // поэтому общий хедер на ней не рендерим.
-  if (pathname === "/") {
-    return <>{children}</>;
-  }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className="bg-brand-light text-black p-4">
-        <nav className="container flex justify-between items-center h-80">
-          <div className="flex w-full justify-between desktop:justify-center">
-            <div className="h-48 flex items-center mr-48">
-              <Link href="/">
-                <Image
-                  src={logoFull}
-                  alt="логотип"
-                  className="object-cover w-auto h-48 mr-2"
-                />
-              </Link>
-            </div>
-            <div className="h-48 flex-1 items-center space-x-20 flex">
-              <Link href={link} className="text-l text-primary-base">
-                {CURRENT_TOURNAMENT_NAME}
-              </Link>
-              <Link href="/rules" className="text-l text-primary-base">
-                Правила
-              </Link>
-            </div>
-            <div className="h-48 flex items-center space-x-20 hidden tablet:flex desktop:flex">
-              <Link
-                href="https://t.me/+nsoeCj4lNi81Zjg6"
-                className="heading-xs text-primary-base"
-                target="_blank"
-              >
-                Хочу с вами!
-              </Link>
-            </div>
+    <div className="poster-scope flex min-h-screen flex-col bg-poster-paper">
+      <header className="sticky top-0 z-20 border-b-[3px] border-poster-ink bg-poster-paper text-poster-ink">
+        <nav className="container flex h-80 items-center justify-between gap-16">
+          <Link href="/" className="flex shrink-0 items-center no-underline">
+            <Image
+              src={logoFull}
+              alt="логотип"
+              className="mr-2 h-48 w-auto object-cover"
+            />
+          </Link>
+          <div className="flex flex-1 items-center gap-16 tablet:gap-24 desktop:gap-24">
+            <Link
+              href={link}
+              className="caption-s font-semibold uppercase tracking-[0.1em] no-underline hover:text-poster-clay tablet:caption-m desktop:caption-m"
+            >
+              {CURRENT_TOURNAMENT_NAME}
+            </Link>
+            <Link
+              href="/rules"
+              className="caption-s font-semibold uppercase tracking-[0.1em] no-underline hover:text-poster-clay tablet:caption-m desktop:caption-m"
+            >
+              Правила
+            </Link>
           </div>
+          <Link
+            href="https://t.me/+nsoeCj4lNi81Zjg6"
+            target="_blank"
+            className="hidden shrink-0 border-2 border-poster-ink bg-poster-ink px-12 py-4 caption-s font-semibold uppercase tracking-[0.1em] text-poster-cream no-underline transition-colors hover:bg-poster-clay tablet:block desktop:block"
+          >
+            Хочу с вами!
+          </Link>
         </nav>
       </header>
 
-      <main>{children}</main>
+      <main className="flex-1">{children}</main>
     </div>
   );
 };

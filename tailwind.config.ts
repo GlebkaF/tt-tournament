@@ -42,6 +42,16 @@ const config: Config = {
         red: "#D6034F",
         blue: "#556CE9",
       },
+      // Постерная палитра (как на лендинге-афише)
+      poster: {
+        clay: "#c7431f",
+        "clay-deep": "#8e2e14",
+        cream: "#f3e9d8",
+        paper: "#efe3ce",
+        ink: "#1c1712",
+        court: "#1e4632",
+        muted: "#5a5046",
+      },
     },
     backgroundColor: {
       primary: {
@@ -64,6 +74,15 @@ const config: Config = {
         medium: "#b0aeff",
         dark: "#271a58",
       },
+      poster: {
+        clay: "#c7431f",
+        "clay-deep": "#8e2e14",
+        cream: "#f3e9d8",
+        paper: "#efe3ce",
+        ink: "#1c1712",
+        court: "#1e4632",
+        "court-deep": "#143324",
+      },
     },
     borderColor: {
       primary: {
@@ -75,6 +94,11 @@ const config: Config = {
       },
       tetriary: {
         base: "#d9d9d9",
+      },
+      poster: {
+        ink: "#1c1712",
+        clay: "#c7431f",
+        muted: "#b8a98c",
       },
     },
     spacing: {

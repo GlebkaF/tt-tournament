@@ -10,11 +10,14 @@ interface Deps {
   postService: PostService;
 }
 
-let cachedDeps = null as null | Deps;
+// Кэшируем на globalThis, чтобы dev-режим Next (hot-reload пересоздаёт
+// модули) переиспользовал один PrismaClient, а не открывал новый пул
+// соединений на каждый Fast Refresh (иначе исчерпываются слоты Postgres).
+const globalForDeps = globalThis as unknown as { __ttDeps?: Deps };
 
 export default function createDeps(): Deps {
-  if (cachedDeps) {
-    return cachedDeps;
+  if (globalForDeps.__ttDeps) {
+    return globalForDeps.__ttDeps;
   }
 
   const prisma = new PrismaClient();
@@ -29,7 +32,7 @@ export default function createDeps(): Deps {
     postService,
   };
 
-  cachedDeps = deps;
+  globalForDeps.__ttDeps = deps;
 
   return deps;
 }
