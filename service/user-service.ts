@@ -682,6 +682,18 @@ const playersDB: {
     lastName: "Сафронов",
     image: "/image/profile/default.jpg",
   },
+  69: {
+    id: 69,
+    firstName: "Анна",
+    lastName: "Николенко",
+    image: "/image/profile/nikolenko-anna.jpg",
+  },
+  70: {
+    id: 70,
+    firstName: "Вячеслав",
+    lastName: "Волков",
+    image: "/image/profile/volkov-vyacheslav.jpg",
+  },
 };
 
 type MatchResult = "PLAYER1_WIN" | "PLAYER2_WIN" | "DRAW" | "TBD";
