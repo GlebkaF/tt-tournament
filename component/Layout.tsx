@@ -27,15 +27,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="flex flex-1 items-center gap-16 tablet:gap-24 desktop:gap-24">
             <Link
               href={link}
-              className="caption-s font-semibold uppercase tracking-[0.1em] no-underline hover:text-poster-clay tablet:caption-m desktop:caption-m"
+              className="text-[15px] font-bold uppercase tracking-[0.02em] text-poster-ink no-underline hover:text-poster-clay"
             >
               {CURRENT_TOURNAMENT_NAME}
-            </Link>
-            <Link
-              href="/rules"
-              className="caption-s font-semibold uppercase tracking-[0.1em] no-underline hover:text-poster-clay tablet:caption-m desktop:caption-m"
-            >
-              Правила
             </Link>
           </div>
           <Link
