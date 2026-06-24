@@ -23,6 +23,11 @@ const playersDB: {
     image: "/image/profile/mih-al.jpg",
     facts: [
       {
+        title: "Летний турнир 2025",
+        description:
+          "Золотая лига. 🥉 3 место. В матче за 3-е место обыграл Антона Герасимова.",
+      },
+      {
         title: "Открытие сезона 2025",
         description: "🥇 1 место",
       },
@@ -38,6 +43,11 @@ const playersDB: {
     lastName: "Емельянова",
     image: "/image/profile/emel.jpg",
     facts: [
+      {
+        title: "Летний турнир 2025",
+        description:
+          "Золотая лига. 🥇 1 место. В финале обыграла Наталью Зайцеву 4:1.",
+      },
       {
         title: "Летний турнир 2024",
         description: "Золотая лига. 🥇 1 место",
@@ -56,6 +66,16 @@ const playersDB: {
     lastName: "Зайцева",
     image: "/image/profile/zai.jpg",
     facts: [
+      {
+        title: "Случайные пары 2025",
+        description:
+          "🥈 2 место. В паре с Антоном Катренко. Уступили в финале паре Боженов / Куртеков.",
+      },
+      {
+        title: "Летний турнир 2025",
+        description:
+          "Золотая лига. 🥈 2 место. Уступила в финале Виктории Емельяновой 1:4.",
+      },
       {
         title: "Летний турнир 2024",
         description: "Золотая лига. 🥈 2 место",
@@ -84,6 +104,11 @@ const playersDB: {
     lastName: "Куртеков",
     image: "/image/profile/kur-dim.jpg",
     facts: [
+      {
+        title: "Случайные пары 2025",
+        description:
+          "🥇 1 место. В паре с Вадимом Боженовым. В финале обыграли пару Катренко / Зайцева.",
+      },
       {
         title: "Случайные пары 2023",
         description: "🥈 2 место",
@@ -157,6 +182,11 @@ const playersDB: {
     image: "/image/profile/nazim.jpg",
     facts: [
       {
+        title: "Случайные пары 2025",
+        description:
+          "🥉 3 место. В паре с Антоном Шестерниным. Выиграли матч за 3-е место.",
+      },
+      {
         title: "Летний турнир 2024",
         description: "Бронзовая лига. 🥈 2 место",
       },
@@ -175,6 +205,13 @@ const playersDB: {
     firstName: "Антон",
     lastName: "Шестернин",
     image: "/image/profile/shest-an.jpg",
+    facts: [
+      {
+        title: "Случайные пары 2025",
+        description:
+          "🥉 3 место. В паре с Константином Назимовым. Выиграли матч за 3-е место.",
+      },
+    ],
   },
   11: {
     id: 11,
@@ -194,6 +231,11 @@ const playersDB: {
     lastName: "Ролдугин",
     image: "/image/profile/roldug.jpg",
     facts: [
+      {
+        title: "Летний турнир 2025",
+        description:
+          "Серебряная лига. 🥈 2 место. Уступил в финале Максиму Егорову.",
+      },
       {
         title: "Летний турнир 2024",
         description: "Серебряная лига. 🥈 2 место",
@@ -224,6 +266,11 @@ const playersDB: {
     lastName: "Ефименко",
     image: "/image/profile/efim.jpg",
     facts: [
+      {
+        title: "Летний турнир 2025",
+        description:
+          "Серебряная лига. 🥉 3 место. В матче за 3-е место обыграл Антона Шестернина.",
+      },
       {
         title: "Случайные пары 2023",
         description: "🥇 1 место",
@@ -263,6 +310,13 @@ const playersDB: {
     firstName: "Максим",
     lastName: "Егоров",
     image: "/image/profile/egorov-maks.jpg",
+    facts: [
+      {
+        title: "Летний турнир 2025",
+        description:
+          "Серебряная лига. 🥇 1 место. В финале обыграл Кирилла Ролдугина.",
+      },
+    ],
   },
   20: {
     id: 20,
@@ -289,6 +343,13 @@ const playersDB: {
     firstName: "Никита",
     lastName: "Рабчевский",
     image: "/image/profile/rabch.jpg",
+    facts: [
+      {
+        title: "Летний турнир 2025",
+        description:
+          "Бронзовая лига. 🥇 1 место. В финале разгромил Сергея Герковенко 4:0.",
+      },
+    ],
   },
   22: {
     id: 22,
@@ -301,6 +362,13 @@ const playersDB: {
     firstName: "Антон",
     lastName: "Катренко",
     image: "/image/profile/katrenko.jpg",
+    facts: [
+      {
+        title: "Случайные пары 2025",
+        description:
+          "🥈 2 место. В паре с Натальей Зайцевой. Уступили в финале паре Боженов / Куртеков.",
+      },
+    ],
   },
   24: {
     id: 24,
@@ -414,6 +482,13 @@ const playersDB: {
     firstName: "Вадим",
     lastName: "Боженов",
     image: "/image/profile/bojenov-vadim.jpg",
+    facts: [
+      {
+        title: "Случайные пары 2025",
+        description:
+          "🥇 1 место. В паре с Дмитрием Куртековым. В финале обыграли пару Катренко / Зайцева.",
+      },
+    ],
   },
   38: {
     id: 38,
@@ -514,6 +589,13 @@ const playersDB: {
     firstName: "Сергей",
     lastName: "Герковенко",
     image: "/image/profile/default.jpg",
+    facts: [
+      {
+        title: "Летний турнир 2025",
+        description:
+          "Бронзовая лига. 🥈 2 место. Уступил в финале Никите Рабчевскому 0:4.",
+      },
+    ],
   },
   55: {
     id: 55,
@@ -550,6 +632,13 @@ const playersDB: {
     firstName: "Дмитрий",
     lastName: "Ерзин",
     image: "/image/profile/erzin-dima.jpg",
+    facts: [
+      {
+        title: "Летний турнир 2025",
+        description:
+          "Бронзовая лига. 🥉 3 место. В матче за 3-е место обыграл Никиту Склярова 4:1.",
+      },
+    ],
   },
   61: {
     id: 61,
