@@ -694,6 +694,12 @@ const playersDB: {
     lastName: "Волков",
     image: "/image/profile/volkov-vyacheslav.jpg",
   },
+  71: {
+    id: 71,
+    firstName: "Антон",
+    lastName: "Кепасов",
+    image: "/image/profile/kepasov-anton.jpg",
+  },
 };
 
 type MatchResult = "PLAYER1_WIN" | "PLAYER2_WIN" | "DRAW" | "TBD";
