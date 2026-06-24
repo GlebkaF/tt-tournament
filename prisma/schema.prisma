@@ -9,9 +9,10 @@ generator client {
 
 model User {
   id        Int     @id @default(autoincrement())
-  firstName String
-  lastName  String
-  telegram  String?
+  firstName  String
+  lastName   String
+  telegram   String?
+  telegramId BigInt?
   matches1  Match[] @relation("Player1")
   matches2  Match[] @relation("Player2")
 }
