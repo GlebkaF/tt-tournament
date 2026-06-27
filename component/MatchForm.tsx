@@ -38,9 +38,7 @@ const MatchForm: React.FC<MatchFormProps> = ({
   const [player2Id, setPlayer2Id] = useState<number | null>(
     initialPlayer2Id ?? null
   );
-  const [result, setResult] = useState<
-    MatchResult.player1Win | MatchResult.player2Win | null
-  >(null);
+  const [result, setResult] = useState<MatchResult | null>(null);
   const [matchDate, setMatchDate] = useState(dayjs());
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -95,10 +93,10 @@ const MatchForm: React.FC<MatchFormProps> = ({
       return;
     }
 
-    // Играем до 2 побед из 3 партий — ничьих не бывает, счёт по матчу 2:0
     const scores = {
       [MatchResult.player1Win]: { player1Score: 2, player2Score: 0 },
       [MatchResult.player2Win]: { player1Score: 0, player2Score: 2 },
+      [MatchResult.draw]: { player1Score: 1, player2Score: 1 },
     };
     const { player1Score, player2Score } = scores[result];
 
@@ -219,6 +217,15 @@ const MatchForm: React.FC<MatchFormProps> = ({
             disabled={!player1Id || !player2Id}
           >
             Победил(а) {getPlayerName(player1Id)}
+          </Button>
+          <Button
+            type={result === MatchResult.draw ? "primary" : "default"}
+            onClick={() => setResult(MatchResult.draw)}
+            size="large"
+            block
+            disabled={!player1Id || !player2Id}
+          >
+            Ничья
           </Button>
           <Button
             type={result === MatchResult.player2Win ? "primary" : "default"}

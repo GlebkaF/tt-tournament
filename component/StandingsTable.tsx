@@ -148,8 +148,8 @@ const StandingsTable = ({
         {/* Инфо-полоса формата */}
         <div className="mt-16 flex flex-col gap-8 border-2 border-poster-ink bg-poster-cream p-16 tablet:flex-row tablet:items-center tablet:justify-between desktop:flex-row desktop:items-center desktop:justify-between">
           <p className="text-m">
-            Каждый играет со всеми · встреча до 2 побед из 3 партий · очки:
-            победа 3, поражение 1
+            Каждый играет со всеми · в каждой встрече две партии · очки:
+            победа 3, ничья 2, поражение 1
           </p>
           <Link
             href="/rules"
