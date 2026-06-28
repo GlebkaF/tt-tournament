@@ -3,6 +3,12 @@ import { Player, Match, MatchResult } from "@/app/interface";
 import { useState, useMemo, useEffect } from "react";
 import { Form, Select, Button, message, Typography, DatePicker } from "antd";
 import dayjs from "dayjs";
+import {
+  authHeader,
+  clearPassword,
+  ensurePassword,
+  savePassword,
+} from "@/utils/adminAuth";
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -14,8 +20,6 @@ interface MatchFormProps {
   player1Id?: number;
   player2Id?: number;
 }
-
-const PASSWORD_LS_KEY = "auth_password";
 
 const MatchForm: React.FC<MatchFormProps> = ({
   players,
@@ -64,19 +68,6 @@ const MatchForm: React.FC<MatchFormProps> = ({
     }
   }, [player1Id, initialPlayer2Id]);
 
-  const getPasswordFromLocalStorage = () => {
-    return localStorage.getItem(PASSWORD_LS_KEY);
-  };
-
-  const requestPassword = () => {
-    const password = prompt("Введите пароль для авторизации:") ?? "";
-    if (password.match(/^[a-zA-Z0-9]+$/)) {
-      return password;
-    }
-
-    return "";
-  };
-
   const handleSubmit = async () => {
     if (player1Id === null || player2Id === null) {
       setErrorMessage("Все поля обязательны.");
@@ -100,19 +91,15 @@ const MatchForm: React.FC<MatchFormProps> = ({
     };
     const { player1Score, player2Score } = scores[result];
 
-    let password = getPasswordFromLocalStorage();
+    const password = ensurePassword();
     if (!password) {
-      password = requestPassword();
-      if (!password) {
-        message.error("Авторизация отменена.");
-        return;
-      }
+      message.error("Авторизация отменена.");
+      return;
     }
-    const username = "admin";
 
     const headers = new Headers();
     headers.set("Content-Type", "application/json");
-    headers.set("Authorization", `Basic ${btoa(`${username}:${password}`)}`); // Измените "user" на ваш username
+    headers.set("Authorization", authHeader(password));
 
     const requestBody = JSON.stringify({
       player1Id,
@@ -133,10 +120,10 @@ const MatchForm: React.FC<MatchFormProps> = ({
       message.success("Результат матча записан!");
       onSubmit();
       setPlayer2Id(null);
-      localStorage.setItem(PASSWORD_LS_KEY, password);
+      savePassword(password);
     } else if (res.status === 401) {
       message.error("Неверный пароль, попробуйте еще");
-      localStorage.removeItem(PASSWORD_LS_KEY);
+      clearPassword();
     } else {
       message.error("Ошибка при записи результата матча.");
     }

@@ -2,7 +2,7 @@ import { Player } from "@/app/interface";
 import MatchPage from "@/component/MatchPage";
 import { Metadata } from "next";
 import createDeps from "@/service/create-deps";
-import { CURRENT_TOURNAMENT_ID } from "../const";
+import { CURRENT_TOURNAMENT_ID, CURRENT_TOURNAMENT_NAME } from "../const";
 
 const { tournamentService } = createDeps();
 
@@ -17,5 +17,5 @@ export default async function MatchesPage() {
 }
 
 export const metadata: Metadata = {
-  title: "Матчи летнего турнира 2025 — Теннис. Евроберег",
+  title: `Матчи — ${CURRENT_TOURNAMENT_NAME} — Теннис. Евроберег`,
 };

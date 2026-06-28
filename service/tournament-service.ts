@@ -16,10 +16,10 @@ const summerTournament2025PlayersIds = [
   61, 62, 65, 21,
 ];
 
-// Состав летнего турнира 2026 — 26 участников (см. опрос в Telegram)
+// Состав летнего турнира 2026 — 27 участников (см. опрос в Telegram)
 const summerTournament2026PlayersIds = [
   5, 67, 22, 1, 15, 20, 65, 62, 61, 54, 55, 21, 59, 7, 16, 23, 2, 68, 29, 4, 30,
-  69, 70, 71, 32, 10,
+  69, 70, 71, 32, 10, 27,
 ];
 
 interface PlayerData {
@@ -296,8 +296,10 @@ export class TournamentService {
         date: "asc",
       },
       include: {
-        player1: true,
-        player2: true,
+        // Только нужные поля: telegramId — BigInt, он не сериализуется в JSON
+        // и ломает GET /api/match (а также server→client пропсы schedule/v2).
+        player1: { select: { id: true, firstName: true, lastName: true } },
+        player2: { select: { id: true, firstName: true, lastName: true } },
       },
     });
 
@@ -352,6 +354,45 @@ export class TournamentService {
     });
 
     return;
+  }
+
+  async updateMatch(
+    matchId: number,
+    result: MatchResult,
+    player1Score: number,
+    player2Score: number,
+    tournamentId: number
+  ) {
+    if ([1, 2, 3].includes(tournamentId)) {
+      throw new Error("Tournament closed");
+    }
+
+    const match = await this.prisma.match.findFirst({
+      where: { id: matchId, tournamentId },
+    });
+    if (!match) {
+      throw new Error("Match not found");
+    }
+
+    await this.prisma.match.update({
+      where: { id: matchId },
+      data: { result, player1Score, player2Score },
+    });
+  }
+
+  async deleteMatch(matchId: number, tournamentId: number) {
+    if ([1, 2, 3].includes(tournamentId)) {
+      throw new Error("Tournament closed");
+    }
+
+    const match = await this.prisma.match.findFirst({
+      where: { id: matchId, tournamentId },
+    });
+    if (!match) {
+      throw new Error("Match not found");
+    }
+
+    await this.prisma.match.delete({ where: { id: matchId } });
   }
 
   async getTotalMatchesCount(tournamentId: number): Promise<number> {

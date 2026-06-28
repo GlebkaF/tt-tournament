@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import MatchForm from "./MatchForm";
 import MatchList from "./MatchList";
 import { Loading } from "./Loading";
+import { CURRENT_TOURNAMENT_NAME_SHORT } from "@/app/const";
 
 const MatchPage = ({
   players,
@@ -37,7 +38,7 @@ const MatchPage = ({
 
   return (
     <div className="container pb-32 pt-24">
-      <h1 className="heading-l mb-16">Матчи летнего турнира 2025</h1>
+      <h1 className="heading-l mb-16">Матчи {CURRENT_TOURNAMENT_NAME_SHORT}</h1>
       {showForm && (
         <MatchForm
           players={players}
@@ -48,7 +49,12 @@ const MatchPage = ({
       {loading ? (
         <Loading></Loading>
       ) : (
-        <MatchList totalMatchesCount={totalMatchesCount} matches={matches} />
+        <MatchList
+          totalMatchesCount={totalMatchesCount}
+          matches={matches}
+          editable={showForm}
+          onChanged={refreshMatches}
+        />
       )}
     </div>
   );
