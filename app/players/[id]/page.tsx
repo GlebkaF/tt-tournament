@@ -89,7 +89,8 @@ export default async function PlayerPage({
   return (
     <PlayerProfile
       player={playerData.player}
-      matchDetails={playerData.matchDetails}
+      matchDays={playerData.matchDays}
+      pending={playerData.pending}
     />
   );
 }

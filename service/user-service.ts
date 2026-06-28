@@ -2,10 +2,7 @@ import { Match, PrismaClient } from "@prisma/client";
 
 import { getCache, setCache } from "@/helpers/cache";
 import { TournamentService } from "./tournament-service";
-import {
-  CURRENT_TOURNAMENT_ID,
-  CURRENT_TOURNAMENT_MATCHES_PER_ROUND,
-} from "@/app/const";
+import { CURRENT_TOURNAMENT_ID } from "@/app/const";
 
 const playersDB: {
   [key: number]: {
@@ -718,8 +715,8 @@ interface MatchDetail {
   result: MatchResult;
 }
 
-interface Round {
-  round: number;
+interface MatchDay {
+  date: string;
   matches: MatchDetail[];
 }
 
@@ -731,7 +728,8 @@ interface PlayerProfile {
     image: string;
     facts: { title: string; description: string }[];
   };
-  matchDetails: Round[];
+  matchDays: MatchDay[];
+  pending: { id: number; name: string }[];
 }
 
 export class UserService {
@@ -754,63 +752,65 @@ export class UserService {
       },
     });
 
-    const players2 = await this.tournamentService.getPlayers(3);
+    // Ростер текущего турнира — для имён соперников и блока «осталось сыграть»
+    const roster = await this.tournamentService.getPlayers(
+      CURRENT_TOURNAMENT_ID
+    );
     const matches2 = await this.getUserMatches(id);
 
     if (!player) {
       return null;
     }
 
-    // Сортируем сыгранные матчи по дате
-    const completedMatches = matches2.sort(
+    const nameById = new Map(
+      roster.map((p) => [p.id, `${p.lastName} ${p.firstName}`.trim()])
+    );
+
+    const opponentIdOf = (match: Match) =>
+      match.player1Id === id ? match.player2Id : match.player1Id;
+
+    const resolveResult = (match: Match): MatchResult => {
+      if (match.date > new Date()) return "TBD";
+      if (match.player1Id === id) return match.result as MatchResult;
+      if (match.result === "PLAYER1_WIN") return "PLAYER2_WIN";
+      if (match.result === "PLAYER2_WIN") return "PLAYER1_WIN";
+      return "DRAW";
+    };
+
+    const dayFormatter = new Intl.DateTimeFormat("ru-RU", {
+      day: "numeric",
+      month: "long",
+    });
+
+    // Сортируем по дате и группируем по календарному дню
+    const sortedMatches = [...matches2].sort(
       (a, b) => a.date.getTime() - b.date.getTime()
     );
 
-    // Формируем детализированные матчи
-    const detailedMatches = completedMatches.map((match) => ({
-      match,
-      opponent: players2.find(
-        (p) =>
-          p.id === (match.player1Id === id ? match.player2Id : match.player1Id)
-      ),
-    }));
-
-    // Комбинируем сыгранные и оставшиеся матчи
-    const combinedMatches = detailedMatches;
-
-    // Группируем матчи по турам (4 матча в каждом туре)
-    const groupedMatches: Round[] = [];
-    for (
-      let i = 0;
-      i < combinedMatches.length;
-      i += CURRENT_TOURNAMENT_MATCHES_PER_ROUND
-    ) {
-      groupedMatches.push({
-        round: i / CURRENT_TOURNAMENT_MATCHES_PER_ROUND + 1,
-        matches: combinedMatches
-          .slice(i, i + CURRENT_TOURNAMENT_MATCHES_PER_ROUND)
-          .map(({ match, opponent }) => ({
-            opponent: opponent
-              ? {
-                  id: opponent.id,
-                  name: `${opponent.lastName} ${opponent.firstName}`,
-                }
-              : {
-                  id: 0,
-                  name: "Неизвестный",
-                },
-            result: (match.date <= new Date()
-              ? match.player1Id === id
-                ? match.result
-                : match.result === "PLAYER1_WIN"
-                ? "PLAYER2_WIN"
-                : match.result === "PLAYER2_WIN"
-                ? "PLAYER1_WIN"
-                : "DRAW"
-              : "TBD") as MatchResult,
-          })),
+    const matchDays: MatchDay[] = [];
+    for (const match of sortedMatches) {
+      const dayLabel = dayFormatter.format(match.date);
+      let group = matchDays.find((d) => d.date === dayLabel);
+      if (!group) {
+        group = { date: dayLabel, matches: [] };
+        matchDays.push(group);
+      }
+      const opponentId = opponentIdOf(match);
+      group.matches.push({
+        opponent: {
+          id: opponentId,
+          name: nameById.get(opponentId) ?? "Неизвестный",
+        },
+        result: resolveResult(match),
       });
     }
+
+    // С кем из ростера ещё не сыграно
+    const playedOpponentIds = new Set(matches2.map(opponentIdOf));
+    const pending = roster
+      .filter((p) => p.id !== id && !playedOpponentIds.has(p.id))
+      .map((p) => ({ id: p.id, name: `${p.lastName} ${p.firstName}`.trim() }))
+      .sort((a, b) => a.name.localeCompare(b.name, "ru"));
 
     const image = playersDB[player.id]?.image ?? "/image/profile/default.jpg";
     const facts = playersDB[player.id]?.facts ?? [];
@@ -819,13 +819,14 @@ export class UserService {
       player: {
         id: player.id,
         name:
-          `${player.lastName || ""} ${player.firstName || ""}`.trim() ??
+          `${player.lastName || ""} ${player.firstName || ""}`.trim() ||
           "Без имени",
         image,
         facts,
         gamesPlayed: matches2.length,
       },
-      matchDetails: groupedMatches,
+      matchDays,
+      pending,
     };
 
     setCache(cacheKey, output);

@@ -20,10 +20,11 @@ interface PlayerProfileProps {
     image: string;
     facts: { title: string; description: string }[];
   };
-  matchDetails: {
-    round: number;
+  matchDays: {
+    date: string;
     matches: MatchDetail[];
   }[];
+  pending: { id: number; name: string }[];
 }
 
 const Eyebrow = ({ children }: { children: React.ReactNode }) => (
@@ -102,9 +103,10 @@ const RESULT_META: Record<
 
 const PlayerProfile: React.FC<PlayerProfileProps> = ({
   player,
-  matchDetails,
+  matchDays,
+  pending,
 }) => {
-  const allMatches = matchDetails.flatMap((r) => r.matches);
+  const allMatches = matchDays.flatMap((d) => d.matches);
   const { wins, draws, losses, tbd, score } = calculateStatistics(allMatches);
   const played = wins + draws + losses;
 
@@ -213,13 +215,13 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
             </div>
           ) : (
             <div className="mt-12 space-y-16">
-              {matchDetails.map((round) => (
-                <div key={round.round}>
+              {matchDays.map((day) => (
+                <div key={day.date}>
                   <div className="mb-4 caption-xs uppercase tracking-[0.12em] text-poster-muted">
-                    Тур {round.round}
+                    {day.date}
                   </div>
                   <ul className="border-2 border-poster-ink bg-poster-cream">
-                    {round.matches.map((match, i) => {
+                    {day.matches.map((match, i) => {
                       const meta =
                         RESULT_META[match.result] ?? RESULT_META.TBD;
                       return (
@@ -247,6 +249,31 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
             </div>
           )}
         </section>
+
+        {/* Осталось сыграть */}
+        {pending.length > 0 && (
+          <section className="mt-32">
+            <Eyebrow>Осталось сыграть · {pending.length}</Eyebrow>
+            <ul className="mt-12 border-2 border-dashed border-poster-muted bg-poster-cream">
+              {pending.map((opponent) => (
+                <li
+                  key={opponent.id}
+                  className="flex items-center justify-between gap-12 border-t border-poster-ink/15 px-12 py-8 first:border-t-0"
+                >
+                  <Link
+                    href={`/players/${opponent.id}`}
+                    className="font-bold uppercase tracking-[-0.01em] text-poster-ink no-underline hover:text-poster-clay"
+                  >
+                    {opponent.name}
+                  </Link>
+                  <span className="shrink-0 border border-dashed border-poster-muted px-8 py-2 caption-xs font-semibold uppercase tracking-[0.08em] text-poster-muted">
+                    · Не сыграно
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </div>
   );
