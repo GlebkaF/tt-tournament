@@ -702,6 +702,11 @@ const playersDB: {
   },
 };
 
+/** Аватар игрока по id (с фолбэком на дефолтную картинку). */
+export function getPlayerImage(id: number): string {
+  return playersDB[id]?.image ?? "/image/profile/default.jpg";
+}
+
 type MatchResult = "PLAYER1_WIN" | "PLAYER2_WIN" | "DRAW" | "TBD";
 
 interface MatchDetail {

@@ -174,6 +174,22 @@ const ScheduleComponent: React.FC<{ players: Player[] }> = ({ players }) => {
 
   return (
     <div className="container pb-32 pt-24">
+      <a
+        href="/schedule/v2"
+        style={{
+          display: "block",
+          marginBottom: 16,
+          padding: "12px 16px",
+          borderRadius: 12,
+          background: "#1e4632",
+          color: "#f3e9d8",
+          fontWeight: 700,
+          textDecoration: "none",
+        }}
+      >
+        ✨ Попробуйте новое «Табло организатора v2» — столы, таймеры, умная
+        очередь и занос результата в один тап →
+      </a>
       <Title level={3}>Расписание</Title>
       <Text>
         Отметь игроков которые пришли играть, нажми сформировать пары, вызывай
