@@ -281,6 +281,15 @@
 .affiche-root .sc:last-child {
   border-right: none;
 }
+.affiche-root a.sc {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.affiche-root a.sc:hover {
+  background-color: rgba(199, 67, 31, 0.08);
+}
 .affiche-root .sc .n {
   font-size: clamp(44px, 6vw, 80px);
   font-weight: 900;

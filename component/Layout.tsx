@@ -31,6 +31,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             >
               {CURRENT_TOURNAMENT_NAME}
             </Link>
+            <Link
+              href="/tournaments"
+              className="text-[15px] font-bold uppercase tracking-[0.02em] text-poster-ink no-underline hover:text-poster-clay"
+            >
+              Все турниры
+            </Link>
           </div>
           <Link
             href="https://t.me/+nsoeCj4lNi81Zjg6"

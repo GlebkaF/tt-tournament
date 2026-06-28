@@ -98,10 +98,10 @@ export default async function Home() {
           <div className="n">{ru(matchesCount)}</div>
           <div className="l">Матчей сыграно</div>
         </div>
-        <div className="sc">
+        <Link href="/tournaments" className="sc">
           <div className="n">{ru(tournamentsCount)}</div>
           <div className="l">Турниров</div>
-        </div>
+        </Link>
         <div className="sc">
           <div className="n">{foundingYear}</div>
           <div className="l">Играем с</div>

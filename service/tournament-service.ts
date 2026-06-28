@@ -55,6 +55,21 @@ export class TournamentService {
     });
   }
 
+  async getTournaments(): Promise<
+    { id: number; title: string; date: Date; playersCount: number }[]
+  > {
+    const tournaments = await this.prisma.tournament.findMany({
+      orderBy: { date: "desc" },
+    });
+
+    return tournaments.map((tournament) => ({
+      id: tournament.id,
+      title: tournament.title,
+      date: tournament.date,
+      playersCount: this.getPlayersIdsByTournamentId(tournament.id).length,
+    }));
+  }
+
   async getStandings(tournamentId: number): Promise<Standings> {
     const tournamentsPlayers = await this.getPlayersByTournamentId(
       tournamentId
@@ -241,6 +256,10 @@ export class TournamentService {
   private async getPlayersByTournamentId(
     tournamentId: number
   ): Promise<number[]> {
+    return this.getPlayersIdsByTournamentId(tournamentId);
+  }
+
+  private getPlayersIdsByTournamentId(tournamentId: number): number[] {
     if (tournamentId === 1) {
       return summerTournament2024PlayersIds;
     }
