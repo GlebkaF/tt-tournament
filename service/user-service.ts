@@ -585,7 +585,7 @@ const playersDB: {
     id: 54,
     firstName: "Сергей",
     lastName: "Герковенко",
-    image: "/image/profile/default.jpg",
+    image: "/image/profile/gerkovenko.jpg",
     facts: [
       {
         title: "Летний турнир 2025",
@@ -665,7 +665,7 @@ const playersDB: {
     id: 65,
     firstName: "Антон",
     lastName: "Герасимов",
-    image: "/image/profile/default.jpg",
+    image: "/image/profile/gerasimov-anton.jpg",
   },
   66: {
     id: 66,
