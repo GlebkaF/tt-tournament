@@ -15,8 +15,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build and run with docker compose
-        run: docker compose up -d --build --force-recreate
+      - name: Start database and apply admin schema
+        run: |
+          docker compose up -d postgres
+          for attempt in $(seq 1 30); do
+            if docker exec tt-tournament-postgres pg_isready -U tt -d tt; then
+              break
+            fi
+            if [ "$attempt" -eq 30 ]; then
+              echo "PostgreSQL did not become ready"
+              exit 1
+            fi
+            sleep 1
+          done
+          docker exec -i tt-tournament-postgres psql -U tt -d tt -v ON_ERROR_STOP=1 \
+            < prisma/migrations/20260718000000_add_tournament_participants_and_user_image/migration.sql
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          BASIC_AUTH_USERNAME: ${{ secrets.BASIC_AUTH_USERNAME }}
+          BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
+
+      - name: Build and run application
+        run: docker compose up -d --build --force-recreate --no-deps tt-tournament
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}

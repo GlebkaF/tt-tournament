@@ -1,6 +1,7 @@
 "use client";
 
 import { Match, Player } from "@/app/interface";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import MatchForm from "./MatchForm";
 import MatchList from "./MatchList";
@@ -40,11 +41,16 @@ const MatchPage = ({
     <div className="container pb-32 pt-24">
       <h1 className="heading-l mb-16">Матчи {CURRENT_TOURNAMENT_NAME_SHORT}</h1>
       {showForm && (
-        <MatchForm
-          players={players}
-          playedMatches={matches}
-          onSubmit={refreshMatches}
-        />
+        <>
+          <div className="mb-12">
+            <Link href="/admin/players">Управление игроками →</Link>
+          </div>
+          <MatchForm
+            players={players}
+            playedMatches={matches}
+            onSubmit={refreshMatches}
+          />
+        </>
       )}
       {loading ? (
         <Loading></Loading>

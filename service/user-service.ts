@@ -812,7 +812,10 @@ export class UserService {
       .map((p) => ({ id: p.id, name: `${p.lastName} ${p.firstName}`.trim() }))
       .sort((a, b) => a.name.localeCompare(b.name, "ru"));
 
-    const image = playersDB[player.id]?.image ?? "/image/profile/default.jpg";
+    const image =
+      player.image && player.imageMimeType
+        ? `/api/player-image/${player.id}`
+        : playersDB[player.id]?.image ?? "/image/profile/default.jpg";
     const facts = playersDB[player.id]?.facts ?? [];
 
     const output = {

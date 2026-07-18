@@ -39,6 +39,20 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 npx dotenv -e .env.local -- npx tsx command/seed-players.ts
 npx dotenv -e .env.local -- npx tsx command/seed-missing-players.ts
 
+#### Админка игроков
+
+`/admin/players` позволяет создать игрока и сразу добавить его в текущий
+турнир, а также загрузить новое фото существующему игроку. Используется тот же
+Basic Auth, что и для записи матчей.
+
+Новые фото хранятся в PostgreSQL; старые файловые фото продолжают работать как
+fallback. На x260 необходимая схема применяется автоматически при деплое. Для
+локальной базы:
+
+```bash
+npx dotenv -e .env.local -- npx prisma migrate deploy
+```
+
 #### Создать миграцию
 
 (!) Добавь DATABASE_URL в .env.local

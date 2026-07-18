@@ -1,47 +1,14 @@
 import { CURRENT_TOURNAMENT_ID } from "@/app/const";
 import { MatchResult } from "@/app/interface";
 import createDeps from "@/service/create-deps";
+import {
+  isAdminAuthorized,
+  unauthorizedResponse,
+} from "@/utils/serverAdminAuth";
 
 const { tournamentService } = createDeps();
 
 const tournamentId = CURRENT_TOURNAMENT_ID;
-
-function parseBasicAuth(
-  authHeader: string
-): { username: string; password: string } | null {
-  if (!authHeader.startsWith("Basic ")) {
-    return null;
-  }
-  const base64Credentials = authHeader.slice("Basic ".length).trim();
-  const credentials = Buffer.from(base64Credentials, "base64").toString(
-    "utf-8"
-  );
-  const [username, password] = credentials.split(":");
-  return { username, password };
-}
-
-function validateCredentials(username: string, password: string) {
-  const validUsername = process.env.BASIC_AUTH_USERNAME;
-  const validPassword = process.env.BASIC_AUTH_PASSWORD;
-
-  return username === validUsername && password === validPassword;
-}
-
-// true, если запрос авторизован как админ.
-function isAuthorized(req: Request): boolean {
-  const authHeader = req.headers.get("Authorization") ?? "";
-  const credentials = parseBasicAuth(authHeader);
-  return (
-    !!credentials &&
-    validateCredentials(credentials.username, credentials.password)
-  );
-}
-
-function unauthorized() {
-  return new Response(JSON.stringify({ error: "Unauthorized" }), {
-    status: 401,
-  });
-}
 
 // Встреча = 2 партии: победа 2:0, ничья 1:1.
 function scoresForResult(result: MatchResult): {
@@ -62,8 +29,8 @@ function scoresForResult(result: MatchResult): {
 
 export async function POST(req: Request) {
   try {
-    if (!isAuthorized(req)) {
-      return unauthorized();
+    if (!isAdminAuthorized(req)) {
+      return unauthorizedResponse();
     }
 
     const { player1Id, player2Id, player1Score, player2Score, result, date } =
@@ -92,8 +59,8 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
   try {
-    if (!isAuthorized(req)) {
-      return unauthorized();
+    if (!isAdminAuthorized(req)) {
+      return unauthorizedResponse();
     }
 
     const { matchId, result } = await req.json();
@@ -120,8 +87,8 @@ export async function PUT(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
-    if (!isAuthorized(req)) {
-      return unauthorized();
+    if (!isAdminAuthorized(req)) {
+      return unauthorizedResponse();
     }
 
     const { matchId } = await req.json();

@@ -21,7 +21,9 @@ export default async function ScheduleV2Page() {
     id: p.id,
     firstName: p.firstName,
     lastName: p.lastName,
-    image: getPlayerImage(p.id),
+    image: p.imageMimeType
+      ? `/api/player-image/${p.id}`
+      : getPlayerImage(p.id),
   }));
 
   const serverMatches: PlayedMatch[] = rawMatches.map((m) => ({

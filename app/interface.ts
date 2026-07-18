@@ -4,6 +4,7 @@ export interface Player {
   id: number;
   firstName: string;
   lastName: string;
+  imageMimeType?: string | null;
 }
 
 export interface Match {

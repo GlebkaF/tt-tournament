@@ -16,7 +16,7 @@ const summerTournament2025PlayersIds = [
   61, 62, 65, 21,
 ];
 
-// Состав летнего турнира 2026 — 27 участников (см. опрос в Telegram)
+// Базовый состав 2026; новые участники добавляются через TournamentParticipant.
 const summerTournament2026PlayersIds = [
   5, 67, 22, 1, 15, 20, 65, 62, 61, 54, 55, 21, 59, 7, 16, 23, 2, 68, 29, 4, 30,
   69, 70, 71, 32, 10, 27,
@@ -44,6 +44,12 @@ export class TournamentService {
           in: await this.getPlayersByTournamentId(tournamentId),
         },
       },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        imageMimeType: true,
+      },
     });
   }
 
@@ -62,12 +68,15 @@ export class TournamentService {
       orderBy: { date: "desc" },
     });
 
-    return tournaments.map((tournament) => ({
-      id: tournament.id,
-      title: tournament.title,
-      date: tournament.date,
-      playersCount: this.getPlayersIdsByTournamentId(tournament.id).length,
-    }));
+    return Promise.all(
+      tournaments.map(async (tournament) => ({
+        id: tournament.id,
+        title: tournament.title,
+        date: tournament.date,
+        playersCount: (await this.getPlayersIdsByTournamentId(tournament.id))
+          .length,
+      }))
+    );
   }
 
   async getStandings(tournamentId: number): Promise<Standings> {
@@ -81,6 +90,11 @@ export class TournamentService {
           id: {
             in: tournamentsPlayers,
           },
+        },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
         },
       });
 
@@ -259,7 +273,26 @@ export class TournamentService {
     return this.getPlayersIdsByTournamentId(tournamentId);
   }
 
-  private getPlayersIdsByTournamentId(tournamentId: number): number[] {
+  private async getPlayersIdsByTournamentId(
+    tournamentId: number
+  ): Promise<number[]> {
+    const legacyPlayerIds =
+      this.getLegacyPlayersIdsByTournamentId(tournamentId);
+    const managedParticipants =
+      await this.prisma.tournamentParticipant.findMany({
+        where: { tournamentId },
+        select: { playerId: true },
+      });
+
+    return [
+      ...new Set([
+        ...legacyPlayerIds,
+        ...managedParticipants.map(({ playerId }) => playerId),
+      ]),
+    ];
+  }
+
+  private getLegacyPlayersIdsByTournamentId(tournamentId: number): number[] {
     if (tournamentId === 1) {
       return summerTournament2024PlayersIds;
     }

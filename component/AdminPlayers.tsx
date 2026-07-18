@@ -1,0 +1,243 @@
+"use client";
+
+import { message } from "antd";
+import { FormEvent, useCallback, useEffect, useState } from "react";
+import {
+  authHeader,
+  clearPassword,
+  ensurePassword,
+  getStoredPassword,
+  savePassword,
+} from "@/utils/adminAuth";
+
+interface AdminPlayer {
+  id: number;
+  firstName: string;
+  lastName: string;
+  telegram: string | null;
+  hasDatabaseImage: boolean;
+}
+
+async function readError(response: Response): Promise<string> {
+  const body = (await response.json().catch(() => null)) as {
+    error?: string;
+  } | null;
+  return body?.error ?? "Неизвестная ошибка";
+}
+
+export default function AdminPlayers() {
+  const [players, setPlayers] = useState<AdminPlayer[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const adminFetch = useCallback(
+    async (input: RequestInfo, init: RequestInit = {}) => {
+      const password = ensurePassword();
+      if (!password) throw new Error("Авторизация отменена");
+
+      const headers = new Headers(init.headers);
+      headers.set("Authorization", authHeader(password));
+      const response = await fetch(input, { ...init, headers });
+
+      if (response.status === 401) {
+        clearPassword();
+        throw new Error("Неверный пароль");
+      }
+      if (response.ok) savePassword(password);
+      return response;
+    },
+    []
+  );
+
+  const loadPlayers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await adminFetch("/api/admin/players");
+      if (!response.ok) throw new Error(await readError(response));
+      setPlayers((await response.json()) as AdminPlayer[]);
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Ошибка загрузки");
+    } finally {
+      setLoading(false);
+    }
+  }, [adminFetch]);
+
+  useEffect(() => {
+    if (getStoredPassword()) void loadPlayers();
+  }, [loadPlayers]);
+
+  const createPlayer = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    setSaving(true);
+    try {
+      const response = await adminFetch("/api/admin/players", {
+        method: "POST",
+        body: new FormData(form),
+      });
+      if (!response.ok) throw new Error(await readError(response));
+
+      const player = (await response.json()) as AdminPlayer;
+      message.success(
+        `${player.lastName} ${player.firstName} добавлен(а) в турнир`
+      );
+      form.reset();
+      await loadPlayers();
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Ошибка сохранения");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const updatePhoto = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    setSaving(true);
+    try {
+      const response = await adminFetch("/api/admin/players", {
+        method: "PATCH",
+        body: new FormData(form),
+      });
+      if (!response.ok) throw new Error(await readError(response));
+
+      message.success("Фотография обновлена");
+      form.reset();
+      await loadPlayers();
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Ошибка сохранения");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const inputClass =
+    "mt-4 w-full border-2 border-poster-ink bg-white px-12 py-8 text-m text-poster-ink";
+  const buttonClass =
+    "border-2 border-poster-ink bg-poster-ink px-16 py-8 font-bold uppercase tracking-[0.08em] text-poster-cream disabled:cursor-not-allowed disabled:opacity-50";
+
+  return (
+    <div className="container py-32 tablet:py-48">
+      <header className="mb-24 border-b-[3px] border-poster-ink pb-16">
+        <div className="caption-s font-bold uppercase tracking-[0.18em] text-poster-clay">
+          Администрирование
+        </div>
+        <h1 className="mt-8 text-[36px] font-black uppercase leading-none tablet:text-[56px]">
+          Игроки
+        </h1>
+      </header>
+
+      {players.length === 0 && (
+        <button
+          className={buttonClass}
+          onClick={() => void loadPlayers()}
+          disabled={loading}
+        >
+          {loading ? "Загрузка…" : "Войти и загрузить игроков"}
+        </button>
+      )}
+
+      <div className="mt-24 grid grid-cols-1 gap-20 desktop:grid-cols-2">
+        <form
+          onSubmit={createPlayer}
+          className="border-[3px] border-poster-ink bg-poster-cream p-20"
+        >
+          <h2 className="text-[24px] font-black uppercase">Новый участник</h2>
+          <p className="mt-4 text-m text-poster-muted">
+            Игрок сразу попадёт в текущий турнир, фото сохранится в БД.
+          </p>
+
+          <label className="mt-16 block font-bold">
+            Имя
+            <input className={inputClass} name="firstName" required />
+          </label>
+          <label className="mt-12 block font-bold">
+            Фамилия
+            <input className={inputClass} name="lastName" required />
+          </label>
+          <label className="mt-12 block font-bold">
+            Telegram
+            <input
+              className={inputClass}
+              name="telegram"
+              placeholder="@username"
+            />
+          </label>
+          <label className="mt-12 block font-bold">
+            Фото
+            <input
+              className={inputClass}
+              name="image"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              required
+            />
+          </label>
+
+          <button className={`${buttonClass} mt-16`} disabled={saving}>
+            Добавить в турнир
+          </button>
+        </form>
+
+        <form
+          onSubmit={updatePhoto}
+          className="border-[3px] border-poster-ink bg-poster-cream p-20"
+        >
+          <h2 className="text-[24px] font-black uppercase">Заменить фото</h2>
+          <p className="mt-4 text-m text-poster-muted">
+            Подходит и для старых игроков: новое фото будет храниться в БД.
+          </p>
+
+          <label className="mt-16 block font-bold">
+            Игрок
+            <select
+              className={inputClass}
+              name="playerId"
+              required
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Выберите игрока
+              </option>
+              {players.map((player) => (
+                <option key={player.id} value={player.id}>
+                  {player.lastName} {player.firstName}
+                  {player.hasDatabaseImage ? " · фото в БД" : ""}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="mt-12 block font-bold">
+            Новое фото
+            <input
+              className={inputClass}
+              name="image"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              required
+            />
+          </label>
+
+          <button
+            className={`${buttonClass} mt-16`}
+            disabled={saving || players.length === 0}
+          >
+            Сохранить фото
+          </button>
+        </form>
+      </div>
+
+      {players.length > 0 && (
+        <div className="mt-24 border-2 border-poster-ink bg-white p-16">
+          <div className="font-black uppercase">
+            Игроков в базе: {players.length}
+          </div>
+          <div className="mt-4 text-m text-poster-muted">
+            С фото в БД:{" "}
+            {players.filter((player) => player.hasDatabaseImage).length}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
