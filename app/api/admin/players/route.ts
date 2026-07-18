@@ -6,7 +6,7 @@ import {
   unauthorizedResponse,
 } from "@/utils/serverAdminAuth";
 
-const { prisma } = createDeps();
+const { prisma, tournamentService } = createDeps();
 
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
@@ -52,21 +52,28 @@ function validationError(error: unknown): Response | null {
 export async function GET(req: Request) {
   if (!isAdminAuthorized(req)) return unauthorizedResponse();
 
-  const players = await prisma.user.findMany({
-    orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
-    select: {
-      id: true,
-      firstName: true,
-      lastName: true,
-      telegram: true,
-      imageMimeType: true,
-    },
-  });
+  const [players, currentTournamentPlayers] = await Promise.all([
+    prisma.user.findMany({
+      orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        telegram: true,
+        imageMimeType: true,
+      },
+    }),
+    tournamentService.getPlayers(CURRENT_TOURNAMENT_ID),
+  ]);
+  const currentTournamentPlayerIds = new Set(
+    currentTournamentPlayers.map(({ id }) => id)
+  );
 
   return Response.json(
     players.map(({ imageMimeType, ...player }) => ({
       ...player,
       hasDatabaseImage: !!imageMimeType,
+      inCurrentTournament: currentTournamentPlayerIds.has(player.id),
     }))
   );
 }
@@ -130,8 +137,9 @@ export async function POST(req: Request) {
         create: {
           tournamentId: CURRENT_TOURNAMENT_ID,
           playerId: savedPlayer.id,
+          active: true,
         },
-        update: {},
+        update: { active: true },
       });
 
       return savedPlayer;
@@ -175,5 +183,70 @@ export async function PATCH(req: Request) {
 
     console.error("Update player image error:", error);
     return Response.json({ error: "Не удалось обновить фото" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  if (!isAdminAuthorized(req)) return unauthorizedResponse();
+
+  try {
+    const { playerId: rawPlayerId } = (await req.json()) as {
+      playerId?: unknown;
+    };
+    const playerId = Number(rawPlayerId);
+    if (!Number.isInteger(playerId) || playerId <= 0) {
+      return Response.json({ error: "Выберите игрока" }, { status: 400 });
+    }
+
+    const currentPlayers = await tournamentService.getPlayers(
+      CURRENT_TOURNAMENT_ID
+    );
+    if (!currentPlayers.some(({ id }) => id === playerId)) {
+      return Response.json(
+        { error: "Игрок уже не участвует в текущем турнире" },
+        { status: 409 }
+      );
+    }
+
+    const matchesCount = await prisma.match.count({
+      where: {
+        tournamentId: CURRENT_TOURNAMENT_ID,
+        OR: [{ player1Id: playerId }, { player2Id: playerId }],
+      },
+    });
+    if (matchesCount > 0) {
+      return Response.json(
+        {
+          error:
+            `У игрока есть матчи (${matchesCount}). ` +
+            "Сначала удалите их на странице матчей.",
+        },
+        { status: 409 }
+      );
+    }
+
+    await prisma.tournamentParticipant.upsert({
+      where: {
+        tournamentId_playerId: {
+          tournamentId: CURRENT_TOURNAMENT_ID,
+          playerId,
+        },
+      },
+      create: {
+        tournamentId: CURRENT_TOURNAMENT_ID,
+        playerId,
+        active: false,
+      },
+      update: { active: false },
+    });
+
+    resetCache(`profile${playerId}`);
+    return Response.json({ id: playerId });
+  } catch (error) {
+    console.error("Remove tournament participant error:", error);
+    return Response.json(
+      { error: "Не удалось убрать игрока из турнира" },
+      { status: 500 }
+    );
   }
 }

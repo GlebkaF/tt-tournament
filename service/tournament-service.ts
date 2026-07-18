@@ -281,15 +281,21 @@ export class TournamentService {
     const managedParticipants =
       await this.prisma.tournamentParticipant.findMany({
         where: { tournamentId },
-        select: { playerId: true },
+        select: { playerId: true, active: true },
       });
 
-    return [
-      ...new Set([
-        ...legacyPlayerIds,
-        ...managedParticipants.map(({ playerId }) => playerId),
-      ]),
-    ];
+    const managedState = new Map(
+      managedParticipants.map(({ playerId, active }) => [playerId, active])
+    );
+    const activePlayerIds = legacyPlayerIds.filter(
+      (playerId) => managedState.get(playerId) !== false
+    );
+
+    for (const { playerId, active } of managedParticipants) {
+      if (active) activePlayerIds.push(playerId);
+    }
+
+    return [...new Set(activePlayerIds)];
   }
 
   private getLegacyPlayersIdsByTournamentId(tournamentId: number): number[] {

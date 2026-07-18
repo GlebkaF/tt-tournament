@@ -28,8 +28,13 @@ jobs:
             fi
             sleep 1
           done
-          docker exec -i tt-tournament-postgres psql -U tt -d tt -v ON_ERROR_STOP=1 \
-            < prisma/migrations/20260718000000_add_tournament_participants_and_user_image/migration.sql
+          for migration in \
+            prisma/migrations/20260718000000_add_tournament_participants_and_user_image/migration.sql \
+            prisma/migrations/20260718010000_add_active_tournament_participant/migration.sql
+          do
+            docker exec -i tt-tournament-postgres psql -U tt -d tt -v ON_ERROR_STOP=1 \
+              < "$migration"
+          done
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}

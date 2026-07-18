@@ -2,6 +2,7 @@
 
 import { message } from "antd";
 import { FormEvent, useCallback, useEffect, useState } from "react";
+import { CURRENT_TOURNAMENT_NAME } from "@/app/const";
 import {
   authHeader,
   clearPassword,
@@ -16,6 +17,7 @@ interface AdminPlayer {
   lastName: string;
   telegram: string | null;
   hasDatabaseImage: boolean;
+  inCurrentTournament: boolean;
 }
 
 async function readError(response: Response): Promise<string> {
@@ -111,6 +113,44 @@ export default function AdminPlayers() {
     }
   };
 
+  const removeFromTournament = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const playerId = Number(new FormData(form).get("playerId"));
+    const player = players.find(({ id }) => id === playerId);
+    if (!player) {
+      message.error("Выберите игрока");
+      return;
+    }
+    if (
+      !confirm(
+        `Убрать ${player.lastName} ${player.firstName} из турнира «${CURRENT_TOURNAMENT_NAME}»? Профиль игрока останется в базе.`
+      )
+    ) {
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const response = await adminFetch("/api/admin/players", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ playerId }),
+      });
+      if (!response.ok) throw new Error(await readError(response));
+
+      message.success(
+        `${player.lastName} ${player.firstName} больше не участвует в турнире`
+      );
+      form.reset();
+      await loadPlayers();
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Ошибка удаления");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const inputClass =
     "mt-4 w-full border-2 border-poster-ink bg-white px-12 py-8 text-m text-poster-ink";
   const buttonClass =
@@ -143,8 +183,11 @@ export default function AdminPlayers() {
           className="border-[3px] border-poster-ink bg-poster-cream p-20"
         >
           <h2 className="text-[24px] font-black uppercase">Новый участник</h2>
-          <p className="mt-4 text-m text-poster-muted">
-            Игрок сразу попадёт в текущий турнир, фото сохранится в БД.
+          <div className="mt-4 caption-s font-bold uppercase tracking-[0.1em] text-poster-clay">
+            {CURRENT_TOURNAMENT_NAME}
+          </div>
+          <p className="mt-8 text-m text-poster-muted">
+            Игрок сразу попадёт в этот турнир, фото сохранится в БД.
           </p>
 
           <label className="mt-16 block font-bold">
@@ -175,7 +218,7 @@ export default function AdminPlayers() {
           </label>
 
           <button className={`${buttonClass} mt-16`} disabled={saving}>
-            Добавить в турнир
+            Добавить · {CURRENT_TOURNAMENT_NAME}
           </button>
         </form>
 
@@ -225,6 +268,50 @@ export default function AdminPlayers() {
             Сохранить фото
           </button>
         </form>
+
+        <form
+          onSubmit={removeFromTournament}
+          className="border-[3px] border-poster-clay bg-poster-cream p-20"
+        >
+          <h2 className="text-[24px] font-black uppercase text-poster-clay-deep">
+            Убрать из турнира
+          </h2>
+          <div className="mt-4 caption-s font-bold uppercase tracking-[0.1em] text-poster-clay">
+            {CURRENT_TOURNAMENT_NAME}
+          </div>
+          <p className="mt-8 text-m text-poster-muted">
+            Профиль и фото останутся в базе. Игрока с записанными матчами убрать
+            нельзя — сначала нужно удалить его матчи.
+          </p>
+
+          <label className="mt-16 block font-bold">
+            Участник
+            <select
+              className={inputClass}
+              name="playerId"
+              required
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Выберите игрока
+              </option>
+              {players
+                .filter(({ inCurrentTournament }) => inCurrentTournament)
+                .map((player) => (
+                  <option key={player.id} value={player.id}>
+                    {player.lastName} {player.firstName}
+                  </option>
+                ))}
+            </select>
+          </label>
+
+          <button
+            className="mt-16 border-2 border-poster-clay bg-poster-clay px-16 py-8 font-bold uppercase tracking-[0.08em] text-white disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={saving || players.length === 0}
+          >
+            Убрать из турнира
+          </button>
+        </form>
       </div>
 
       {players.length > 0 && (
@@ -235,6 +322,10 @@ export default function AdminPlayers() {
           <div className="mt-4 text-m text-poster-muted">
             С фото в БД:{" "}
             {players.filter((player) => player.hasDatabaseImage).length}
+          </div>
+          <div className="mt-2 text-m text-poster-muted">
+            Участников «{CURRENT_TOURNAMENT_NAME}»: {" "}
+            {players.filter((player) => player.inCurrentTournament).length}
           </div>
         </div>
       )}

@@ -45,6 +45,7 @@ model Tournament {
 model TournamentParticipant {
   tournamentId Int
   playerId     Int
+  active       Boolean    @default(true)
   tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
   player       User       @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
