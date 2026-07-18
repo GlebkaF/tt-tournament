@@ -37,6 +37,28 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - BASIC_AUTH_USERNAME=${BASIC_AUTH_USERNAME}
       - BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_EDITOR_MODEL=${OPENAI_EDITOR_MODEL:-gpt-5.4-mini}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHANNEL_ID=${TELEGRAM_CHANNEL_ID}
+      - TELEGRAM_THREAD_ID=${TELEGRAM_THREAD_ID}
+      - DIGEST_CRON_SECRET=${DIGEST_CRON_SECRET}
+
+  digest-scheduler:
+    image: alpine:3.20
+    container_name: tt-tournament-digest-scheduler
+    restart: unless-stopped
+    depends_on:
+      tt-tournament:
+        condition: service_started
+    environment:
+      - DIGEST_CRON_SECRET=${DIGEST_CRON_SECRET}
+    command:
+      - /bin/sh
+      - -ec
+      - |
+        echo "0,5,10 15 * * * wget -qO- --header='Authorization: Bearer $${DIGEST_CRON_SECRET}' http://tt-tournament:3000/api/cron/daily-digest >> /proc/1/fd/1 2>> /proc/1/fd/2" > /etc/crontabs/root
+        exec crond -f -l 2
 
 volumes:
   tt_pg_data:

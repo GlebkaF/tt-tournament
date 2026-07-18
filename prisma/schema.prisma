@@ -40,6 +40,7 @@ model Tournament {
   date         DateTime                @default(now())
   matches      Match[]
   participants TournamentParticipant[]
+  dailyDigests DailyDigest[]
 }
 
 model TournamentParticipant {
@@ -52,8 +53,33 @@ model TournamentParticipant {
   @@id([tournamentId, playerId])
 }
 
+model DailyDigest {
+  id                Int               @id @default(autoincrement())
+  tournamentId      Int
+  digestDate        String
+  status            DailyDigestStatus @default(PROCESSING)
+  matchIds          Json
+  content           String?
+  editorSource      String?
+  telegramMessageId Int?
+  attempts          Int               @default(1)
+  lastError         String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  tournament        Tournament        @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+
+  @@unique([tournamentId, digestDate])
+}
+
 enum MatchResult {
   PLAYER1_WIN
   PLAYER2_WIN
   DRAW
+}
+
+enum DailyDigestStatus {
+  PROCESSING
+  SKIPPED
+  PUBLISHED
+  FAILED
 }

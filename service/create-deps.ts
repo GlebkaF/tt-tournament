@@ -2,12 +2,14 @@ import { PrismaClient } from "@prisma/client";
 import { UserService } from "./user-service";
 import { TournamentService } from "./tournament-service";
 import { PostService } from "./post-service";
+import { DailyDigestService } from "./daily-digest-service";
 
 interface Deps {
   prisma: PrismaClient;
   userService: UserService;
   tournamentService: TournamentService;
   postService: PostService;
+  dailyDigestService: DailyDigestService;
 }
 
 // Кэшируем на globalThis, чтобы dev-режим Next (hot-reload пересоздаёт
@@ -24,12 +26,14 @@ export default function createDeps(): Deps {
   const tournamentService = new TournamentService(prisma);
   const userService = new UserService(prisma, tournamentService);
   const postService = new PostService();
+  const dailyDigestService = new DailyDigestService(prisma, tournamentService);
 
   const deps = {
     prisma,
     userService,
     tournamentService,
     postService,
+    dailyDigestService,
   };
 
   globalForDeps.__ttDeps = deps;
