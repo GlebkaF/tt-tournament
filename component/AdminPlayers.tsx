@@ -280,8 +280,8 @@ export default function AdminPlayers() {
             {CURRENT_TOURNAMENT_NAME}
           </div>
           <p className="mt-8 text-m text-poster-muted">
-            Профиль и фото останутся в базе. Игрока с записанными матчами убрать
-            нельзя — сначала нужно удалить его матчи.
+            Профиль, фото и матчи останутся в базе, но матчи перестанут
+            учитываться в этом турнире. При повторном добавлении они вернутся.
           </p>
 
           <label className="mt-16 block font-bold">

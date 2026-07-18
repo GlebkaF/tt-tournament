@@ -208,23 +208,6 @@ export async function DELETE(req: Request) {
       );
     }
 
-    const matchesCount = await prisma.match.count({
-      where: {
-        tournamentId: CURRENT_TOURNAMENT_ID,
-        OR: [{ player1Id: playerId }, { player2Id: playerId }],
-      },
-    });
-    if (matchesCount > 0) {
-      return Response.json(
-        {
-          error:
-            `У игрока есть матчи (${matchesCount}). ` +
-            "Сначала удалите их на странице матчей.",
-        },
-        { status: 409 }
-      );
-    }
-
     await prisma.tournamentParticipant.upsert({
       where: {
         tournamentId_playerId: {
