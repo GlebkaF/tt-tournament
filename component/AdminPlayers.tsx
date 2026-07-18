@@ -113,20 +113,10 @@ export default function AdminPlayers() {
     }
   };
 
-  const removeFromTournament = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const playerId = Number(new FormData(form).get("playerId"));
+  const removeFromTournament = async (playerId: number) => {
     const player = players.find(({ id }) => id === playerId);
     if (!player) {
       message.error("Выберите игрока");
-      return;
-    }
-    if (
-      !confirm(
-        `Убрать ${player.lastName} ${player.firstName} из турнира «${CURRENT_TOURNAMENT_NAME}»? Профиль игрока останется в базе.`
-      )
-    ) {
       return;
     }
 
@@ -142,7 +132,6 @@ export default function AdminPlayers() {
       message.success(
         `${player.lastName} ${player.firstName} больше не участвует в турнире`
       );
-      form.reset();
       await loadPlayers();
     } catch (error) {
       message.error(error instanceof Error ? error.message : "Ошибка удаления");
@@ -269,10 +258,7 @@ export default function AdminPlayers() {
           </button>
         </form>
 
-        <form
-          onSubmit={removeFromTournament}
-          className="border-[3px] border-poster-clay bg-poster-cream p-20"
-        >
+        <section className="border-[3px] border-poster-clay bg-poster-cream p-20">
           <h2 className="text-[24px] font-black uppercase text-poster-clay-deep">
             Убрать из турнира
           </h2>
@@ -284,34 +270,29 @@ export default function AdminPlayers() {
             учитываться в этом турнире. При повторном добавлении они вернутся.
           </p>
 
-          <label className="mt-16 block font-bold">
-            Участник
-            <select
-              className={inputClass}
-              name="playerId"
-              required
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Выберите игрока
-              </option>
-              {players
-                .filter(({ inCurrentTournament }) => inCurrentTournament)
-                .map((player) => (
-                  <option key={player.id} value={player.id}>
+          <ul className="mt-16 max-h-[360px] overflow-y-auto border-2 border-poster-ink bg-white">
+            {players
+              .filter(({ inCurrentTournament }) => inCurrentTournament)
+              .map((player) => (
+                <li
+                  key={player.id}
+                  className="flex items-center justify-between gap-12 border-t border-poster-ink/20 px-12 py-8 first:border-t-0"
+                >
+                  <span className="font-bold">
                     {player.lastName} {player.firstName}
-                  </option>
-                ))}
-            </select>
-          </label>
-
-          <button
-            className="mt-16 border-2 border-poster-clay bg-poster-clay px-16 py-8 font-bold uppercase tracking-[0.08em] text-white disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={saving || players.length === 0}
-          >
-            Убрать из турнира
-          </button>
-        </form>
+                  </span>
+                  <button
+                    type="button"
+                    className="shrink-0 border border-poster-clay px-8 py-4 caption-s font-bold uppercase text-poster-clay-deep hover:bg-poster-clay hover:text-white disabled:opacity-50"
+                    disabled={saving}
+                    onClick={() => void removeFromTournament(player.id)}
+                  >
+                    Убрать
+                  </button>
+                </li>
+              ))}
+          </ul>
+        </section>
       </div>
 
       {players.length > 0 && (
