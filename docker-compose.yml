@@ -61,5 +61,23 @@ services:
         echo "0,5,10 15 * * * wget -qO- --header='Authorization: Bearer $${DIGEST_CRON_SECRET}' http://tt-tournament:3000/api/cron/daily-digest >> /proc/1/fd/1 2>> /proc/1/fd/2" > /etc/crontabs/root
         exec crond -f -l 2
 
+  telegram-bot-poller:
+    image: alpine:3.20
+    container_name: tt-tournament-telegram-bot-poller
+    restart: unless-stopped
+    depends_on:
+      tt-tournament:
+        condition: service_started
+    environment:
+      - DIGEST_CRON_SECRET=${DIGEST_CRON_SECRET}
+    command:
+      - /bin/sh
+      - -ec
+      - |
+        while true; do
+          wget -qO- -T 40 --header="Authorization: Bearer $${DIGEST_CRON_SECRET}" http://tt-tournament:3000/api/telegram/poll || true
+          sleep 1
+        done
+
 volumes:
   tt_pg_data:

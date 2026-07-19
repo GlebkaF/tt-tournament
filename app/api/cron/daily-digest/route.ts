@@ -62,11 +62,7 @@ async function probeTelegram(): Promise<{
     throw new Error("Telegram forum or bot permissions are not ready");
   }
 
-  await call("setWebhook", {
-    url: "https://ebtt.ru/api/telegram/webhook",
-    secret_token: token.replace(/[^A-Za-z0-9_-]/g, "_"),
-    allowed_updates: JSON.stringify(["message"]),
-  });
+  await call("deleteWebhook");
   await call("setMyCommands", {
     commands: JSON.stringify([
       { command: "start", description: "Познакомиться с ботом" },

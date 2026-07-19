@@ -61,7 +61,7 @@ jobs:
           DIGEST_CRON_SECRET: ${{ secrets.DIGEST_CRON_SECRET }}
 
       - name: Build and run application
-        run: docker compose up -d --build --force-recreate --no-deps tt-tournament digest-scheduler
+        run: docker compose up -d --build --force-recreate --no-deps tt-tournament digest-scheduler telegram-bot-poller
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
@@ -88,10 +88,23 @@ jobs:
           done
 
           test "$(docker inspect --format '{{.State.Running}}' tt-tournament-digest-scheduler)" = "true"
+          test "$(docker inspect --format '{{.State.Running}}' tt-tournament-telegram-bot-poller)" = "true"
           telegram_probe=$(curl --fail --silent --show-error \
             --header "Authorization: Bearer ${DIGEST_CRON_SECRET}" \
             "http://localhost:3010/api/cron/daily-digest?probe=1")
           echo "$telegram_probe" | grep --quiet '"status":"ready"'
+          for attempt in $(seq 1 30); do
+            if docker logs --since 30s tt-tournament-telegram-bot-poller 2>&1 \
+              | grep --quiet '"status":"ready"'; then
+              break
+            fi
+            if [ "$attempt" -eq 30 ]; then
+              echo "Telegram long polling did not become ready"
+              docker logs tt-tournament-telegram-bot-poller --tail 50
+              exit 1
+            fi
+            sleep 1
+          done
           digest_response=$(curl --fail --silent --show-error \
             --header "Authorization: Bearer ${DIGEST_CRON_SECRET}" \
             "http://localhost:3010/api/cron/daily-digest?dryRun=1&date=2026-07-14")

@@ -6,11 +6,10 @@ import {
   unknownTelegramUserMessage,
 } from "@/utils/telegramBot";
 
-export const runtime = "nodejs";
-
 const ADMIN_TELEGRAM_USERNAME = "glebkaf";
 
-interface TelegramUpdate {
+export interface TelegramUpdate {
+  update_id: number;
   message?: {
     message_id: number;
     message_thread_id?: number;
@@ -19,13 +18,7 @@ interface TelegramUpdate {
     from?: { id: number; username?: string };
   };
 }
-
 const { telegramBotService } = createDeps();
-
-function webhookSecret(token: string): string {
-  // Telegram разрешает в secret_token только A-Z, a-z, 0-9, _ и -.
-  return token.replace(/[^A-Za-z0-9_-]/g, "_");
-}
 
 async function sendTelegramMessage(
   token: string,
@@ -115,62 +108,49 @@ function startMessage(
   return `${verb} тебя, ${result.player.firstName}! Теперь /remaining покажет, с кем тебе осталось сыграть.`;
 }
 
-export async function POST(req: Request) {
+export async function handleTelegramUpdate(
+  update: TelegramUpdate
+): Promise<boolean> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
-  if (!token) {
-    console.error("Telegram webhook: TELEGRAM_BOT_TOKEN is not configured");
-    return Response.json({ ok: false }, { status: 503 });
-  }
+  if (!token) throw new Error("TELEGRAM_BOT_TOKEN is not configured");
 
-  if (
-    req.headers.get("x-telegram-bot-api-secret-token") !== webhookSecret(token)
-  ) {
-    return Response.json({ ok: false }, { status: 401 });
-  }
+  const message = update.message;
+  if (!message?.text || !message.from) return false;
 
-  try {
-    const update = (await req.json()) as TelegramUpdate;
-    const message = update.message;
-    if (!message?.text || !message.from) return Response.json({ ok: true });
+  const command = parseTelegramCommand(message.text);
+  if (!command) return false;
 
-    const command = parseTelegramCommand(message.text);
-    if (!command) return Response.json({ ok: true });
-
-    let responseText: string;
-    if (command === "start") {
-      const result = await telegramBotService.registerPlayer(
-        message.from.id,
-        message.from.username
-      );
-      responseText = startMessage(result);
-      if (result.status === "registered") {
-        await sendLinkNotification(token, message.from, result.player);
-      }
-    } else {
-      const result = await telegramBotService.getRemainingOpponents(
-        message.from.id
-      );
-      responseText = result
-        ? formatRemainingMessage(
-            result.player.firstName,
-            result.opponents,
-            result.isActiveParticipant
-          )
-        : unknownTelegramUserMessage();
-    }
-
-    await sendTelegramMessage(
-      token,
-      {
-        chatId: message.chat.id,
-        messageThreadId: message.message_thread_id,
-        replyToMessageId: message.message_id,
-      },
-      responseText
+  let responseText: string;
+  if (command === "start") {
+    const result = await telegramBotService.registerPlayer(
+      message.from.id,
+      message.from.username
     );
-    return Response.json({ ok: true });
-  } catch (error) {
-    console.error("Telegram webhook error:", error);
-    return Response.json({ ok: false }, { status: 500 });
+    responseText = startMessage(result);
+    if (result.status === "registered") {
+      await sendLinkNotification(token, message.from, result.player);
+    }
+  } else {
+    const result = await telegramBotService.getRemainingOpponents(
+      message.from.id
+    );
+    responseText = result
+      ? formatRemainingMessage(
+          result.player.firstName,
+          result.opponents,
+          result.isActiveParticipant
+        )
+      : unknownTelegramUserMessage();
   }
+
+  await sendTelegramMessage(
+    token,
+    {
+      chatId: message.chat.id,
+      messageThreadId: message.message_thread_id,
+      replyToMessageId: message.message_id,
+    },
+    responseText
+  );
+  return true;
 }
