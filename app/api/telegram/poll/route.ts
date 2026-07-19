@@ -91,7 +91,13 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error("Telegram polling error:", error);
-    return Response.json({ error: "Telegram polling failed" }, { status: 502 });
+    const message = error instanceof Error ? error.message : String(error);
+    // Endpoint доступен только внутреннему контейнеру с cron-secret; сообщение
+    // попадает в его лог и делает сбой long polling диагностируемым.
+    return Response.json({
+      status: "error",
+      message: message.slice(0, 500),
+    });
   } finally {
     globalForPolling.__ttTelegramPollActive = false;
   }

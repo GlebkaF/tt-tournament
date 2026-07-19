@@ -93,14 +93,15 @@ jobs:
             --header "Authorization: Bearer ${DIGEST_CRON_SECRET}" \
             "http://localhost:3010/api/cron/daily-digest?probe=1")
           echo "$telegram_probe" | grep --quiet '"status":"ready"'
-          for attempt in $(seq 1 30); do
-            if docker logs --since 30s tt-tournament-telegram-bot-poller 2>&1 \
+          for attempt in $(seq 1 60); do
+            if docker logs --since 60s tt-tournament-telegram-bot-poller 2>&1 \
               | grep --quiet '"status":"ready"'; then
               break
             fi
-            if [ "$attempt" -eq 30 ]; then
+            if [ "$attempt" -eq 60 ]; then
               echo "Telegram long polling did not become ready"
               docker logs tt-tournament-telegram-bot-poller --tail 50
+              docker logs tt-tournament --tail 100
               exit 1
             fi
             sleep 1

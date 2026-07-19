@@ -63,14 +63,21 @@ async function probeTelegram(): Promise<{
   }
 
   await call("deleteWebhook");
+  const commands = JSON.stringify([
+    { command: "start", description: "Познакомиться с ботом" },
+    {
+      command: "remaining",
+      description: "С кем мне осталось сыграть",
+    },
+  ]);
+  await call("setMyCommands", { commands });
   await call("setMyCommands", {
-    commands: JSON.stringify([
-      { command: "start", description: "Познакомиться с ботом" },
-      {
-        command: "remaining",
-        description: "С кем мне осталось сыграть",
-      },
-    ]),
+    commands,
+    scope: JSON.stringify({ type: "all_group_chats" }),
+  });
+  await call("setMyCommands", {
+    commands,
+    scope: JSON.stringify({ type: "chat", chat_id: chatId }),
   });
   return { status: "ready", forum: true, botRole: member.status };
 }
