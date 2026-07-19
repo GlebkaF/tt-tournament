@@ -6,6 +6,7 @@ import {
   DigestEventCandidate,
   selectFallbackEvents,
 } from "@/utils/dailyDigest";
+import { getExternalFetch } from "../proxy";
 
 const SelectionSchema = z.object({
   selectedCandidateIds: z.array(z.string()).max(3),
@@ -57,7 +58,12 @@ export async function selectDigestEvents(
     return { events: fallback, source: "fallback", warning: "OpenAI is not configured" };
   }
 
-  const client = new OpenAI({ apiKey, timeout: 20_000, maxRetries: 1 });
+  const client = new OpenAI({
+    apiKey,
+    fetch: getExternalFetch(),
+    timeout: 20_000,
+    maxRetries: 1,
+  });
   try {
     const response = await client.responses.parse({
       model: process.env.OPENAI_EDITOR_MODEL || "gpt-5.4-mini",

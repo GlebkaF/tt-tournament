@@ -12,6 +12,7 @@ import {
   formatDailyDigestMessage,
   selectDigestEvents,
 } from "./daily-digest/editor";
+import { getExternalFetch } from "./proxy";
 
 const TIME_ZONE = "Asia/Novosibirsk";
 const PROCESSING_STALE_MS = 2 * 60 * 1000;
@@ -65,7 +66,7 @@ async function sendTelegramMessage(text: string): Promise<number> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15_000);
   try {
-    const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    const response = await getExternalFetch()(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
