@@ -15,6 +15,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Load Telegram proxy from pesiki-bot
+        run: |
+          proxy_url=$(docker inspect pesiki-bot \
+            --format '{{range .Config.Env}}{{println .}}{{end}}' \
+            | sed -n 's/^HTTPS_PROXY=//p' \
+            | head -n 1)
+          if [ -z "$proxy_url" ]; then
+            echo "HTTPS_PROXY is not configured in pesiki-bot"
+            exit 1
+          fi
+          echo "::add-mask::$proxy_url"
+          echo "HTTPS_PROXY=$proxy_url" >> "$GITHUB_ENV"
+
       - name: Start database and apply admin schema
         run: |
           docker compose up -d postgres
@@ -42,7 +55,6 @@ jobs:
           BASIC_AUTH_USERNAME: ${{ secrets.BASIC_AUTH_USERNAME }}
           BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          HTTPS_PROXY: ${{ secrets.HTTPS_PROXY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
           TELEGRAM_THREAD_ID: ${{ secrets.TELEGRAM_THREAD_ID }}
@@ -56,7 +68,6 @@ jobs:
           BASIC_AUTH_USERNAME: ${{ secrets.BASIC_AUTH_USERNAME }}
           BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          HTTPS_PROXY: ${{ secrets.HTTPS_PROXY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
           TELEGRAM_THREAD_ID: ${{ secrets.TELEGRAM_THREAD_ID }}
@@ -77,6 +88,34 @@ jobs:
           done
 
           test "$(docker inspect --format '{{.State.Running}}' tt-tournament-digest-scheduler)" = "true"
+          docker exec tt-tournament node -e '
+            const { ProxyAgent, fetch } = require("undici");
+            const proxy = process.env.HTTPS_PROXY;
+            const token = process.env.TELEGRAM_BOT_TOKEN;
+            const chatId = process.env.TELEGRAM_CHANNEL_ID;
+            if (!proxy || !token || !chatId) process.exit(1);
+            const dispatcher = new ProxyAgent(proxy);
+            const call = async (method, params = {}) => {
+              const url = new URL(`https://api.telegram.org/bot${token}/${method}`);
+              for (const [key, value] of Object.entries(params)) {
+                url.searchParams.set(key, String(value));
+              }
+              const response = await fetch(url, { dispatcher });
+              const body = await response.json();
+              if (!response.ok || !body.ok) throw new Error(`${method}: ${body.description}`);
+              return body.result;
+            };
+            void (async () => {
+              const bot = await call("getMe");
+              const chat = await call("getChat", { chat_id: chatId });
+              const member = await call("getChatMember", {
+                chat_id: chatId,
+                user_id: bot.id,
+              });
+              if (!chat.is_forum || member.status !== "administrator") process.exit(1);
+              console.log("Telegram proxy, forum, and bot permissions verified");
+            })();
+          '
           digest_response=$(curl --fail --silent --show-error \
             --header "Authorization: Bearer ${DIGEST_CRON_SECRET}" \
             "http://localhost:3010/api/cron/daily-digest?dryRun=1&date=2026-07-14")

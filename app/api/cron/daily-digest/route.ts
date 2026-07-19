@@ -63,6 +63,7 @@ export async function GET(request: Request) {
       date: result.date,
       editorSource: result.editorSource,
       telegramMessageId: result.telegramMessageId,
+      ...(dryRun ? { message: result.message, analysis: result.analysis } : {}),
     });
   } catch (error) {
     console.error("Daily digest cron failed:", error);
