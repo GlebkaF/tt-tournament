@@ -1,5 +1,7 @@
 import { timingSafeEqual } from "node:crypto";
+import { CURRENT_TOURNAMENT_ID } from "@/app/const";
 import createDeps from "@/service/create-deps";
+import { dateInNovosibirsk } from "@/service/daily-digest-service";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -25,12 +27,36 @@ export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
     const dryRun = url.searchParams.get("dryRun") === "1";
+    const inspect = url.searchParams.get("inspect") === "1";
     const requestedDate = url.searchParams.get("date") ?? undefined;
     const date =
-      dryRun && requestedDate && /^\d{4}-\d{2}-\d{2}$/.test(requestedDate)
+      (dryRun || inspect) &&
+      requestedDate &&
+      /^\d{4}-\d{2}-\d{2}$/.test(requestedDate)
         ? requestedDate
         : undefined;
-    const { dailyDigestService } = createDeps();
+    const { dailyDigestService, prisma } = createDeps();
+    if (inspect) {
+      const digestDate = date ?? dateInNovosibirsk();
+      const digest = await prisma.dailyDigest.findUnique({
+        where: {
+          tournamentId_digestDate: {
+            tournamentId: CURRENT_TOURNAMENT_ID,
+            digestDate,
+          },
+        },
+        select: {
+          status: true,
+          attempts: true,
+          editorSource: true,
+          telegramMessageId: true,
+          lastError: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+      return Response.json({ date: digestDate, digest });
+    }
     const result = await dailyDigestService.run({ dryRun, date });
     return Response.json({
       status: result.status,
@@ -40,6 +66,10 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error("Daily digest cron failed:", error);
-    return Response.json({ error: "Daily digest failed" }, { status: 500 });
+    const detail = error instanceof Error ? error.message : String(error);
+    return Response.json(
+      { error: "Daily digest failed", detail: detail.slice(0, 1000) },
+      { status: 500 }
+    );
   }
 }
