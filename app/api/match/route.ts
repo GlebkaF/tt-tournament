@@ -5,6 +5,7 @@ import {
   isAdminAuthorized,
   unauthorizedResponse,
 } from "@/utils/serverAdminAuth";
+import { resetRatingCache } from "@/service/rating-service";
 
 const { tournamentService } = createDeps();
 
@@ -45,6 +46,7 @@ export async function POST(req: Request) {
       new Date(date),
       tournamentId
     );
+    resetRatingCache();
     return new Response(
       JSON.stringify({ message: "Match recorded successfully" }),
       { status: 200 }
@@ -73,6 +75,7 @@ export async function PUT(req: Request) {
       player2Score,
       tournamentId
     );
+    resetRatingCache();
     return new Response(
       JSON.stringify({ message: "Match updated successfully" }),
       { status: 200 }
@@ -94,6 +97,7 @@ export async function DELETE(req: Request) {
     const { matchId } = await req.json();
 
     await tournamentService.deleteMatch(matchId, tournamentId);
+    resetRatingCache();
     return new Response(
       JSON.stringify({ message: "Match deleted successfully" }),
       { status: 200 }

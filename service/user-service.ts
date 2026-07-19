@@ -707,6 +707,7 @@ export function getPlayerImage(id: number): string {
 type MatchResult = "PLAYER1_WIN" | "PLAYER2_WIN" | "DRAW" | "TBD";
 
 interface MatchDetail {
+  matchId: number;
   opponent: {
     name: string;
     id: number;
@@ -797,6 +798,7 @@ export class UserService {
       }
       const opponentId = opponentIdOf(match);
       group.matches.push({
+        matchId: match.id,
         opponent: {
           id: opponentId,
           name: nameById.get(opponentId) ?? "Неизвестный",

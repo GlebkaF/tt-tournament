@@ -2,6 +2,7 @@
 import { Standings, StandingsItem } from "@/app/interface";
 import Link from "next/link";
 import { Fragment, useState } from "react";
+import { useRatingFeatureFlag } from "@/utils/ratingFeature";
 
 /** Сыгранные (с результатом) и оставшиеся соперники игрока. */
 function getOpponents(standings: Standings, item: StandingsItem) {
@@ -130,6 +131,7 @@ const StandingsTable = ({
   title: string;
 }) => {
   const [expanded, setExpanded] = useState<number | null>(null);
+  const { enabled: ratingEnabled } = useRatingFeatureFlag();
   const hasResults = standings.some((s) => s.gamesPlayed > 0);
   const leaders = hasResults ? standings.slice(0, 3) : [];
   const medals = ["🥇", "🥈", "🥉"];
@@ -207,6 +209,11 @@ const StandingsTable = ({
                   <th className="px-12 py-8 text-center caption-s font-semibold uppercase tracking-[0.1em]">
                     Игры
                   </th>
+                  {ratingEnabled && (
+                    <th className="px-12 py-8 text-center caption-s font-semibold uppercase tracking-[0.1em]">
+                      Сила
+                    </th>
+                  )}
                   <th className="w-40 px-12 py-8 text-center caption-s font-semibold uppercase tracking-[0.1em]">
                     {/* шеврон */}
                   </th>
@@ -264,6 +271,19 @@ const StandingsTable = ({
                         <td className="px-12 py-8 text-center tabular-nums text-poster-muted">
                           {item.gamesPlayed}
                         </td>
+                        {ratingEnabled && (
+                          <td
+                            className="px-12 py-8 text-center font-black tabular-nums text-poster-court"
+                            title={
+                              item.strength?.isCalibrating
+                                ? `Калибровка · примерно ${item.strength.estimatedGamesToCalibration} игр`
+                                : "Рейтинг силы Glicko-2"
+                            }
+                          >
+                            {item.strength?.rating ?? 1500}
+                            {item.strength?.isCalibrating ? "*" : ""}
+                          </td>
+                        )}
                         <td className="px-12 py-8 text-center text-poster-muted">
                           <span
                             className={`inline-block transition-transform ${
@@ -276,7 +296,10 @@ const StandingsTable = ({
                       </tr>
                       {isOpen && (
                         <tr className="bg-poster-paper">
-                          <td colSpan={7} className="px-12 pb-16 pt-4">
+                          <td
+                            colSpan={ratingEnabled ? 8 : 7}
+                            className="px-12 pb-16 pt-4"
+                          >
                             <div className="flex flex-col gap-16 border-2 border-poster-ink bg-poster-cream p-16 desktop:flex-row">
                               {/* Осталось сыграть — главный кейс */}
                               <div className="flex-1">
@@ -360,6 +383,12 @@ const StandingsTable = ({
               </tbody>
             </table>
           </div>
+          {ratingEnabled && (
+            <p className="mt-8 caption-xs text-poster-muted">
+              * Рейтинг ещё калибруется. Примерное число оставшихся игр указано
+              в профиле игрока.
+            </p>
+          )}
         </section>
       </div>
     </div>
