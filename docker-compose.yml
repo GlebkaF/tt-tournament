@@ -76,6 +76,7 @@ services:
       - |
         while true; do
           wget -qO- -T 40 --header="Authorization: Bearer $${DIGEST_CRON_SECRET}" http://tt-tournament:3000/api/telegram/poll || true
+          echo
           sleep 1
         done
 
