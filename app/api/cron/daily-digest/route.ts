@@ -2,6 +2,7 @@ import { timingSafeEqual } from "node:crypto";
 import { CURRENT_TOURNAMENT_ID } from "@/app/const";
 import createDeps from "@/service/create-deps";
 import { dateInNovosibirsk } from "@/service/daily-digest-service";
+import { getExternalFetch } from "@/service/proxy";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,6 +20,50 @@ function authorized(request: Request): boolean {
   );
 }
 
+async function probeTelegram(): Promise<{
+  status: "ready";
+  forum: boolean;
+  botRole: string;
+}> {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHANNEL_ID;
+  if (!token || !chatId) {
+    throw new Error("Telegram credentials are not configured");
+  }
+
+  const call = async <T>(method: string, params: Record<string, string> = {}) => {
+    const url = new URL(`https://api.telegram.org/bot${token}/${method}`);
+    for (const [key, value] of Object.entries(params)) {
+      url.searchParams.set(key, value);
+    }
+    const response = await getExternalFetch()(url);
+    const body = (await response.json()) as {
+      ok?: boolean;
+      description?: string;
+      result?: T;
+    };
+    if (!response.ok || !body.ok || body.result === undefined) {
+      throw new Error(
+        `${method}: ${body.description || `HTTP ${response.status}`}`
+      );
+    }
+    return body.result;
+  };
+
+  const bot = await call<{ id: number }>("getMe");
+  const chat = await call<{ is_forum?: boolean }>("getChat", {
+    chat_id: chatId,
+  });
+  const member = await call<{ status: string }>("getChatMember", {
+    chat_id: chatId,
+    user_id: String(bot.id),
+  });
+  if (!chat.is_forum || member.status !== "administrator") {
+    throw new Error("Telegram forum or bot permissions are not ready");
+  }
+  return { status: "ready", forum: true, botRole: member.status };
+}
+
 export async function GET(request: Request) {
   if (!authorized(request)) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
@@ -28,6 +73,7 @@ export async function GET(request: Request) {
     const url = new URL(request.url);
     const dryRun = url.searchParams.get("dryRun") === "1";
     const inspect = url.searchParams.get("inspect") === "1";
+    const probe = url.searchParams.get("probe") === "1";
     const requestedDate = url.searchParams.get("date") ?? undefined;
     const date =
       (dryRun || inspect) &&
@@ -36,6 +82,9 @@ export async function GET(request: Request) {
         ? requestedDate
         : undefined;
     const { dailyDigestService, prisma } = createDeps();
+    if (probe) {
+      return Response.json({ telegram: await probeTelegram() });
+    }
     if (inspect) {
       const digestDate = date ?? dateInNovosibirsk();
       const digest = await prisma.dailyDigest.findUnique({
