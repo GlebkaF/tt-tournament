@@ -34,11 +34,23 @@ function normalizeSelection(
 
   const selected: DigestEventCandidate[] = [];
   const usedPlayers = new Set<number>();
+  const usedKinds = new Set<DigestEventCandidate["kind"]>();
   for (const candidate of ordered) {
     if (candidate.playerIds.some((id) => usedPlayers.has(id))) continue;
+    if (usedKinds.has(candidate.kind)) continue;
     selected.push(candidate);
     candidate.playerIds.forEach((id) => usedPlayers.add(id));
+    usedKinds.add(candidate.kind);
     if (selected.length === limit) return selected;
+  }
+
+  // Если игроков не хватает, повторяем игрока раньше, чем тип сюжета.
+  for (const candidate of ordered) {
+    if (selected.some((item) => item.id === candidate.id)) continue;
+    if (usedKinds.has(candidate.kind)) continue;
+    selected.push(candidate);
+    usedKinds.add(candidate.kind);
+    if (selected.length === limit) break;
   }
   for (const candidate of ordered) {
     if (selected.some((item) => item.id === candidate.id)) continue;

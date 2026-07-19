@@ -567,21 +567,35 @@ export function selectFallbackEvents(
   candidates: DigestEventCandidate[],
   limit: number
 ): DigestEventCandidate[] {
+  const ordered = [...candidates].sort(
+    (a, b) => b.priority - a.priority || a.id.localeCompare(b.id)
+  );
   const selected: DigestEventCandidate[] = [];
   const usedPlayers = new Set<number>();
-  for (const candidate of [...candidates].sort(
-    (a, b) => b.priority - a.priority || a.id.localeCompare(b.id)
-  )) {
+  const usedKinds = new Set<DigestEventKind>();
+  for (const candidate of ordered) {
     if (candidate.playerIds.some((id) => usedPlayers.has(id))) continue;
+    if (usedKinds.has(candidate.kind)) continue;
     selected.push(candidate);
     candidate.playerIds.forEach((id) => usedPlayers.add(id));
+    usedKinds.add(candidate.kind);
     if (selected.length >= limit) break;
   }
 
+  // Сначала ослабляем уникальность игроков, но сохраняем разнообразие сюжетов.
   if (selected.length < limit) {
-    for (const candidate of [...candidates].sort(
-      (a, b) => b.priority - a.priority || a.id.localeCompare(b.id)
-    )) {
+    for (const candidate of ordered) {
+      if (selected.some((item) => item.id === candidate.id)) continue;
+      if (usedKinds.has(candidate.kind)) continue;
+      selected.push(candidate);
+      usedKinds.add(candidate.kind);
+      if (selected.length >= limit) break;
+    }
+  }
+
+  // Повтор типа допустим только когда иначе физически нельзя заполнить сводку.
+  if (selected.length < limit) {
+    for (const candidate of ordered) {
       if (selected.some((item) => item.id === candidate.id)) continue;
       selected.push(candidate);
       if (selected.length >= limit) break;

@@ -156,4 +156,44 @@ describe("daily digest analysis", () => {
     expect(new Set(selected.map(({ id }) => id)).size).toBe(3);
     expect(selected.map(({ kind }) => kind)).toContain("WIN_STREAK");
   });
+
+  it("prefers a different story type over a second milestone", () => {
+    const selected = selectFallbackEvents(
+      [
+        {
+          id: "MATCH_MILESTONE:1:10",
+          kind: "MATCH_MILESTONE",
+          priority: 90,
+          playerIds: [1],
+          headline: "КРУГЛАЯ ДАТА",
+          body: "Первая дата",
+          evidence: {},
+        },
+        {
+          id: "MATCH_MILESTONE:2:10",
+          kind: "MATCH_MILESTONE",
+          priority: 89,
+          playerIds: [2],
+          headline: "КРУГЛАЯ ДАТА",
+          body: "Вторая дата",
+          evidence: {},
+        },
+        {
+          id: "MARATHON:3",
+          kind: "MARATHON",
+          priority: 80,
+          playerIds: [3],
+          headline: "МАРАФОН",
+          body: "Шесть матчей",
+          evidence: {},
+        },
+      ],
+      2
+    );
+
+    expect(selected.map(({ kind }) => kind)).toEqual([
+      "MATCH_MILESTONE",
+      "MARATHON",
+    ]);
+  });
 });
