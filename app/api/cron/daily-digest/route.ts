@@ -79,6 +79,17 @@ async function probeTelegram(): Promise<{
     commands,
     scope: JSON.stringify({ type: "chat", chat_id: chatId }),
   });
+  await call("setMyCommands", { commands, language_code: "ru" });
+  await call("setMyCommands", {
+    commands,
+    language_code: "ru",
+    scope: JSON.stringify({ type: "all_group_chats" }),
+  });
+  await call("setMyCommands", {
+    commands,
+    language_code: "ru",
+    scope: JSON.stringify({ type: "chat", chat_id: chatId }),
+  });
   return { status: "ready", forum: true, botRole: member.status };
 }
 
