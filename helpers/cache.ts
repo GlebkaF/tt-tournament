@@ -23,3 +23,4 @@ export function setCache(key: string, value: any) {
 }
 
 export const STANDINGS_CACHE_KEY = "standings";
+export const RATING_CACHE_KEY = "rating-history";

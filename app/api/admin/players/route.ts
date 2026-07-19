@@ -1,5 +1,6 @@
 import { CURRENT_TOURNAMENT_ID } from "@/app/const";
 import { resetCache } from "@/helpers/cache";
+import { resetRatingCache } from "@/service/rating-service";
 import createDeps from "@/service/create-deps";
 import {
   isAdminAuthorized,
@@ -146,6 +147,7 @@ export async function POST(req: Request) {
     });
 
     resetCache(`profile${player.id}`);
+    resetRatingCache();
     return Response.json(player, { status: existingPlayer ? 200 : 201 });
   } catch (error) {
     const response = validationError(error);

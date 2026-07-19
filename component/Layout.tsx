@@ -5,6 +5,7 @@ import { ReactNode } from "react";
 import logoFull from "@/images/logo-v3-light-bg.png";
 import Image from "next/image";
 import { CURRENT_TOURNAMENT_ID, CURRENT_TOURNAMENT_NAME } from "@/app/const";
+import { useRatingFeatureFlag } from "@/utils/ratingFeature";
 
 interface LayoutProps {
   children: ReactNode;
@@ -12,6 +13,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const link = `/tournament/${CURRENT_TOURNAMENT_ID}`;
+  const { enabled: ratingEnabled } = useRatingFeatureFlag();
 
   return (
     <div className="poster-scope flex min-h-screen flex-col bg-poster-paper">
@@ -37,6 +39,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             >
               Все турниры
             </Link>
+            {ratingEnabled && (
+              <Link
+                href="/rating"
+                className="text-[15px] font-bold uppercase tracking-[0.02em] text-poster-ink no-underline hover:text-poster-clay"
+              >
+                Рейтинг
+              </Link>
+            )}
           </div>
           <Link
             href="https://t.me/+nsoeCj4lNi81Zjg6"

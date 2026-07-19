@@ -3,6 +3,7 @@ import { UserService } from "./user-service";
 import { TournamentService } from "./tournament-service";
 import { PostService } from "./post-service";
 import { DailyDigestService } from "./daily-digest-service";
+import { RatingService } from "./rating-service";
 
 interface Deps {
   prisma: PrismaClient;
@@ -10,6 +11,7 @@ interface Deps {
   tournamentService: TournamentService;
   postService: PostService;
   dailyDigestService: DailyDigestService;
+  ratingService: RatingService;
 }
 
 // Кэшируем на globalThis, чтобы dev-режим Next (hot-reload пересоздаёт
@@ -27,6 +29,7 @@ export default function createDeps(): Deps {
   const userService = new UserService(prisma, tournamentService);
   const postService = new PostService();
   const dailyDigestService = new DailyDigestService(prisma, tournamentService);
+  const ratingService = new RatingService(prisma);
 
   const deps = {
     prisma,
@@ -34,6 +37,7 @@ export default function createDeps(): Deps {
     tournamentService,
     postService,
     dailyDigestService,
+    ratingService,
   };
 
   globalForDeps.__ttDeps = deps;

@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import createDeps from "@/service/create-deps";
 import { notFound } from "next/navigation";
 
-const { userService } = createDeps();
+const { userService, ratingService } = createDeps();
 
 export const generateStaticParams = async (): Promise<{ id: string }[]> => {
   return [
@@ -80,17 +80,31 @@ export default async function PlayerPage({
 }) {
   const { id } = await params;
   const playerId = parseInt(id, 10);
-  const playerData = await userService.getUserProfile(playerId);
+  const [playerData, ratingData] = await Promise.all([
+    userService.getUserProfile(playerId),
+    ratingService.getRatingData(),
+  ]);
 
   if (!playerData) {
     notFound();
   }
 
+  const matchDays = playerData.matchDays.map((day) => ({
+    ...day,
+    matches: day.matches.map((match) => {
+      const delta = ratingData.history.matches.get(match.matchId);
+      const playerDelta =
+        delta?.player1.playerId === playerId ? delta.player1 : delta?.player2;
+      return { ...match, ratingDelta: playerDelta?.delta };
+    }),
+  }));
+
   return (
     <PlayerProfile
       player={playerData.player}
-      matchDays={playerData.matchDays}
+      matchDays={matchDays}
       pending={playerData.pending}
+      rating={ratingData.history.players.get(playerId)}
     />
   );
 }

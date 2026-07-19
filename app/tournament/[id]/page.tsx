@@ -3,7 +3,7 @@ import StandingsTable from "@/component/StandingsTable";
 
 import createDeps from "@/service/create-deps";
 
-const { tournamentService } = createDeps();
+const { tournamentService, ratingService } = createDeps();
 
 export const generateStaticParams = async (): Promise<{ id: string }[]> => {
   return [
@@ -49,9 +49,18 @@ const StandingsPage = async ({
     return <div>Турнир не найден</div>;
   }
 
-  const standings = await tournamentService.getStandings(tournamentId);
+  const [standings, ratingData] = await Promise.all([
+    tournamentService.getStandings(tournamentId),
+    ratingService.getRatingData(),
+  ]);
+  const standingsWithRating = standings.map((item) => ({
+    ...item,
+    strength: ratingData.history.players.get(item.playerId),
+  }));
 
-  return <StandingsTable title={tournament.title} standings={standings} />;
+  return (
+    <StandingsTable title={tournament.title} standings={standingsWithRating} />
+  );
 };
 
 export default StandingsPage;

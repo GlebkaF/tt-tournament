@@ -3,13 +3,17 @@ import { CURRENT_TOURNAMENT_NAME } from "@/app/const";
 import { CURRENT_TOURNAMENT_ID } from "@/app/const";
 import Image from "next/image";
 import Link from "next/link";
+import type { PlayerRating } from "@/utils/rating";
+import { useRatingFeatureFlag } from "@/utils/ratingFeature";
 
 interface MatchDetail {
+  matchId: number;
   opponent: {
     name: string;
     id: number;
   };
   result: string;
+  ratingDelta?: number;
 }
 
 interface PlayerProfileProps {
@@ -25,6 +29,7 @@ interface PlayerProfileProps {
     matches: MatchDetail[];
   }[];
   pending: { id: number; name: string }[];
+  rating?: PlayerRating;
 }
 
 const Eyebrow = ({ children }: { children: React.ReactNode }) => (
@@ -105,7 +110,9 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
   player,
   matchDays,
   pending,
+  rating,
 }) => {
+  const { enabled: ratingEnabled } = useRatingFeatureFlag();
   const allMatches = matchDays.flatMap((d) => d.matches);
   const { wins, draws, losses, tbd, score } = calculateStatistics(allMatches);
   const played = wins + draws + losses;
@@ -139,6 +146,25 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
             <h1 className="mt-8 font-black uppercase leading-[0.9] tracking-[-0.02em] text-[clamp(34px,5.5vw,60px)]">
               {player.name}
             </h1>
+
+            {ratingEnabled && rating && (
+              <Link
+                href="/rating"
+                className="mt-16 inline-flex items-center gap-12 border-2 border-poster-ink bg-poster-court px-16 py-12 text-poster-cream no-underline hover:bg-poster-clay hover:text-poster-cream"
+              >
+                <span className="caption-xs font-semibold uppercase tracking-[0.12em]">
+                  Сила
+                </span>
+                <strong className="text-[32px] font-black leading-none tabular-nums">
+                  {rating.rating}
+                </strong>
+                {rating.isCalibrating && (
+                  <span className="caption-xs uppercase tracking-[0.08em] text-poster-cream/80">
+                    Калибровка · примерно {rating.estimatedGamesToCalibration} игр
+                  </span>
+                )}
+              </Link>
+            )}
 
             {/* Плитки статистики */}
             <div className="mt-16 flex flex-wrap gap-8">
@@ -221,12 +247,12 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                     {day.date}
                   </div>
                   <ul className="border-2 border-poster-ink bg-poster-cream">
-                    {day.matches.map((match, i) => {
+                    {day.matches.map((match) => {
                       const meta =
                         RESULT_META[match.result] ?? RESULT_META.TBD;
                       return (
                         <li
-                          key={i}
+                          key={match.matchId}
                           className="flex items-center justify-between gap-12 border-t border-poster-ink/15 px-12 py-8 first:border-t-0"
                         >
                           <Link
@@ -235,11 +261,28 @@ const PlayerProfile: React.FC<PlayerProfileProps> = ({
                           >
                             {match.opponent.name}
                           </Link>
-                          <span
-                            className={`shrink-0 border px-8 py-2 caption-xs font-semibold uppercase tracking-[0.08em] ${meta.chip}`}
-                          >
-                            {meta.mark} {meta.label}
-                          </span>
+                          <div className="flex shrink-0 items-center gap-8">
+                            {ratingEnabled && match.ratingDelta !== undefined && (
+                              <span
+                                className={`caption-s font-black tabular-nums ${
+                                  match.ratingDelta > 0
+                                    ? "text-poster-court"
+                                    : match.ratingDelta < 0
+                                    ? "text-poster-clay-deep"
+                                    : "text-poster-muted"
+                                }`}
+                                title="Изменение рейтинга силы"
+                              >
+                                {match.ratingDelta > 0 ? "+" : ""}
+                                {match.ratingDelta}
+                              </span>
+                            )}
+                            <span
+                              className={`border px-8 py-2 caption-xs font-semibold uppercase tracking-[0.08em] ${meta.chip}`}
+                            >
+                              {meta.mark} {meta.label}
+                            </span>
+                          </div>
                         </li>
                       );
                     })}

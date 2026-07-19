@@ -1,4 +1,5 @@
 import { Match as DBMatch } from "@prisma/client";
+import type { PlayerRating } from "@/utils/rating";
 
 export interface Player {
   id: number;
@@ -37,6 +38,7 @@ export interface StandingsItem {
   gamesPlayed: number;
   league: string;
   matches: DBMatch[];
+  strength?: PlayerRating;
 }
 
 export type Standings = StandingsItem[];
