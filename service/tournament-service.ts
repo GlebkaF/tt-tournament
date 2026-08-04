@@ -16,12 +16,6 @@ const summerTournament2025PlayersIds = [
   61, 62, 65, 21,
 ];
 
-// Базовый состав 2026; новые участники добавляются через TournamentParticipant.
-const summerTournament2026PlayersIds = [
-  5, 67, 22, 1, 15, 20, 65, 62, 61, 54, 55, 21, 59, 7, 16, 23, 2, 68, 29, 4, 30,
-  69, 70, 71, 32, 10, 27,
-];
-
 interface PlayerData {
   player: string;
   playerId: number;
@@ -299,6 +293,9 @@ export class TournamentService {
   }
 
   private getLegacyPlayersIdsByTournamentId(tournamentId: number): number[] {
+    // Только завершённые турниры хранят неизменяемый состав в коде.
+    // Состав текущего и всех будущих турниров управляется исключительно через
+    // TournamentParticipant — не добавляйте для них локальные списки и исключения.
     if (tournamentId === 1) {
       return summerTournament2024PlayersIds;
     }
@@ -309,10 +306,6 @@ export class TournamentService {
 
     if (tournamentId === 3) {
       return summerTournament2025PlayersIds;
-    }
-
-    if (tournamentId === 4) {
-      return summerTournament2026PlayersIds;
     }
 
     return [];
